@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from github_twitter.scripts.get_pull_requests import insert_response
 from github_twitter.scripts.send_tweet import send_tweet
 
