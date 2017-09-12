@@ -25,6 +25,8 @@ def send_tweet():
             .filter(PullRequests.tweet_id.is_(None))
             .first()
         )
+        if next_pull_request is None:
+            return
         status = f'Merged PR from {next_pull_request.author}: ' \
                  f'{next_pull_request.title} {next_pull_request.url}'
         tweet = twitter.update_status(status=status)
