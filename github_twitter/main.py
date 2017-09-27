@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
-sys.path.insert(0, '../')
-
+sys.path.insert(0, '/home/ubuntu/github-twitter/')
+print('\n'.join(sys.path))
 from github_twitter.scripts.get_pull_requests import insert_response
 from github_twitter.scripts.send_tweet import send_tweet
 
