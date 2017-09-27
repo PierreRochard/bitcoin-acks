@@ -7,6 +7,7 @@ class Contributors(Base):
     __tablename__ = 'contributors'
 
     id = Column(Integer, primary_key=True)
-    contributions = Column(Integer, nullable=False)
-    github_name = Column(String, nullable=False, unique=True)
+    email = Column(String, unique=True)
+    git_name = Column(String, unique=True)
+    github_name = Column(String, unique=True)
     twitter_name = Column(String, unique=True)
