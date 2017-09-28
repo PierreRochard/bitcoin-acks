@@ -1,6 +1,7 @@
 import datetime
 import os
 
+import requests
 from twython import Twython
 
 from github_twitter.database.session_scope import session_scope
@@ -19,18 +20,29 @@ def send_tweet():
                           )
         next_pull_request = (
             session
-            .query(PullRequests)
-            .order_by(PullRequests.merged_at.asc())
-            .filter(PullRequests.merged_at > yesterday)
-            .filter(PullRequests.tweet_id.is_(None))
-            .first()
+                .query(PullRequests)
+                .order_by(PullRequests.merged_at.asc())
+                .filter(PullRequests.merged_at > yesterday)
+                .filter(PullRequests.tweet_id.is_(None))
+                .first()
         )
         if next_pull_request is None:
             return
-        status = 'Merged PR from {0}: {1} {2}'\
-            .format(next_pull_request.author,
-                    next_pull_request.title,
-                    next_pull_request.url)
+        commits_url = 'https://api.github.com/repos/bitcoin/bitcoin/commits'
+        params = {'author': next_pull_request.author}
+        response = requests.get(commits_url, params=params)
+        response_json = response.json()
+        if len(response_json):
+            status = 'Merged PR from {0}: {1} {2}' \
+                .format(next_pull_request.author,
+                        next_pull_request.title,
+                        next_pull_request.url)
+        else:
+            status = '''
+            {0}'s first merged PR: {1}
+            Congratulations!  🎉🍾🎆
+            '''.format(next_pull_request.author,
+                       next_pull_request.url)
         tweet = twitter.update_status(status=status)
         new_tweet = Tweets()
         new_tweet.id = tweet['id']
