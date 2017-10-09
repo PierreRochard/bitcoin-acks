@@ -1,4 +1,7 @@
+import string
+
 import dateparser
+import json
 import requests
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -50,6 +53,12 @@ def insert_response():
         session.add(new_response)
 
         events = events_response.json()
+
+        punctuation_translator = str.maketrans('', '', string.punctuation)
+        sanitized_etag = events_response.headers['etag'].translate(punctuation_translator)
+        with open('{0}.json'.format(sanitized_etag), 'w') as outfile:
+            json.dump(events, outfile)
+
         for event in events:
             if event['type'] == 'PullRequestEvent':
                 if event['payload']['pull_request']['merged']:
