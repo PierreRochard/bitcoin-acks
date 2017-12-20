@@ -56,8 +56,9 @@ def insert_response():
 
         punctuation_translator = str.maketrans('', '', string.punctuation)
         sanitized_etag = events_response.headers['etag'].translate(punctuation_translator)
-        with open('{0}.json'.format(sanitized_etag), 'w') as outfile:
-            json.dump(events, outfile)
+        # Todo: fix so this doesn't fill up the entire disk....
+        # with open('{0}.json'.format(sanitized_etag), 'w') as outfile:
+        #     json.dump(events, outfile)
 
         for event in events:
             if event['type'] == 'PullRequestEvent':

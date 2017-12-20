@@ -33,8 +33,9 @@ def send_tweet():
         params = {'author': next_pull_request.author}
         response = requests.get(commits_url, params=params)
         response_json = response.json()
-        with open('{0}.json'.format(params['author']), 'w') as outfile:
-            json.dump(response_json, outfile)
+        # Todo: fix so this doesn't fill up the entire disk....
+        # with open('{0}.json'.format(params['author']), 'w') as outfile:
+        #     json.dump(response_json, outfile)
         if len(response_json):
             status = 'Merged PR from {0}: {1} {2}' \
                 .format(next_pull_request.author,
