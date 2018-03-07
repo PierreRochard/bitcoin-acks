@@ -4,11 +4,11 @@ from github_twitter.database.base import Base
 import github_twitter.models
 
 
-def setup_database():
-    with session_scope(echo=True) as session:
-        Base.metadata.drop_all(session.connection())
+def create_database(echo=True):
+    with session_scope(echo=echo) as session:
         Base.metadata.create_all(session.connection())
 
 
-if __name__ == '__main__':
-    setup_database()
+def drop_database(echo=True):
+    with session_scope(echo=echo) as session:
+        Base.metadata.drop_all(session.connection())

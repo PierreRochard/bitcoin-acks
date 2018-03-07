@@ -1,5 +1,5 @@
 dateparser
-pytest
+pytest>=3.4.2
 requests
 sqlalchemy
 twython
