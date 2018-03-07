@@ -1,15 +1,11 @@
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database.createdb import create_database
 from github_twitter.database.session_scope import session_scope
 from github_twitter.models import Repositories
 
 
 def get_pull_requests():
-    # To create any new tables
-    create_database()
-
     with session_scope() as session:
         try:
             repository = (
