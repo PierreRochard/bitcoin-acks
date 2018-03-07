@@ -1,3 +1,3 @@
 from .pull_requests import PullRequests
-from .responses import Responses
+from .repositories import Repositories
 from .tweets import Tweets
