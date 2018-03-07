@@ -21,7 +21,7 @@ def session_scope(echo: bool = False,
                   raise_integrity_error: bool = True,
                   raise_programming_error: bool = True) -> Session:
     db_path = get_db_path()
-    logging.debug(f'Connecting to {db_path}')
+    logging.debug('Connecting to {db_path}'.format(db_path=db_path))
     url = URL(drivername='sqlite',
               database=db_path)
 
