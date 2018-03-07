@@ -24,7 +24,9 @@ class GitHubService(object):
             'page': page,
             'per_page': per_page
         }
-        url = f'{self.api_url}repos/{path}/{name}/pulls'
+        url = '{api_url}repos/{path}/{name}/pulls'.format(api_url=self.api_url,
+                                                          path=path,
+                                                          name=name)
 
         response = requests.get(url=url, params=params)
         if response.status_code != 200:
