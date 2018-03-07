@@ -44,7 +44,7 @@ def insert_response():
         else:
             headers = {'If-None-Match': last_response.etag}
 
-        repo_events_url = 'https://api.github.com/repos/bitcoin/bitcoin/events'
+        repo_events_url = 'https://api.github.com/repos/bitcoin/bitcoin/events?page=1&per_page=300'
         events_response = requests.get(repo_events_url, headers=headers)
         if events_response.status_code == 304:
             return
