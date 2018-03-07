@@ -28,7 +28,7 @@ def get_pull_requests():
             repository.name = 'bitcoin'
             session.add(repository)
             session.flush()
-            session.expunge(repository)
+        session.expunge(repository)
     repository.insert_pull_requests()
 
 
