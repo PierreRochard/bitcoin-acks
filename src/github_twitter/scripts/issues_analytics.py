@@ -9,8 +9,10 @@ def issues_analytics():
         issues_stats = (
             session
                 .query(func.strftime('%Y-%m', Issues.created_at),
-                       func.count(Issues.id))
+                       func.count(Issues.id),
+                       func.avg(Issues.closed_at - Issues.created_at))
                 .group_by(func.strftime('%Y-%m', Issues.created_at))
+
             .all()
         )
         for s in issues_stats:
