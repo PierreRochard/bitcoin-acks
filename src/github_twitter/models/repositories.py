@@ -44,7 +44,7 @@ class Repositories(Base):
 
     def insert_issues(self):
         from github_twitter.models.issues import Issues
-        page = 1
+        page = 417
         while True:
             issues = GitHubService().get_issues(path=self.path, name=self.name, page=page)
             page += 1
