@@ -1,31 +1,24 @@
 from contextlib import contextmanager
-import logging
 import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import IntegrityError, ProgrammingError
-from sqlalchemy.orm import sessionmaker, Session
-
-database_file = 'github_twitter.db'
-
-
-def get_db_path() -> str:
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(file_path, database_file)
-    return db_path
+from sqlalchemy.orm import sessionmaker
 
 
 @contextmanager
-def session_scope(echo: bool = False,
-                  raise_integrity_error: bool = True,
-                  raise_programming_error: bool = True) -> Session:
-    db_path = get_db_path()
-    logging.debug('Connecting to {db_path}'.format(db_path=db_path))
-    url = URL(drivername='sqlite',
-              database=db_path)
-
-    engine = create_engine(url, echo=echo)
+def session_scope(echo=False,
+                  raise_integrity_error=True,
+                  raise_programming_error=True):
+    pg_url = URL(drivername='postgresql+psycopg2',
+                 username=os.environ['PGUSER'],
+                 password=os.environ['PGPASSWORD'],
+                 host=os.environ['PGHOST'],
+                 port=os.environ['PGPORT'],
+                 database=os.environ['GH_PGDATABASE'])
+    engine = create_engine(pg_url, echo=echo,
+                           connect_args={'sslmode': 'require'})
     session_maker = sessionmaker(bind=engine)
     session = session_maker()
 
