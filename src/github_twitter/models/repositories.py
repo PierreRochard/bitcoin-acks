@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import dateparser
 from sqlalchemy import Column, String, Integer, and_
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -19,28 +18,29 @@ class Repositories(Base):
     path = Column(String)
     name = Column(String)
 
-    def insert_pull_requests(self):
-        pull_requests = GitHubService().get_merged_pull_requests(path=self.path, name=self.name)
+    def upsert_pull_requests(self):
+        pull_requests = GitHubService().get_pull_requests(path=self.path, name=self.name)
         for pull_request in pull_requests:
             pull_request_id = pull_request['number']
             with session_scope() as session:
                 try:
-                    (
+                    pull_request_record = (
                         session
                             .query(PullRequests)
                             .filter(PullRequests.id == pull_request_id)
                             .one()
                     )
                 except NoResultFound:
-                    new_record = PullRequests()
-                    # Todo: add repository ID
-                    new_record.id = pull_request_id
-                    new_record.author = pull_request['user']['login']
-                    new_record.title = pull_request['title']
-                    new_record.url = pull_request['html_url']
-                    new_record.created_at = dateparser.parse(pull_request['created_at'])
-                    new_record.merged_at = dateparser.parse(pull_request['merged_at'])
-                    session.add(new_record)
+                    pull_request_record = PullRequests()
+                    pull_request_record.repository_id = self.id
+                    pull_request_record.id = pull_request_id
+                    pull_request_record.url = pull_request['html_url']
+                    pull_request_record.author = pull_request['user']['login']
+                    pull_request_record.created_at = pull_request['created_at']
+                    session.add(pull_request_record)
+
+                pull_request_record.title = pull_request['title']
+                pull_request_record.merged_at = pull_request['merged_at']
 
     def insert_issues(self):
         from github_twitter.models.issues import Issues
@@ -68,7 +68,7 @@ class Repositories(Base):
                         if hasattr(issue_record, key):
                             column_type = getattr(Issues, key).expression.type.python_type
                             if column_type == datetime and value is not None:
-                                value = dateparser.parse(value)
+                                value = value
                             setattr(issue_record, key, value)
                     if issue['milestone']:
                         issue_record.milestone_id = Milestones.insert_milestone(issue['milestone'])

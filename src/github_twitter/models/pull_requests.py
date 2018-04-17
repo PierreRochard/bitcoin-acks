@@ -14,4 +14,5 @@ class PullRequests(Base):
     created_at = Column(DateTime, nullable=False)
     merged_at = Column(DateTime, nullable=False)
 
+    repository_id = Column(Integer, nullable=False)
     tweet_id = Column(Integer, nullable=True, unique=True)

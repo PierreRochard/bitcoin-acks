@@ -25,7 +25,7 @@ def get_pull_requests():
             session.add(repository)
             session.flush()
         session.expunge(repository)
-    repository.insert_pull_requests()
+    repository.upsert_pull_requests()
 
 
 if __name__ == '__main__':
