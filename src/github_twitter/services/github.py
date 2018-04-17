@@ -14,13 +14,8 @@ class GitHubService(object):
     def get(cls, url, params):
         response = requests.get(url=url, params=params, auth=(cls.user_name, cls.password))
         if response.status_code != 200:
-            raise Exception()
+            raise Exception(response)
         return response.json()
-
-    def get_merged_pull_requests(self, path: str, name: str):
-        pull_requests = self.get_pull_requests(path=path, name=name)
-        pull_requests = [pr for pr in pull_requests if pr['merged_at']]
-        return pull_requests
 
     def get_pull_requests(self,
                           path: str,
