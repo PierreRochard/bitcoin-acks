@@ -1,3 +1,4 @@
+from .diffs import Diffs
 from .issues import Issues
 from .milestones import Milestones
 from .pull_requests import PullRequests
