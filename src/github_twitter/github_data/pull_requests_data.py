@@ -1,9 +1,11 @@
 from typing import List
 
+import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database import session_scope
+from github_twitter.github_data.diffs_data import DiffsData
 from github_twitter.github_data.repositories_data import RepositoriesData
 from github_twitter.github_data.users_data import UsersData
 from github_twitter.models import PullRequests
@@ -75,11 +77,13 @@ class PullRequestsData(RepositoriesData):
             user = data.pop('user')
 
             UsersData.upsert(data=user)
-
             pull_request_record.user_id = user['id']
 
             for key, value in data.items():
                 setattr(pull_request_record, key, value)
+
+            diff = requests.get(pull_request_record.diff_url).text
+            DiffsData.insert(pull_request_record.id, diff)
 
     def update_database(self):
         data = self.get_all()
