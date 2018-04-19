@@ -11,7 +11,7 @@ from github_twitter.models import Repositories
 
 class RepositoriesData(GitHubData):
     def __init__(self, repository_path: str, repository_name: str):
-        super(RepositoriesData).__init__()
+        super(RepositoriesData, self).__init__()
         with session_scope() as session:
             try:
                 repository = (
@@ -33,7 +33,7 @@ class RepositoriesData(GitHubData):
             session.expunge(repository)
         self.repo = repository
 
-    def _url(self, path: str):
+    def _url(self, path: str) -> str:
         return '{api_url}repos/{repo_path}/{repo_name}/{path}'.format(
             api_url=self.api_url,
             repo_path=self.repo.path,
