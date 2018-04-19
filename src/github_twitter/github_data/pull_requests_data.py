@@ -1,9 +1,11 @@
 from typing import List
 
+from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database import session_scope
 from github_twitter.github_data.repositories_data import RepositoriesData
+from github_twitter.github_data.users_data import UsersData
 from github_twitter.models import PullRequests
 
 
@@ -44,28 +46,46 @@ class PullRequestsData(RepositoriesData):
         return pull_requests_data
 
     def upsert(self, data: dict):
-        pull_request_id = data['number']
         with session_scope() as session:
             try:
                 pull_request_record = (
                     session
                         .query(PullRequests)
-                        .filter(PullRequests.id == pull_request_id)
+                        .filter(
+                            and_(PullRequests.repository_id == self.repo.id,
+                                 PullRequests.number == data['number'])
+                        )
                         .one()
                 )
             except NoResultFound:
                 pull_request_record = PullRequests()
                 pull_request_record.repository_id = self.repo.id
-                pull_request_record.id = pull_request_id
-                pull_request_record.url = data['html_url']
-                pull_request_record.author = data['user']['login']
-                pull_request_record.created_at = data['created_at']
+                pull_request_record.number = data['number']
                 session.add(pull_request_record)
 
-            pull_request_record.title = data['title']
-            pull_request_record.merged_at = data['merged_at']
+            links = data.pop('_links')
+            assignee = data.pop('assignee')
+            assignees = data.pop('assignees')
+            base = data.pop('base')
+            head = data.pop('head')
+            labels = data.pop('labels')
+            milestone = data.pop('milestone')
+            requested_reviewers = data.pop('requested_reviewers')
+            requested_teams = data.pop('requested_teams')
+            user = data.pop('user')
+
+            UsersData.upsert(data=user)
+
+            pull_request_record.user_id = user['id']
+
+            for key, value in data.items():
+                setattr(pull_request_record, key, value)
 
     def update_database(self):
         data = self.get_all()
         for item in data:
             self.upsert(item)
+
+
+if __name__ == '__main__':
+    PullRequestsData('bitcoin', 'bitcoin').update_database()

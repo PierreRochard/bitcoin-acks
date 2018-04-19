@@ -15,4 +15,5 @@ def drop_database(echo=True):
 
 
 if __name__ == '__main__':
+    drop_database()
     create_database()
