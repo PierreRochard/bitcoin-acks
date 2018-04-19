@@ -109,9 +109,6 @@ pip-selfcheck.json
 
 .idea
 
-*.json
 !/coverage_parser/coverage/scripts/
 !/coverage_parser/coverage/models/source_files.py
 !/coverage_parser/coverage/models/branches.py
-
-*test_github_twitter.db

@@ -1,7 +1,7 @@
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database.session_scope import session_scope
+from github_twitter.database.session import session_scope
 from github_twitter.models import Repositories
 
 

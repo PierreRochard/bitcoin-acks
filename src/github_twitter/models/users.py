@@ -1,14 +1,12 @@
 from sqlalchemy import (
     Column,
-    DateTime,
-    ForeignKey,
     Integer,
-    String,
-    Boolean)
+    String
+)
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database.base import Base
-from github_twitter.database.session_scope import session_scope
+from github_twitter.database.session import session_scope
 
 
 class Users(Base):

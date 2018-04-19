@@ -4,7 +4,7 @@ import os
 import requests
 from twython import Twython
 
-from github_twitter.database.session_scope import session_scope
+from github_twitter.database.session import session_scope
 from github_twitter.models import PullRequests
 from github_twitter.models.tweets import Tweets
 
@@ -24,6 +24,7 @@ def send_tweet():
                 .order_by(PullRequests.merged_at.asc())
                 .filter(PullRequests.merged_at > yesterday)
                 .filter(PullRequests.tweet_id.is_(None))
+                .filter(PullRequests.merged_at.isnot(None))
                 .first()
         )
         if next_pull_request is None:

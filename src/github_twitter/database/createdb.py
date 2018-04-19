@@ -1,4 +1,4 @@
-from github_twitter.database.session_scope import session_scope
+from github_twitter.database.session import session_scope
 from github_twitter.database.base import Base
 
 import github_twitter.models

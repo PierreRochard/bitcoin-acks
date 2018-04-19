@@ -1,6 +1,3 @@
-from datetime import datetime
-
-import dateparser
 from sqlalchemy import (
     Column,
     DateTime,
@@ -11,7 +8,7 @@ from sqlalchemy import (
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database.base import Base
-from github_twitter.database.session_scope import session_scope
+from github_twitter.database.session import session_scope
 from github_twitter.models.users import Users
 
 
@@ -46,9 +43,6 @@ class Milestones(Base):
                 session.add(milestone_record)
             for key, value in milestone.items():
                 if hasattr(milestone_record, key):
-                    column_type = getattr(Milestones, key).expression.type.python_type
-                    if column_type == datetime and value is not None:
-                        value = dateparser.parse(value)
                     setattr(milestone_record, key, value)
             session.commit()
         return milestone['id']
