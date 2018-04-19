@@ -1,9 +1,10 @@
+import json
 import logging
-import os
+from typing import List
 
 import pytest
 
-from github_twitter.database.session_scope import get_db_path
+from tests import issues_file_path, pull_requests_file_path
 
 
 @pytest.fixture(autouse=True)
@@ -13,21 +14,16 @@ def set_log_level(caplog):
 
 @pytest.fixture(autouse=True)
 def use_test_database(monkeypatch):
-    monkeypatch.setattr('github_twitter.database.session_scope.database_file',
-                        'test_github_twitter.db')
-    try:
-        os.remove(get_db_path())
-    except OSError:
-        pass
-
-    from github_twitter.database.createdb import create_database
+    monkeypatch.setattr('github_twitter.database.session.is_test', True)
+    from github_twitter.database.createdb import create_database, drop_database
+    drop_database(echo=False)
     create_database(echo=False)
 
 
 @pytest.fixture
 def repository():
     from github_twitter.models.repositories import Repositories
-    from github_twitter.database.session_scope import session_scope
+    from github_twitter.database.session import session_scope
     r = Repositories()
     r.path = 'bitcoin'
     r.name = 'bitcoin'
@@ -36,3 +32,17 @@ def repository():
         session.flush()
         session.expunge(r)
     return r
+
+
+@pytest.fixture(scope="session")
+def issues_data() -> List[dict]:
+    with open(issues_file_path, 'r') as outfile:
+        issues = json.load(outfile)
+        return issues
+
+
+@pytest.fixture(scope="session")
+def pull_requests_data() -> List[dict]:
+    with open(pull_requests_file_path, 'r') as outfile:
+        pull_requests = json.load(outfile)
+        return pull_requests
