@@ -20,12 +20,13 @@ class PullRequestsModelView(ModelView):
     column_searchable_list = [
         PullRequests.number,
         'title',
-        'body'
+        'body',
+        'user.login'
     ]
-    column_auto_select_related = True
+
     column_list = [
-        PullRequests.number,
-        'user',
+        'number',
+        'user.login',
         'state',
         'title',
         'body',
