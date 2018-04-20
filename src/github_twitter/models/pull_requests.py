@@ -7,8 +7,10 @@ from sqlalchemy import (
     String,
     UniqueConstraint
 )
+from sqlalchemy.orm import relationship
 
 from github_twitter.database.base import Base
+from github_twitter.models.users import Users
 
 
 class PullRequests(Base):
@@ -45,3 +47,9 @@ class PullRequests(Base):
     repository_id = Column(Integer, nullable=False)
     user_id = Column(Numeric, nullable=False)
     tweet_id = Column(Integer, nullable=True, unique=True)
+
+    user = relationship('Users',
+                        primaryjoin=user_id == Users.id,
+                        foreign_keys='[PullRequests.user_id]',
+                        backref='pull_requests'
+                        )

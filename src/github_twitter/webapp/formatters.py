@@ -1,11 +1,18 @@
+from bs4 import BeautifulSoup
+
 from markupsafe import Markup
 
 
-def screen_name_formatter(view, context, model, name):
-    return Markup(
-        f'<a href="https://twitter.com/{model.screen_name}">{model.screen_name}</a>')
+def body_formatter(view, context, model, name):
+    body = getattr(model, name)
+    soup = BeautifulSoup(body)
+    text = soup.get_text()
+    if text:
+        return text[0:100] + '...'
+    else:
+        return ''
 
 
-def image_formatter(view, context, model, name):
-    url = getattr(model, name)
-    return Markup(f'<img src="{url}">')
+def user_formatter(view, context, model, name):
+    user = getattr(model, name)
+    return user.login

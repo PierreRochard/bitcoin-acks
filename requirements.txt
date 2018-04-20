@@ -1,5 +1,7 @@
+beautifulsoup4
 flask
 flask-admin
+markupsafe
 mock
 psycopg2
 pytest>=3.4.2
