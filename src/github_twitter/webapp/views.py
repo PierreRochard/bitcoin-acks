@@ -1,5 +1,8 @@
 from flask_admin.contrib.sqla import ModelView
 
+from github_twitter.models import Users, PullRequests
+from github_twitter.webapp.formatters import body_formatter, user_formatter
+
 
 class PullRequestsModelView(ModelView):
     def __init__(self, model, session, *args, **kwargs):
@@ -13,37 +16,28 @@ class PullRequestsModelView(ModelView):
     can_create = False
     can_edit = False
     can_view_details = True
-    # column_searchable_list = [
-    #     'screen_name',
-    #     'name',
-    #     'description',
-    #     'location'
-    # ]
-    # column_list = [
-    #     'is_interesting',
-    #     'tags',
-    #     'profile_image_url',
-    #     'screen_name',
-    #     'following',
-    #     'friends_followers_ratio',
-    #     'name',
-    #     'description',
-    #     'location',
-    #     'created_at',
-    #     'followers_count',
-    #     'friends_count',
-    #     'statuses_count',
-    #     'favourites_count',
-    #     'lang',
-    # ]
-    # column_filters = [c for c in column_list if not c.endswith('_ratio')]
-    # column_editable_list = [
-    #     'is_interesting',
-    #     'tags'
-    # ]
-    #
-    # column_formatters = dict(
-    #     screen_name=screen_name_formatter,
-    #     profile_image_url=image_formatter
-    # )
-    # column_default_sort = ('followers_count', True)
+    # inline_models = (Users, )
+    column_searchable_list = [
+        PullRequests.number,
+        'title',
+        'body'
+    ]
+    column_auto_select_related = True
+    column_list = [
+        PullRequests.number,
+        'user',
+        'state',
+        'title',
+        'body',
+        'created_at',
+        'updated_at',
+        'merged_at',
+        'closed_at',
+        'locked'
+    ]
+    column_filters = column_list
+    column_formatters = dict(
+        body=body_formatter,
+        user=user_formatter
+    )
+    column_default_sort = ('number', True)
