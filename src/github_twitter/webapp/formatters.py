@@ -1,7 +1,6 @@
 import datetime
 
 import humanize
-from bs4 import BeautifulSoup
 
 from markupsafe import Markup
 
@@ -20,11 +19,13 @@ def line_count_formatter(view, context, model, name):
 
 
 def body_formatter(view, context, model, name):
-    body = getattr(model, name)
-    soup = BeautifulSoup(body, "html5lib")
-    text = soup.get_text()
-    if text:
-        return Markup('<div title="{0}">{1}</div>'.format(text, text.split('.')[0] + '...'))
+    full_text = display_text = Markup.escape(model.body)
+    max_length = 200
+    if len(full_text) > max_length:
+        display_text = full_text[0:max_length]
+        display_text += '...'
+    if full_text:
+        return Markup('<div title="{0}">{1}</div>'.format(full_text, display_text))
     else:
         return ''
 
