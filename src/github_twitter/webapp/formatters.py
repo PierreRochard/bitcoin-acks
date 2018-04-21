@@ -13,6 +13,10 @@ def body_formatter(view, context, model, name):
         return ''
 
 
-def user_formatter(view, context, model, name):
-    user = getattr(model, name)
-    return user.login
+def pr_link_formatter(view, context, model, name):
+    value = getattr(model, name)
+    return Markup('<a href="{0}">{1}</a>'.format(model.html_url, value))
+
+
+def user_link_formatter(view, context, model, name):
+    return Markup('<a href="{0}">{1}</a>'.format(model.user.html_url, model.user.login))
