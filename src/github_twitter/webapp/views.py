@@ -4,7 +4,8 @@ from github_twitter.models import PullRequests
 from github_twitter.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
-    user_link_formatter)
+    user_link_formatter,
+    humanize_date_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -46,6 +47,11 @@ class PullRequestsModelView(ModelView):
         'body': body_formatter,
         'number': pr_link_formatter,
         'title': pr_link_formatter,
-        'user.login': user_link_formatter
+        'user.login': user_link_formatter,
+        'created_at': humanize_date_formatter,
+        'updated_at': humanize_date_formatter,
+        'merged_at': humanize_date_formatter,
+        'closed_at': humanize_date_formatter
+
     }
     column_default_sort = ('number', True)
