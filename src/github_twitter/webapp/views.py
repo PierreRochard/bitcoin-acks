@@ -5,7 +5,7 @@ from github_twitter.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
     user_link_formatter,
-    humanize_date_formatter)
+    humanize_date_formatter, line_count_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -31,11 +31,10 @@ class PullRequestsModelView(ModelView):
     column_list = [
         'number',
         'user.login',
-        'diff.added_lines',
-        'diff.removed_lines',
-        'state',
         'title',
         'body',
+        'diff.added_lines',
+        'diff.removed_lines',
         'created_at',
         'updated_at',
         'merged_at',
@@ -46,12 +45,23 @@ class PullRequestsModelView(ModelView):
     column_formatters = {
         'body': body_formatter,
         'number': pr_link_formatter,
-        'title': pr_link_formatter,
         'user.login': user_link_formatter,
         'created_at': humanize_date_formatter,
         'updated_at': humanize_date_formatter,
         'merged_at': humanize_date_formatter,
-        'closed_at': humanize_date_formatter
+        'closed_at': humanize_date_formatter,
+        'diff.added_lines': line_count_formatter,
+        'diff.removed_lines': line_count_formatter,
 
     }
     column_default_sort = ('number', True)
+    column_labels = {
+        'user.login': 'Author',
+        'diff.added_lines': '+',
+        'diff.removed_lines': '-',
+        'created_at': 'Created',
+        'updated_at': 'Updated',
+        'merged_at': 'Merged',
+        'closed_at': 'Closed'
+
+    }
