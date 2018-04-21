@@ -1,7 +1,10 @@
 from flask_admin.contrib.sqla import ModelView
 
-from github_twitter.models import Users, PullRequests
-from github_twitter.webapp.formatters import body_formatter, user_formatter
+from github_twitter.models import PullRequests
+from github_twitter.webapp.formatters import (
+    body_formatter,
+    pr_link_formatter,
+    user_link_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -33,12 +36,14 @@ class PullRequestsModelView(ModelView):
         'created_at',
         'updated_at',
         'merged_at',
-        'closed_at',
-        'locked'
+        'closed_at'
     ]
     column_filters = column_list
-    column_formatters = dict(
-        body=body_formatter,
-        user=user_formatter
-    )
+    column_sortable_list = column_list
+    column_formatters = {
+        'body': body_formatter,
+        'number': pr_link_formatter,
+        'title': pr_link_formatter,
+        'user.login': user_link_formatter
+    }
     column_default_sort = ('number', True)
