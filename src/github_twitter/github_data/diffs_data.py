@@ -18,13 +18,13 @@ class DiffsData(object):
             try:
                 (
                     session.query(Diffs)
-                    .filter(
+                        .filter(
                         and_(
                             Diffs.pull_request_id == pull_request_id,
                             Diffs.diff_hash == diff_hash
                         )
                     )
-                    .one()
+                        .one()
                 )
             except NoResultFound:
                 record = Diffs()
@@ -38,3 +38,13 @@ class DiffsData(object):
                 record.modified_files = len(patch.modified_files)
                 record.removed_files = len(patch.removed_files)
                 session.add(record)
+
+            (
+                session.query(Diffs).update({Diffs.is_most_recent: False})
+                    .filter(
+                    and_(
+                        Diffs.diff_hash != diff_hash,
+                        Diffs.pull_request_id == pull_request_id
+                    )
+                )
+            )

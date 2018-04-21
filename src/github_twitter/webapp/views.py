@@ -19,7 +19,7 @@ class PullRequestsModelView(ModelView):
     can_create = False
     can_edit = False
     can_view_details = True
-    # inline_models = (Users, )
+
     column_searchable_list = [
         PullRequests.number,
         'title',
@@ -30,6 +30,8 @@ class PullRequestsModelView(ModelView):
     column_list = [
         'number',
         'user.login',
+        'diff.added_lines',
+        'diff.removed_lines',
         'state',
         'title',
         'body',

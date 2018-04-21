@@ -1,4 +1,5 @@
 from sqlalchemy import (
+    Boolean,
     Column,
     DateTime,
     func,
@@ -21,9 +22,11 @@ class Diffs(Base):
                         onupdate=func.now(),
                         server_default=func.now())
 
+    is_most_recent = Column(Boolean, default=True)
+
     id = Column(Integer, primary_key=True)
     pull_request_id = Column(Integer)
-    diff_hash = Column(String, unique=True)
+    diff_hash = Column(String)
 
     diff = Column(String)
     added_lines = Column(Integer)

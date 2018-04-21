@@ -5,11 +5,12 @@ from sqlalchemy import (
     Integer,
     Numeric,
     String,
-    UniqueConstraint
-)
+    UniqueConstraint,
+    select, func, and_)
 from sqlalchemy.orm import relationship
 
 from github_twitter.database.base import Base
+from github_twitter.models.diffs import Diffs
 from github_twitter.models.users import Users
 
 
@@ -48,8 +49,16 @@ class PullRequests(Base):
     user_id = Column(Numeric, nullable=False)
     tweet_id = Column(Integer, nullable=True, unique=True)
 
-    user = relationship('Users',
+    user = relationship(Users,
                         primaryjoin=user_id == Users.id,
                         foreign_keys='[PullRequests.user_id]',
                         backref='pull_requests'
+                        )
+
+    diff = relationship(Diffs,
+                        primaryjoin=and_(id == Diffs.pull_request_id,
+                                         Diffs.is_most_recent.is_(True)),
+                        foreign_keys=[Diffs.pull_request_id],
+                        backref='pull_request',
+                        uselist=False
                         )

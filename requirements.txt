@@ -1,6 +1,7 @@
 beautifulsoup4
 flask
 flask-admin
+humanize
 markupsafe
 mock
 psycopg2
