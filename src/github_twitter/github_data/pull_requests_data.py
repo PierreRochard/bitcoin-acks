@@ -88,6 +88,13 @@ class PullRequestsData(RepositoriesData):
     def update_database(self):
         data = self.get_all()
         for item in data:
+            if item['state'] == 'open':
+
+                response = requests.get(url=self._url(path=path),
+                                        params=params,
+                                        auth=self._auth)
+                response.raise_for_status()
+                return response.json()
             self.upsert(item)
 
 
