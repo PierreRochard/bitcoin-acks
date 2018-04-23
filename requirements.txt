@@ -1,5 +1,6 @@
 flask
 flask-admin
+graphene
 humanize
 markupsafe
 mock

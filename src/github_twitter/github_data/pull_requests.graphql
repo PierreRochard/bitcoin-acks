@@ -1,0 +1,63 @@
+query($prCursor: String = null){
+    rateLimit {
+        limit
+        cost
+        remaining
+        resetAt
+    }
+    repository(owner: "bitcoin", name: "bitcoin") {
+        pullRequests(first: 100, after: $prCursor) {
+            totalCount
+            edges {
+                cursor
+                node {
+                    id
+                    number
+                    title
+                    mergeable
+                    labels(last: 100) {
+                        totalCount
+                        nodes {
+                            name
+                            color
+                        }
+                    }
+                    author {
+                        login
+                        url
+                        avatarUrl
+                    }
+                    bodyHTML
+                    additions
+                    deletions
+                    createdAt
+                    updatedAt
+                    mergedAt
+                    closedAt
+                    comments(last: 100) {
+                        totalCount
+                        nodes {
+                            id
+                            publishedAt
+                            author {
+                                login
+                                avatarUrl
+                            }
+                            body
+                            url
+                        }
+                    }
+                    commits(last: 1) {
+                        totalCount
+                        nodes {
+                            commit {
+                                oid
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
