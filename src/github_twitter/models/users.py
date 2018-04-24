@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column,
     String
 )
+from sqlalchemy.orm import synonym
 
 from github_twitter.database.base import Base
 
@@ -12,9 +13,11 @@ class Users(Base):
     id = Column(String, primary_key=True)
     login = Column(String, unique=True)
 
-    avatar_url = Column(String)
     name = Column(String)
     bio = Column(String)
     url = Column(String)
+
+    avatar_url = Column(String)
+    avatarUrl = synonym('avatar_url')
 
     twitter_handle = Column(String)

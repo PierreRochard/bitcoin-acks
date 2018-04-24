@@ -1,4 +1,3 @@
-import re
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database import session_scope
@@ -36,9 +35,6 @@ class UsersData(GitHubData):
                 user_record = Users()
                 session.add(user_record)
             for key, value in data.items():
-                # key_parts = re.findall('[A-Z][^A-Z]*', key)
-                key_parts = [a.lower() for a in re.split(r'([A-Z][a-z]*)', key) if a]
-                modified_key = '_'.join(key_parts)
-                setattr(user_record, modified_key, value)
+                setattr(user_record, key, value)
             session.commit()
             return user_record.id
