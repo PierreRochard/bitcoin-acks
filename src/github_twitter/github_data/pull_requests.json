@@ -9630,7 +9630,7 @@
         "number": 10757,
         "state": "OPEN",
         "title": "RPC: Introduce getblockstats to plot things",
-        "updatedAt": "2018-04-24T20:08:12Z"
+        "updatedAt": "2018-04-24T22:21:48Z"
     },
     {
         "additions": 710,
@@ -26301,13 +26301,13 @@
         "updatedAt": "2018-03-23T14:31:42Z"
     },
     {
-        "additions": 140,
+        "additions": 132,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
             "login": "practicalswift",
             "url": "https://github.com/practicalswift"
         },
-        "body": "Add compile time checking for all run time locking assertions.\r\n\r\nThe intention is that literally all `EXCLUSIVE_LOCKS_REQUIRED`/`LOCKS_EXCLUDED`:s added in this PR should follow either directly or indirectly from `AssertLockHeld(\u2026)`/`AssertLockNotHeld(\u2026)`:s already existing in the repo.\r\n\r\nConsider the case where function `A(\u2026)` contains `AssertLockHeld(cs_foo)` (without\r\nfirst locking `cs_foo` in `A`), and that `B(\u2026)` calls `A(\u2026)` (without first locking `cs_main`):\r\n* It _directly_ follows that: `A(\u2026)` should have an `EXCLUSIVE_LOCKS_REQUIRED(cs_foo)` annotation.\r\n* It _indirectly_ follows that: `B(\u2026)` should have an `EXCLUSIVE_LOCKS_REQUIRED(cs_foo)` annotation.\r\n\r\nThese are the annotations added \u2013 let me know if something sticks out/looks weird:\r\n\r\n```\r\nsrc/init.cpp\r\n  void ThreadImport(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/keystore.h\r\n  void ImplicitlyLearnRelatedKeyScripts(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_KeyStore)\r\n\r\nsrc/net_processing.cpp\r\n  void MaybeSetPeerAsAnnouncingHeaderAndIDs(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool TipMayBeStale(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  static bool BlockRequestAllowed(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void static ProcessGetBlockData(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  void static ProcessGetData(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs) LOCKS_EXCLUDED(cs_main)\r\n  bool static ProcessMessage(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  static bool SendRejectsAndCheckIfBanned(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool PeerLogicValidation::ProcessMessages(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/net_processing.h\r\n  void ConsiderEviction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n\r\nsrc/policy/rbf.h\r\n  RBFTransactionState IsRBFOptIn(\u2026) EXCLUSIVE_LOCKS_REQUIRED(pool.cs)\r\n\r\nsrc/qt/transactiondesc.h\r\n  static QString FormatTxStatus(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n\r\nsrc/qt/transactionrecord.h\r\n  static QList<TransactionRecord> decomposeTransaction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void updateStatus(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool statusUpdateNeeded() const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n\r\nsrc/rpc/blockchain.cpp\r\n  UniValue blockheaderToJSON(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void entryToJSON(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  UniValue preciousblock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  UniValue invalidateblock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  UniValue reconsiderblock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/rpc/blockchain.h\r\n  UniValue blockToJSON(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  UniValue blockheaderToJSON(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n\r\nsrc/rpc/mining.cpp\r\n  UniValue generatetoaddress(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  UniValue submitblock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/rpc/mining.h\r\n  UniValue generateBlocks(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/rpc/rawtransaction.cpp\r\n  UniValue sendrawtransaction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/test/miner_tests.cpp\r\n  bool TestSequenceLocks(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  BOOST_AUTO_TEST_CASE(CreateNewBlock_validity) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/test/test_bitcoin.cpp\r\n  TestChain100Setup::CreateAndProcessBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/test/txvalidation_tests.cpp\r\n  BOOST_FIXTURE_TEST_CASE(tx_mempool_reject_coinbase, TestChain100Setup) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/test/txvalidationcache_tests.cpp\r\n  ToMemPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  BOOST_FIXTURE_TEST_CASE(tx_mempool_block_doublespend, TestChain100Setup) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/txmempool.cpp\r\n  void CTxMemPool::removeForReorg(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n\r\nsrc/txmempool.h\r\n  void trackPackageRemoved(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs)\r\n  std::vector<indexed_transaction_set::const_iterator> GetSortedDepthAndScore() const EXCLUSIVE_LOCKS_REQUIRED(cs)\r\n  void RemoveStaged(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs)\r\n\r\nsrc/validation.cpp\r\n  bool PreciousBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  bool InvalidateBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  static bool IsCurrentForFeeEstimation() EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void UpdateMempoolForReorg(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  static bool CheckInputsFromMempoolAndCache(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  static bool AcceptToMemoryPoolWorker(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  static bool AcceptToMemoryPoolWithTime(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  bool AcceptToMemoryPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  static void CheckForkWarningConditions() EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  static void CheckForkWarningConditionsOnNewFork(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void static InvalidChainFound(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void CChainState::InvalidBlockFound(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CheckInputs(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  static unsigned int GetBlockScriptFlags(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CChainState::ConnectBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CChainState::ConnectTip(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CChainState::ActivateBestChainStep(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  CChainState::ActivateBestChain(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  bool CChainState::AcceptBlockHeader(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CChainState::AcceptBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool LoadChainTip(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/validation.h\r\n  bool ProcessNewBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs) LOCKS_EXCLUDED(cs_main)\r\n  bool LoadExternalBlockFile(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  bool ActivateBestChain(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs) LOCKS_EXCLUDED(cs_main)\r\n  bool AcceptToMemoryPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  bool CheckFinalTx(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool TestLockPointValidity(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool CheckSequenceLocks(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  bool TestBlockValidity(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool PreciousBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n  bool InvalidateBlock(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n  bool ResetBlockFailureFlags(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool LoadMempool() EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/validationinterface.h\r\n  void SyncWithValidationInterfaceQueue() LOCKS_EXCLUDED(cs_main)\r\n\r\nsrc/wallet/feebumper.cpp\r\n  static feebumper::Result PreconditionChecks(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, wallet->cs_wallet)\r\n\r\nsrc/wallet/rpcdump.cpp\r\n  void ImportScript(\u2026) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)\r\n  void ImportAddress(\u2026) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)\r\n  UniValue ProcessImport(\u2026) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)\r\n\r\nsrc/wallet/rpcwallet.cpp\r\n  void WalletTxToJSON(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  UniValue ListReceived(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void ListTransactions(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  UniValue generate(\u2026) EXCLUSIVE_LOCKS_REQUIRED(mempool.cs)\r\n\r\nsrc/wallet/test/wallet_tests.cpp\r\n  BOOST_AUTO_TEST_CASE(coin_selection_tests) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  BOOST_AUTO_TEST_CASE(ApproximateBestSubset) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n\r\nsrc/wallet/wallet.cpp\r\n  bool CWalletTx::AcceptToMemoryPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main, mempool.cs)\r\n\r\nsrc/wallet/wallet.h\r\n  int GetDepthInMainChain(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  int GetDepthInMainChain() const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool IsInMainChain() const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  int GetBlocksToMaturity() const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  CAmount GetCredit(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  CAmount GetImmatureCredit(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  CAmount GetAvailableCredit(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  CAmount GetImmatureWatchOnlyCredit(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  CAmount GetAvailableWatchOnlyCredit(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool IsTrusted() const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool RelayWalletTransaction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool AcceptToMemoryPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool SelectCoins(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  void SyncTransaction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void DeriveNewChildKey(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AddWatchOnly(\u2026) override EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void LoadKeyPool(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool CanSupportFeature(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void AvailableCoins(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main, cs_wallet)\r\n  bool IsSpent(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool IsLockedCoin(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void LockCoin(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void UnlockCoin(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void UnlockAllCoins() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void ListLockedCoins(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  CPubKey GenerateNewKey(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AddKeyPubKey(\u2026) override EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AddKeyPubKeyWithDB(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool LoadKeyMetadata(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool LoadScriptMetadata(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool LoadMinVersion(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void UpdateTimeFirstKey(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AddWatchOnly(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool RemoveWatchOnly(\u2026) override EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void GetKeyBirthTimes(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  int64_t IncOrderPosNext(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AccountMove(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool AddToWalletIfInvolvingMe(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void ResendWalletTransactions(\u2026) override EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  std::vector<uint256> ResendWalletTransactionsBefore(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  bool SignTransaction(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  size_t KeypoolCountExternalKeys() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void MarkReserveKeysAsUsed(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  std::set<std::set<CTxDestination>> GetAddressGroupings() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  std::map<CTxDestination, CAmount> GetAddressBalances() EXCLUSIVE_LOCKS_REQUIRED(cs_main)\r\n  DBErrors ZapSelectTx(\u2026) EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  unsigned int GetKeyPoolSize() EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  bool HasWalletSpend(\u2026) const EXCLUSIVE_LOCKS_REQUIRED(cs_wallet)\r\n  void BlockUntilSyncedToCurrentChain() LOCKS_EXCLUDED(cs_main, cs_wallet)\r\n\r\nsrc/wallet/walletdb.cpp\r\n  bool ReadKeyValue(\u2026) EXCLUSIVE_LOCKS_REQUIRED(pwallet->cs_wallet)\r\n```",
+        "body": "Add compile time checking for all run time locking assertions.\r\n\r\nThe intention is that literally all `EXCLUSIVE_LOCKS_REQUIRED`/`LOCKS_EXCLUDED`:s added in this PR should follow either directly or indirectly from `AssertLockHeld(\u2026)`/`AssertLockNotHeld(\u2026)`:s already existing in the repo.\r\n\r\nConsider the case where function `A(\u2026)` contains `AssertLockHeld(cs_foo)` (without\r\nfirst locking `cs_foo` in `A`), and that `B(\u2026)` calls `A(\u2026)` (without first locking `cs_main`):\r\n* It _directly_ follows that: `A(\u2026)` should have an `EXCLUSIVE_LOCKS_REQUIRED(cs_foo)` annotation.\r\n* It _indirectly_ follows that: `B(\u2026)` should have an `EXCLUSIVE_LOCKS_REQUIRED(cs_foo)` annotation.",
         "closedAt": null,
         "comments": {
             "nodes": [
@@ -26490,22 +26490,32 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzM2ODk3NQ==",
                     "publishedAt": "2018-04-22T09:53:16Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12665#issuecomment-383368975"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "@MarcoFalke Updated. I've now tried to address your feedback. Turns out that I was a bit too strict with the locking requirements for `mempool.cs`, so the updated diff is significantly smaller and hopefully easier to review. Please re-review :-)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA5NTM4MQ==",
+                    "publishedAt": "2018-04-24T22:06:37Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12665#issuecomment-384095381"
                 }
             ],
-            "totalCount": 18
+            "totalCount": 19
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "e68bf37b0f69adc97b7779f7eff60e55154a796b"
+                        "oid": "0d3b75d59efefa2a640e29334b9205fde74cf080"
                     }
                 }
             ],
             "totalCount": 1
         },
         "createdAt": "2018-03-10T17:17:32Z",
-        "deletions": 127,
+        "deletions": 119,
         "id": "MDExOlB1bGxSZXF1ZXN0MTc0MTc5NzAz",
         "labels": {
             "nodes": [
@@ -26522,7 +26532,7 @@
         "number": 12665,
         "state": "OPEN",
         "title": "Add compile time checking for run time locking assertions",
-        "updatedAt": "2018-04-24T21:39:08Z"
+        "updatedAt": "2018-04-24T22:06:37Z"
     },
     {
         "additions": 11,
@@ -33374,7 +33384,7 @@
         "number": 13033,
         "state": "OPEN",
         "title": "Build txindex in parallel with validation",
-        "updatedAt": "2018-04-24T20:30:09Z"
+        "updatedAt": "2018-04-24T22:20:16Z"
     },
     {
         "additions": 129,

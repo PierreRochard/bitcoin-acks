@@ -33,7 +33,7 @@ def body_formatter(view, context, model, name):
 def humanize_date_formatter(view, context, model, name):
     old_date = getattr(model, name)
     if old_date is not None:
-        now = datetime.datetime.now()
+        now = datetime.datetime.utcnow()
         humanized_date = humanize.naturaltime(now - old_date)
         return Markup('<div title="{0}" style="white-space: nowrap; overflow: hidden;">{1}</div>'.format(old_date, humanized_date))
     else:

@@ -2,6 +2,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database import session_scope
 from github_twitter.github_data.github_data import GitHubData
+from github_twitter.github_data.users_data import UsersData
 from github_twitter.models import Comments
 
 
@@ -33,6 +34,11 @@ class CommentsData(GitHubData):
                 record = Comments()
                 record.pull_request_id = pull_request_id
                 session.add(record)
+
+            author = data.pop('author')
+            if author is not None:
+                record.author_id = UsersData().upsert(data=author)
+
             for key, value in data.items():
                 setattr(record, key, value)
             record.auto_detected_ack = self.identify_ack(record.body)
