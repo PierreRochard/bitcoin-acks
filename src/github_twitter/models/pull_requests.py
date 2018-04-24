@@ -21,44 +21,35 @@ class PullRequests(Base):
                                        name='pull_requests_unique_constraint'),
                       )
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
 
-    author_association = Column(String, nullable=False)
+    additions = Column(Integer)
     body = Column(String)
     closed_at = Column(DateTime)
-    comments_url = Column(String, nullable=False)
-    commits_url = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False)
-    diff_url = Column(String, nullable=False)
-    html_url = Column(String, nullable=False)
-    issue_url = Column(String, nullable=False)
-    locked = Column(Boolean, nullable=False)
-    merge_commit_sha = Column(String, nullable=True)
+    deletions = Column(Integer)
     merged_at = Column(DateTime, nullable=True)
     number = Column(Numeric, nullable=False)
-    patch_url = Column(String, nullable=False)
-    review_comment_url = Column(String, nullable=False)
-    review_comments_url = Column(String, nullable=False)
     state = Column(String, nullable=False)
-    statuses_url = Column(String, nullable=False)
     title = Column(String, nullable=False)
     updated_at = Column(DateTime, nullable=False)
-    url = Column(String, nullable=False)
 
     repository_id = Column(Integer, nullable=False)
-    user_id = Column(Numeric, nullable=False)
+    author_id = Column(String, nullable=False)
     tweet_id = Column(Integer, nullable=True, unique=True)
 
-    user = relationship(Users,
-                        primaryjoin=user_id == Users.id,
-                        foreign_keys='[PullRequests.user_id]',
-                        backref='pull_requests'
-                        )
+    author = relationship(Users,
+                          primaryjoin=author_id == Users.id,
+                          foreign_keys='[PullRequests.author_id]',
+                          backref='pull_requests'
+                            )
 
-    diff = relationship(Diffs,
-                        primaryjoin=and_(id == Diffs.pull_request_id,
-                                         Diffs.is_most_recent.is_(True)),
-                        foreign_keys=[Diffs.pull_request_id],
-                        backref='pull_request',
-                        uselist=False
-                        )
+    @property
+    def diff_url(self):
+        url = 'https://patch-diff.githubusercontent.com/raw/{0}/{1}/pull/{2}.diff'
+        return url.format('bitcoin', 'bitcoin', self.number)
+
+    @property
+    def html_url(self):
+        url = 'https://github.com/bitcoin/bitcoin/pull/{0}'
+        return url.format(self.number)

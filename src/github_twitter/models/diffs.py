@@ -25,7 +25,7 @@ class Diffs(Base):
     is_most_recent = Column(Boolean, default=True)
 
     id = Column(Integer, primary_key=True)
-    pull_request_id = Column(Integer)
+    pull_request_id = Column(String)
     diff_hash = Column(String)
 
     diff = Column(String)

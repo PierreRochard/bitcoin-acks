@@ -11,7 +11,7 @@ from github_twitter.models.diffs import Diffs
 class DiffsData(object):
 
     @classmethod
-    def insert(cls, pull_request_id: int, diff: str):
+    def insert(cls, pull_request_id: str, diff: str):
         bdiff = diff.encode('utf-8')
         diff_hash = hashlib.sha256(bdiff).hexdigest()
         with session_scope() as session:
@@ -40,11 +40,11 @@ class DiffsData(object):
                 session.add(record)
 
             (
-                session.query(Diffs).update({Diffs.is_most_recent: False})
+                session.query(Diffs)
                     .filter(
                     and_(
                         Diffs.diff_hash != diff_hash,
                         Diffs.pull_request_id == pull_request_id
                     )
-                )
+                ).update({Diffs.is_most_recent: False})
             )

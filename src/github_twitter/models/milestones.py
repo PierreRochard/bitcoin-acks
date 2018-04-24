@@ -18,7 +18,7 @@ class Milestones(Base):
     closed_at = Column(DateTime)
     closed_issues = Column(Integer)
     created_at = Column(DateTime)
-    creator_id = Column(Integer, ForeignKey(Users.id))
+    creator_id = Column(String, ForeignKey(Users.id))
     description = Column(String)
     due_on = Column(DateTime)
     html_url = Column(String)

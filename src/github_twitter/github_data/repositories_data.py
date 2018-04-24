@@ -32,17 +32,3 @@ class RepositoriesData(GitHubData):
                 session.flush()
             session.expunge(repository)
         self.repo = repository
-
-    def _url(self, path: str) -> str:
-        return '{api_url}repos/{repo_path}/{repo_name}/{path}'.format(
-            api_url=self.api_url,
-            repo_path=self.repo.path,
-            repo_name=self.repo.name,
-            path=path)
-
-    def _get(self, path: str, params: dict) -> List[dict]:
-        response = requests.get(url=self._url(path=path),
-                                params=params,
-                                auth=self._auth)
-        response.raise_for_status()
-        return response.json()
