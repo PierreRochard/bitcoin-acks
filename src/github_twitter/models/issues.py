@@ -30,4 +30,4 @@ class Issues(Base):
     state = Column(String)
     title = Column(String)
     updated_at = Column(DateTime)
-    user_id = Column(Integer, ForeignKey(Users.id), nullable=False)
+    user_id = Column(String, ForeignKey(Users.id), nullable=False)

@@ -6,11 +6,11 @@ from markupsafe import Markup
 
 
 def line_count_formatter(view, context, model, name):
-    lines = getattr(model.diff, name.split('.')[-1])
-    if 'add' in name:
+    lines = getattr(model, name)
+    if name == 'additions':
         color = '#28a745'
         prefix = '+'
-    elif 'remove' in name:
+    elif name == 'deletions':
         color = '#cb2431'
         prefix = '-'
     else:
@@ -45,5 +45,5 @@ def pr_link_formatter(view, context, model, name):
     return Markup('<a href="{0}">{1}</a>'.format(model.html_url, value))
 
 
-def user_link_formatter(view, context, model, name):
-    return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.user.avatar_url, model.user.html_url, model.user.login))
+def author_link_formatter(view, context, model, name):
+    return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))

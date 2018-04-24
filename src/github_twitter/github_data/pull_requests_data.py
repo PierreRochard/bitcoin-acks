@@ -1,5 +1,9 @@
+import json
+import logging
+from pprint import pformat
 from typing import List
 
+import re
 import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -16,36 +20,42 @@ class PullRequestsData(RepositoriesData):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
                                                repository_name=repository_name)
 
-    def get(self,
-            state: str = 'all',
-            sort: str = 'updated',
-            direction: str = 'desc',
-            page: int = 1,
-            per_page: int = 100) -> List[dict]:
+    def get_all(self, state: str = None) -> List[dict]:
+        with open('pull_requests.graphql', 'r') as query_file:
+            query = query_file.read()
 
-        params = {
-            'state': state,
-            'sort': sort,
-            'direction': direction,
-            'page': page,
-            'per_page': per_page
-        }
-        response = self._get(path='pulls', params=params)
-        pull_requests_data = sorted(response,
-                                    key=lambda k: k['updated_at'],
-                                    reverse=True)
-        return pull_requests_data
-
-    def get_all(self, state: str = 'all') -> List[dict]:
-        pull_requests_data = []
-        page = 1
+        pull_requests = []
+        last_cursor = None
+        variables = {}
         while True:
-            data = self.get(state=state, page=page)
-            if not data:
+            if last_cursor is not None:
+                variables['prCursor'] = last_cursor
+            if state is not None:
+                variables['prState'] = state
+
+            json_object = {
+                'query': query,
+                'variables': variables
+            }
+
+            data = self.graphql_post(json_object=json_object).json()
+
+            logging.info(msg=pformat(data['data']['rateLimit']))
+
+            total_to_fetch = data['data']['repository']['pullRequests']['totalCount']
+
+            results = data['data']['repository']['pullRequests']['edges']
+            if not len(results):
                 break
-            pull_requests_data.extend(data)
-            page += 1
-        return pull_requests_data
+            last_cursor = results[-1]['cursor']
+            results = [r['node'] for r in results]
+            pull_requests.extend(results)
+
+            logging.info(msg=(len(pull_requests), total_to_fetch))
+
+            with open('pull_requests.json', 'w') as output_file:
+                json.dump(pull_requests, output_file, indent=4, sort_keys=True)
+        return pull_requests
 
     def upsert(self, data: dict):
         with session_scope() as session:
@@ -65,38 +75,27 @@ class PullRequestsData(RepositoriesData):
                 pull_request_record.number = data['number']
                 session.add(pull_request_record)
 
-            links = data.pop('_links')
-            assignee = data.pop('assignee')
-            assignees = data.pop('assignees')
-            base = data.pop('base')
-            head = data.pop('head')
+            author = data.pop('author')
+            comments = data.pop('comments')
+            commits = data.pop('commits')
             labels = data.pop('labels')
-            milestone = data.pop('milestone')
-            requested_reviewers = data.pop('requested_reviewers')
-            requested_teams = data.pop('requested_teams')
-            user = data.pop('user')
 
-            UsersData.upsert(data=user)
-            pull_request_record.user_id = user['id']
+            user_id = UsersData().upsert(data=author)
+            pull_request_record.author_id = user_id
 
             for key, value in data.items():
-                setattr(pull_request_record, key, value)
+                key_parts = [a.lower() for a in re.split(r'([A-Z][a-z]*)', key) if a]
+                modified_key = '_'.join(key_parts)
+                setattr(pull_request_record, modified_key, value)
 
             diff = requests.get(pull_request_record.diff_url).text
-            DiffsData.insert(pull_request_record.id, diff)
+            DiffsData().insert(pull_request_record.id, diff)
 
-    def update_database(self):
-        data = self.get_all()
+    def update_database(self, state: str = None):
+        data = self.get_all(state=state)
         for item in data:
-            if item['state'] == 'open':
-
-                response = requests.get(url=self._url(path=path),
-                                        params=params,
-                                        auth=self._auth)
-                response.raise_for_status()
-                return response.json()
             self.upsert(item)
 
 
 if __name__ == '__main__':
-    PullRequestsData('bitcoin', 'bitcoin').update_database()
+    PullRequestsData('bitcoin', 'bitcoin').update_database(state='OPEN')

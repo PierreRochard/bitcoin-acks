@@ -1,4 +1,4 @@
-query($prCursor: String = null){
+query($prCursor: String = null, $prState: PullRequestState = null){
     rateLimit {
         limit
         cost
@@ -6,7 +6,7 @@ query($prCursor: String = null){
         resetAt
     }
     repository(owner: "bitcoin", name: "bitcoin") {
-        pullRequests(first: 100, after: $prCursor) {
+        pullRequests(first: 100, after: $prCursor states: [$prState]) {
             totalCount
             edges {
                 cursor
@@ -18,6 +18,7 @@ query($prCursor: String = null){
                     labels(last: 100) {
                         totalCount
                         nodes {
+                            id
                             name
                             color
                         }
@@ -27,13 +28,14 @@ query($prCursor: String = null){
                         url
                         avatarUrl
                     }
-                    bodyHTML
+                    body
                     additions
                     deletions
                     createdAt
                     updatedAt
                     mergedAt
                     closedAt
+                    state
                     comments(last: 100) {
                         totalCount
                         nodes {

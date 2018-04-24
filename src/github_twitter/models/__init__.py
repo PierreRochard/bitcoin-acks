@@ -1,3 +1,4 @@
+from .comments import Comments
 from .diffs import Diffs
 from .issues import Issues
 from .milestones import Milestones
