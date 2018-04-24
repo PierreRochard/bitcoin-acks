@@ -9,6 +9,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from github_twitter.database import session_scope
+from github_twitter.github_data.comments_data import CommentsData
 from github_twitter.github_data.diffs_data import DiffsData
 from github_twitter.github_data.repositories_data import RepositoriesData
 from github_twitter.github_data.users_data import UsersData
@@ -82,11 +83,14 @@ class PullRequestsData(RepositoriesData):
 
             user_id = UsersData().upsert(data=author)
             pull_request_record.author_id = user_id
+            pull_request_record.comments_count = comments['totalCount']
 
             for key, value in data.items():
-                key_parts = [a.lower() for a in re.split(r'([A-Z][a-z]*)', key) if a]
-                modified_key = '_'.join(key_parts)
-                setattr(pull_request_record, modified_key, value)
+                setattr(pull_request_record, key, value)
+
+            for comment in comments['nodes']:
+                CommentsData().upsert(pull_request_id=pull_request_record.id,
+                                      data=comment)
 
             diff = requests.get(pull_request_record.diff_url).text
             DiffsData().insert(pull_request_record.id, diff)

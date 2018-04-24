@@ -1,16 +1,14 @@
 from sqlalchemy import (
-    Boolean,
     Column,
     DateTime,
     Integer,
     Numeric,
     String,
-    UniqueConstraint,
-    select, func, and_)
-from sqlalchemy.orm import relationship
+    UniqueConstraint
+)
+from sqlalchemy.orm import relationship, synonym
 
 from github_twitter.database.base import Base
-from github_twitter.models.diffs import Diffs
 from github_twitter.models.users import Users
 
 
@@ -22,21 +20,30 @@ class PullRequests(Base):
                       )
 
     id = Column(String, primary_key=True)
+    number = Column(Numeric, nullable=False)
 
     additions = Column(Integer)
-    body = Column(String)
-    closed_at = Column(DateTime)
-    created_at = Column(DateTime, nullable=False)
     deletions = Column(Integer)
-    merged_at = Column(DateTime, nullable=True)
-    number = Column(Numeric, nullable=False)
+
     state = Column(String, nullable=False)
     title = Column(String, nullable=False)
+    body = Column(String)
+
+    created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
+    merged_at = Column(DateTime)
+    closed_at = Column(DateTime)
+
+    comments_count = Column(Integer)
+
+    createdAt = synonym('created_at')
+    updatedAt = synonym('updated_at')
+    mergedAt = synonym('merged_at')
+    closedAt = synonym('closed_at')
 
     repository_id = Column(Integer, nullable=False)
     author_id = Column(String, nullable=False)
-    tweet_id = Column(Integer, nullable=True, unique=True)
+    tweet_id = Column(Integer, unique=True)
 
     author = relationship(Users,
                           primaryjoin=author_id == Users.id,

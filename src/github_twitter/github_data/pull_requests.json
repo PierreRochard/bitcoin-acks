@@ -5542,230 +5542,6 @@
         "updatedAt": "2017-12-30T11:10:59Z"
     },
     {
-        "additions": 1269,
-        "author": {
-            "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-            "login": "droark",
-            "url": "https://github.com/droark"
-        },
-        "body": "This is an attempt to revive PR #8660 (and, by extension, PR #5048). For now, this PR simply compiles without fresh warnings or errors. Once it is confirmed that no more conflicts exist, the remaining comments/requests from #8660 will be fully addressed.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars2.githubusercontent.com/u/6848764?v=4",
-                        "login": "paveljanik"
-                    },
-                    "body": "Wshadow statistics: \r\n   1 coinsbyscript.cpp:180:2200: warning: declaration shadows a local variable [-Wshadow]\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4MTAyMTA2OQ==",
-                    "publishedAt": "2017-02-20T08:53:57Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-281021069"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "@paveljanik - Thanks! Fixed that up. Looks like that's the only shadow warning.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4MTE4NjA0Ng==",
-                    "publishedAt": "2017-02-20T21:33:08Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-281186046"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "Thanks for reviving this. IMO this is important.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4MTU5NjA0NA==",
-                    "publishedAt": "2017-02-22T07:58:39Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-281596044"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/6238042?v=4",
-                        "login": "sidhujag"
-                    },
-                    "body": "Concept ACK, are there any statistics on how much extra burden this places on an ordinary node with the index off?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4NjUxNjI5OA==",
-                    "publishedAt": "2017-03-14T18:27:38Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-286516298"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/5767891?v=4",
-                        "login": "instagibbs"
-                    },
-                    "body": "needs rebase ",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4NjkzOTA1MQ==",
-                    "publishedAt": "2017-03-16T02:23:27Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-286939051"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "@instagibbs - Rebased. Thanks for the heads up. (Side note: Is there any way to have GH tell you when a conflict occurs? That would be really handy.)\r\n\r\n@sidhujag - Good question. I don't know offhand. I'm happy to do some benchmarking. I may need some help with that. If anybody would like to make some suggestions, I'm all ears.\r\n\r\nAll - Will get more movement on this. Life intervened for awhile and has finally slowed down enough to where I can dedicate more time to this.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4NzQ4NDMzOA==",
-                    "publishedAt": "2017-03-17T22:13:06Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-287484338"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/6238042?v=4",
-                        "login": "sidhujag"
-                    },
-                    "body": "Thanks droark great feature btw.. this makes walletless spending very easy",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4NzUxMDA1OA==",
-                    "publishedAt": "2017-03-18T02:24:27Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-287510058"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "Am placing a to-do list here to remind myself of what I need to do, and solicit feedback on anything people might think is missing.\r\n\r\n- [x] Remove all Boost code from the PR.\r\n- [x] Address feedback from #8660 (primarily @ryanofsky). (Mostly done but I want to double check a couple of things before proceeding.)\r\n- [ ] Add some C++ tests for CCoinsView classes.\r\n- [x] Probably switch names of this & that per the suggestion of @gmaxwell. (\"utxoindex\" is my current choice but I'm not attached to it.)\r\n- [x] Add a default constructor value for CTxMemPool. (A recently merged PR, combined with this PR, inadvertently nukes the default constructor.)\r\n- [ ] Check in once a day to see if a rebase is needed. (Ongoing task.)",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4NzU3NzU4NA==",
-                    "publishedAt": "2017-03-18T21:53:16Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-287577584"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars2.githubusercontent.com/u/7275704?v=4",
-                        "login": "btcdrak"
-                    },
-                    "body": "needs rebase.\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4ODI2NDg5MA==",
-                    "publishedAt": "2017-03-22T00:49:26Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-288264890"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "@btcdrak - Thanks. Rebased.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4ODI3MjgyMQ==",
-                    "publishedAt": "2017-03-22T01:40:43Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-288272821"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/38776?v=4",
-                        "login": "weex"
-                    },
-                    "body": "Running this on a .bitcoin/ folder that was last used with 0.13 and was run pruned to 2000. It seems 1GB of ram is too low for this enabled as I got an out of memory error. Now on restarting I get the following after/during the \"Rescanning...\" step:\r\n\r\n    ~/.bitcoin# bitcoind: coinsbyscript.cpp:53: CCoinsByScript& CCoinsViewByScript::GetCoinsByScript(const CScript&, bool): Assertion `it != cacheCoinsByScript.end()' failed.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI4ODYwNDA4Nw==",
-                    "publishedAt": "2017-03-23T03:03:48Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-288604087"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "@luke-jr - Thanks for the detailed feedback. I'll look over it this weekend.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDI5NjMzNzMzNw==",
-                    "publishedAt": "2017-04-22T01:19:39Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-296337337"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5836089?v=4",
-                        "login": "dexX7"
-                    },
-                    "body": "Thanks for preparing this @droark. Is this PR still alive?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDMwNDEyMzQ2MA==",
-                    "publishedAt": "2017-05-25T21:01:54Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-304123460"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5931802?v=4",
-                        "login": "droark"
-                    },
-                    "body": "@dexX7 - Thanks for checking in. Some family-related issues came up recently that I had to deal with for awhile. I'm almost done rebasing the PR and will catch up with the remaining feedback ASAP, along with some test harness changes that probably need to be folded in. The path forward looks pretty clear to me, IMO. I just need to wrap up the work.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDMwNDgwNTQ3NQ==",
-                    "publishedAt": "2017-05-30T08:06:59Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-304805475"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
-                        "login": "jtimon"
-                    },
-                    "body": "I still need to read more, but...\r\n\r\nRegarding searching by address , by scriptPubKey, or by COutPoint (tx_id, output_pos), I'm not sure whether I want them all or a subset of them.\r\nThe later doesn't require any further index. \r\nSearching by scriptPubKey only requires an additional scriptPubKey -> COutPoint index but not much logic.\r\nSearching by address on the other hand...there's many types of addresses and people still propose new better ones...I wonder if perhaps the translation address -> scriptPubKey (which shouldn't require an extra index on top of the scriptPubKey one) belongs to an upper layer like the wallet and/or ui that the users of this feature implement. I'm like supporting it here, but maybe script/standard needs to be extended for the address -> scriptPubKey translator (sorry to reiterate, but I don't think we want an address index, just a one way translation function [the other way is for wallets and relay policies, or higher level protocols ala coinjoin and whatnot]). \r\n\r\nThis all assumes you create a new scriptPubKey -> COutPoint index.\r\n\r\nRegarding utxo vs stxo vs txo...\r\nYou can easily serve both utxo and stxo (that is, the whole txo) by just calling GetTransaction() (in validation.o) like getrawtransaction does, without needing any consideration on whether the the output is spent or not while getting the better performance if the COutPoint happens to be in the current utxo, which is very nice.\r\nThat will just complain if you search when you are pruning or not using -txindex and thus you cannot serve certain outputs unless you do a rescan which is completely out of the question.\r\nYou probably want a couple of options -utxoscriptindex and -txoscriptindex or something of the sort.\r\nHaving -utxoscriptindex but not -txoscriptindex maybe should force the error when searching for spent txo's. Having both is just reduntant. Having -txoscriptindex implies having the full historic scriptPubKey -> COutPoint index.\r\nYou don't even need to remove the spent entries from the index if you only have -utxoscriptindex if you make sure the outputs fail when -utxoscriptindex is set but -txoscriptindex is not. In that case, garbage collecting or \"is spent reference counting\" or \"worrying about reorgs\" or \"adding a spent bool to the index\" would probably be nice additions to have since that selection could prune them and otherwise they will accumulate over running time, even if they're just entries on an index and not the outputs themselves. That seems like it could be an important distraction in the short term.\r\n\r\nSo although I'm not against gettxoutsbyaddress and I celebrate concept ACK it, but I think it would be nicer to get gettxoutsbyoutpoint and gettxoutsbyscript reviewed and merged in that order first. But I think some other people don't like chained PRs all that much, so just take it as \"if we're offering gettxoutsbyaddress, we should be able to offer gettxoutsbyoutpoint and gettxoutsbyscript 'almost for free'(tm) too\".\r\n\r\nIt may seem contradictory: I'm asking you to do more with respect to utxo/stxo, but I'm suggesting to do less with respect to addresses and properly removing things for the users that want this feature but don't want to be full archives, which is something we can optimize further later after leveraging the easy important one, which is just looking in the utxo first.\r\nThe way I see it, the utxo is just the subset of the txo that can't be pruned, we happen to cache very efficiently, so it is nice to always search there first just in case and well, people usually care less about stxo because it is already spent...but is simple to also serve it or just complain when you can't or you are not expected to, sorry to reiterate.\r\n\r\nAnyway, feel free to note the parts of my long post you like in whatever order you like best and ignore the rest. I plan to have a deeper look either way beyond this concept ack.\r\n\r\nAll the best but needs rebase.\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDMxMzU3ODU2OQ==",
-                    "publishedAt": "2017-07-07T03:34:50Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-313578569"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
-                        "login": "jtimon"
-                    },
-                    "body": "Sorry, no, using GetTransaction doesn't leverage the utxo index we maintain...One would need to search in the utxo (with CCoinsViewCache::AccessCoin) first and then try with GetTransaction only if we want to also serve stxo, which should perhaps be left out of scope for this PR as a later improvement.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDMxMzczNDU0MQ==",
-                    "publishedAt": "2017-07-07T16:48:38Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-313734541"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
-                        "login": "jtimon"
-                    },
-                    "body": "Sorry for the long post, not for being long but for being incorrect.\r\n\r\nThere's not need for a gettxobyoutpoint or similar because it already exists and is named gettxout!\r\nThat means everything I said about \"optimize later, it shouldn't be hard\" turns into \"it's already done\".\r\n\r\nOnly the slower parts were missing, which I plan to serve in #10822 which is just a draft that needs lots of testing.\r\n\r\nTo reiterate, the important parts of my previous fedback:\r\n\r\n1) I'm more than happy to extend whatever you do for utxo for txo too, ideallly almost transparently\r\n2) Don't do an address index, do a more generic script (that means binary or lower level, hex strings on rpc) to outpoint index, and once you have the outpoint you have the whole txo (unless you don't tcindex or you prune).\r\n3) Create a function to translate \"an address\" into a script so that it can be easily searched for in the outpoint -> script index. There will always be new address types your index doesn't explicitly support yet, make them support your index instead.\r\n\r\nThe PR that should help extend whatever is done for utxo to txo if you do the index: outpoint -> script; is the following:\r\n\r\nhttps://github.com/bitcoin/bitcoin/pull/10822\r\n\r\nAs said it needs testing, but there's no need to wait, let's expose utxo if we can first and then txo \"almost for free\"(tm).\r\n\r\nSorry again for invading the pr in a distractive way, but this needs rebase.\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDMxNTMwMjkzMA==",
-                    "publishedAt": "2017-07-14T08:28:27Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-315302930"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/544777?v=4",
-                        "login": "braydonf"
-                    },
-                    "body": "What's the status of this PR, needs more review and testing? General concept ok?\r\n\r\nI think it would be useful to have an index on the UTXO set for the purposes of supporting external and hardware wallets.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MTgwMDQwNA==",
-                    "publishedAt": "2018-04-17T01:28:35Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/9806#issuecomment-381800404"
-                }
-            ],
-            "totalCount": 18
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "77aa7e091dfc2bb5d2d7f2e95df38b637cabf6ae"
-                    }
-                }
-            ],
-            "totalCount": 15
-        },
-        "createdAt": "2017-02-20T01:38:38Z",
-        "deletions": 94,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTA2OTI3NzEy",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "fbca04",
-                    "id": "MDU6TGFiZWw5NzQ3MDc5Ng==",
-                    "name": "UTXO Db and Indexes"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "CONFLICTING",
-        "mergedAt": null,
-        "number": 9806,
-        "state": "OPEN",
-        "title": "txoutsbyaddress index (take 3)",
-        "updatedAt": "2018-04-17T01:28:35Z"
-    },
-    {
         "additions": 1128,
         "author": {
             "avatarUrl": "https://avatars2.githubusercontent.com/u/1095675?v=4",
@@ -7237,7 +7013,7 @@
         "number": 10267,
         "state": "OPEN",
         "title": "New -includeconf argument for including external configuration files",
-        "updatedAt": "2018-04-19T04:51:36Z"
+        "updatedAt": "2018-04-24T16:32:27Z"
     },
     {
         "additions": 9,
@@ -9056,10 +8832,10 @@
         "number": 10738,
         "state": "OPEN",
         "title": "net: drop custom CNode refcounting in favor of smart pointers",
-        "updatedAt": "2018-02-10T15:36:43Z"
+        "updatedAt": "2018-04-24T14:40:40Z"
     },
     {
-        "additions": 150,
+        "additions": 152,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
             "login": "jnewbery",
@@ -9358,15 +9134,25 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzY0MzEyNQ==",
                     "publishedAt": "2018-04-23T16:44:46Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/10740#issuecomment-383643125"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "Rebased on master and addressed @promag's comments.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAzODExOQ==",
+                    "publishedAt": "2018-04-24T18:42:20Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/10740#issuecomment-384038119"
                 }
             ],
-            "totalCount": 29
+            "totalCount": 30
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "117a29839a406867055d4e5b4438a612611a5484"
+                        "oid": "0569d2cd1324304ba2d78d1299454126c9d82b51"
                     }
                 }
             ],
@@ -9390,10 +9176,10 @@
         "number": 10740,
         "state": "OPEN",
         "title": "[wallet] `loadwallet` RPC - load wallet at runtime",
-        "updatedAt": "2018-04-23T16:44:46Z"
+        "updatedAt": "2018-04-24T19:07:04Z"
     },
     {
-        "additions": 693,
+        "additions": 685,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
             "login": "jtimon",
@@ -9782,19 +9568,49 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzMwNDE3Ng==",
                     "publishedAt": "2018-04-21T15:12:56Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/10757#issuecomment-383304176"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
+                        "login": "jtimon"
+                    },
+                    "body": "Since all the stats are optional anyway, I ended up doing both adding an optional blockhash in the result and my preference, which was moving from height to hash_or_height.\r\nAlso did some squashing and did further simplifications on both the rpc and the tests, including inling the function, since it didn't sense anymore after moving away from height ranges and removing the hardcoded list of expected stats from the tests (since they're already hardcoded in the data file).\r\n\r\nSince the diff from last review was kind of big, I took the opportunity to rebase too.\r\n ",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzc0OTc5OA==",
+                    "publishedAt": "2018-04-23T23:03:11Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/10757#issuecomment-383749798"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
+                        "login": "jtimon"
+                    },
+                    "body": "Fixed the remaining nits: test when there's no txindex and give a specific error when txindex is required but not set as suggested by @jimpo.\r\n",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzc2MTAzNw==",
+                    "publishedAt": "2018-04-24T00:07:14Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/10757#issuecomment-383761037"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1008458?v=4",
+                        "login": "jtimon"
+                    },
+                    "body": "Fixed the tests with the node 1 in travis (in my computer the sync_all wasn't needed, oops) and did some bikeshedding.\r\n",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkzMjk4Mg==",
+                    "publishedAt": "2018-04-24T13:36:38Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/10757#issuecomment-383932982"
                 }
             ],
-            "totalCount": 38
+            "totalCount": 41
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "3402b0dc83e37fd3eac97efc49b857b13aabc2e0"
+                        "oid": "ddfe0918b0d65881c897e57e83505f7054fcbfe2"
                     }
                 }
             ],
-            "totalCount": 8
+            "totalCount": 5
         },
         "createdAt": "2017-07-06T23:21:21Z",
         "deletions": 18,
@@ -9814,7 +9630,7 @@
         "number": 10757,
         "state": "OPEN",
         "title": "RPC: Introduce getblockstats to plot things",
-        "updatedAt": "2018-04-21T15:12:56Z"
+        "updatedAt": "2018-04-24T20:08:12Z"
     },
     {
         "additions": 710,
@@ -10763,7 +10579,7 @@
             ],
             "totalCount": 2
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 10973,
         "state": "OPEN",
@@ -10957,7 +10773,7 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "6f4b15c05235fd43b53cd7808ba22ffd54f68e33"
+                        "oid": "d30f03e93b63477fb9c81c17fa5535379210cac8"
                     }
                 }
             ],
@@ -10981,7 +10797,7 @@
         "number": 11020,
         "state": "OPEN",
         "title": "[wallet] getbalance: Add option to include non-mempool UTXOs",
-        "updatedAt": "2018-03-06T18:35:48Z"
+        "updatedAt": "2018-04-24T05:39:31Z"
     },
     {
         "additions": 435,
@@ -12092,100 +11908,6 @@
         "state": "OPEN",
         "title": "net: remove more CConnman globals",
         "updatedAt": "2017-12-30T11:11:27Z"
-    },
-    {
-        "additions": 243,
-        "author": {
-            "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-            "login": "promag",
-            "url": "https://github.com/promag"
-        },
-        "body": "This is a small step towards better multi wallet management. Starts by removing the global `vpwallets` and adding an interface to add/remove/retrieve wallets.\r\n\r\nThe way it is now it is possible to have, for instance, `listunspent` RPC and in parallel unload the wallet (once #10740 is merged) without blocking. Once the RPC finishes, the shared pointer will release the wallet.\r\n\r\nIt is also possible to get all existing wallets without blocking because the caller keeps a local list of shared pointers.\r\n\r\nI would like to include either here or in follow ups:\r\n- kind of `WalletManager` class;\r\n- keep a weak pointer so when the app terminates it is possible to gracefully unload the wallet;\r\n- make the new interface thread safe.\r\n\r\nPlease consider this RFC.\r\n\r\nThis is related to #10615, #11383 and #10740.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/649246?v=4",
-                        "login": "TheBlueMatt"
-                    },
-                    "body": "Needs rebase. Maybe @jnewbery wants to give this a concept review in how it interacts (or doesnt) with #10740?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM0MzIyNjM3MA==",
-                    "publishedAt": "2017-11-09T17:18:34Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/11402#issuecomment-343226370"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "@jnewbery ping.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM1MTU5Nzc3MA==",
-                    "publishedAt": "2017-12-14T03:25:41Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/11402#issuecomment-351597770"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "What's the status of this PR now that #12587 is open?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3NjUzODk2Nw==",
-                    "publishedAt": "2018-03-27T14:09:26Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/11402#issuecomment-376538967"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "I think both are valid. This PR changes the ownership of the wallets. For example this PR allows:\r\n\r\n> listunspent RPC and in parallel unload the wallet (once #10740 is merged) without blocking. Once the RPC finishes, the shared pointer will release the wallet.\r\n\r\nI'm happy to update this once there is more positive feedback.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3NjU0MjcxNQ==",
-                    "publishedAt": "2018-03-27T14:19:33Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/11402#issuecomment-376542715"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "This PR includes some changes that are now in #13017. Please review that first.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjM4Mjc2NQ==",
-                    "publishedAt": "2018-04-18T13:17:17Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/11402#issuecomment-382382765"
-                }
-            ],
-            "totalCount": 5
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "85b2b4f91d60ab90e12c15ac1d4cefc690286829"
-                    }
-                }
-            ],
-            "totalCount": 4
-        },
-        "createdAt": "2017-09-25T23:05:40Z",
-        "deletions": 201,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTQzMDA0MjUz",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "08a781",
-                    "id": "MDU6TGFiZWwxNDk0MjQ=",
-                    "name": "Wallet"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "CONFLICTING",
-        "mergedAt": null,
-        "number": 11402,
-        "state": "OPEN",
-        "title": "Use shared pointer for wallet instances",
-        "updatedAt": "2018-04-18T13:17:17Z"
     },
     {
         "additions": 74,
@@ -16133,9 +15855,19 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MjU0OTMzOA==",
                     "publishedAt": "2018-04-18T22:29:22Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/11639#issuecomment-382549338"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Needs rebase. (Presumably due to #13032)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg4MzI5MA==",
+                    "publishedAt": "2018-04-24T10:28:49Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/11639#issuecomment-383883290"
                 }
             ],
-            "totalCount": 15
+            "totalCount": 16
         },
         "commits": {
             "nodes": [
@@ -16160,12 +15892,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 11639,
         "state": "OPEN",
         "title": "Rewrite the interface between validation and net_processing wrt DoS",
-        "updatedAt": "2018-04-23T18:09:32Z"
+        "updatedAt": "2018-04-24T10:28:49Z"
     },
     {
         "additions": 142,
@@ -16478,7 +16210,7 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 11652,
         "state": "OPEN",
@@ -16646,7 +16378,7 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 11660,
         "state": "OPEN",
@@ -17809,7 +17541,7 @@
             ],
             "totalCount": 2
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 11775,
         "state": "OPEN",
@@ -19404,7 +19136,7 @@
         "updatedAt": "2018-03-24T04:26:26Z"
     },
     {
-        "additions": 76,
+        "additions": 79,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/250224?v=4",
             "login": "kallewoof",
@@ -19641,14 +19373,14 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "8430032df275d95e44c66226e9c31cce94e95766"
+                        "oid": "51826d4de0ea100f703675cae15bfaeef48b8e2a"
                     }
                 }
             ],
             "totalCount": 2
         },
         "createdAt": "2018-01-05T09:10:48Z",
-        "deletions": 19,
+        "deletions": 20,
         "id": "MDExOlB1bGxSZXF1ZXN0MTYxMjk3OTg4",
         "labels": {
             "nodes": [
@@ -19660,12 +19392,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "CONFLICTING",
+        "mergeable": "MERGEABLE",
         "mergedAt": null,
         "number": 12096,
         "state": "OPEN",
         "title": "[rpc] [wallet] Allow specifying the output index when using bumpfee",
-        "updatedAt": "2018-03-12T01:46:05Z"
+        "updatedAt": "2018-04-24T06:05:44Z"
     },
     {
         "additions": 3148,
@@ -19834,15 +19566,25 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM3NTU0Nzg0MA==",
                     "publishedAt": "2018-03-23T05:17:15Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12131#issuecomment-375547840"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/250224?v=4",
+                        "login": "kallewoof"
+                    },
+                    "body": "The failure is due to a recent rewrite causing `READWRITE(REF(CFlatData(m_skip)));` to fail in `merkle.h`. \r\n\r\nDiscussing right now whether it makes a difference to switch to varint over compactsize explicitly as is done right now (I argue it does not make a difference, as the size is only a small fraction of the content).",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzgyMDE4MA==",
+                    "publishedAt": "2018-04-24T06:38:23Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12131#issuecomment-383820180"
                 }
             ],
-            "totalCount": 16
+            "totalCount": 17
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "8191d011f548bd7986c5fd7bccb5243369fd3cbd"
+                        "oid": "e5e56bc8b41b1ef7812bb44de51b2a3276a428e3"
                     }
                 }
             ],
@@ -19861,12 +19603,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "CONFLICTING",
+        "mergeable": "MERGEABLE",
         "mergedAt": null,
         "number": 12131,
         "state": "OPEN",
         "title": "[BIP-98 + BIP-116] MERKLEBRANCHVERIFY",
-        "updatedAt": "2018-03-27T06:20:41Z"
+        "updatedAt": "2018-04-24T06:38:23Z"
     },
     {
         "additions": 527,
@@ -19896,11 +19638,11 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "d088acb7573eb1fdb7ff5a4d3bd8b4ff3efbd96a"
+                        "oid": "9a40e8e42a216172cee3ee6e4fca5fe4a9f746d8"
                     }
                 }
             ],
-            "totalCount": 2
+            "totalCount": 3
         },
         "createdAt": "2018-01-09T09:18:31Z",
         "deletions": 6,
@@ -19915,12 +19657,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "CONFLICTING",
+        "mergeable": "MERGEABLE",
         "mergedAt": null,
         "number": 12132,
         "state": "OPEN",
         "title": "[BIP-117] Tail call semantics",
-        "updatedAt": "2018-01-12T06:52:38Z"
+        "updatedAt": "2018-04-24T08:42:48Z"
     },
     {
         "additions": 146,
@@ -22317,7 +22059,7 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12257,
         "state": "OPEN",
@@ -24560,9 +24302,19 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM3MTE2MzA5Mg==",
                     "publishedAt": "2018-03-07T14:52:20Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12435#issuecomment-371163092"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "(travis failure is due to subtree check for univalue)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg2NDU5Mg==",
+                    "publishedAt": "2018-04-24T09:22:53Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12435#issuecomment-383864592"
                 }
             ],
-            "totalCount": 7
+            "totalCount": 8
         },
         "commits": {
             "nodes": [
@@ -24592,101 +24344,7 @@
         "number": 12435,
         "state": "OPEN",
         "title": "RPC: Strict JSON-RPC 2.0 compliance (gated behind flag)",
-        "updatedAt": "2018-04-23T17:19:08Z"
-    },
-    {
-        "additions": 19,
-        "author": {
-            "avatarUrl": "https://avatars1.githubusercontent.com/u/13120787?v=4",
-            "login": "251Labs",
-            "url": "https://github.com/251Labs"
-        },
-        "body": "This PR attempts to resolve #11561 by addressing the feedback from @MarcoFalke; and @gmaxwell in #12430.\r\n\r\nCommit 30e9d24 adds a functional test to `rpc_rawtransaction.py` to assert that the transaction version number in the RPC output is a signed 32-bit integer.\r\n\r\nThe functional test uses the raw transaction data from Mainnet transaction `c659729a7fea5071361c2c1a68551ca2bf77679b27086cc415adeeb03852e369`. ",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "utACK 30e9d24. Can you create the transaction programatically instead?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM2NjIwMjgwOQ==",
-                    "publishedAt": "2018-02-16T10:47:59Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12436#issuecomment-366202809"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/13120787?v=4",
-                        "login": "251Labs"
-                    },
-                    "body": "Thanks @promag! I have added two additional tests, which create the transaction programmatically per your request, to assert that the minimum and maximum transaction version number in the RPC output are a signed 32-bit integer. I have kept the utACKed test vector, because it is part of the issue that we are trying to resolve.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3MTY3MDkwMQ==",
-                    "publishedAt": "2018-03-09T00:20:19Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12436#issuecomment-371670901"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/13120787?v=4",
-                        "login": "251Labs"
-                    },
-                    "body": "Thanks @jnewbery! I have addressed your feedback and rebased the feature branch onto master in 09b30db.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3OTM2MDk2NA==",
-                    "publishedAt": "2018-04-06T19:58:52Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12436#issuecomment-379360964"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "utACK 09b30db2b02aef03d15c2def9181bce93db400bb",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3OTg2ODkzOQ==",
-                    "publishedAt": "2018-04-09T19:36:34Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12436#issuecomment-379868939"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "utACK 09b30db2b02aef03d15c2def9181bce93db400bb",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3OTk1MTQxOQ==",
-                    "publishedAt": "2018-04-10T02:13:09Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12436#issuecomment-379951419"
-                }
-            ],
-            "totalCount": 5
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "09b30db2b02aef03d15c2def9181bce93db400bb"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-02-15T01:04:52Z",
-        "deletions": 4,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTY5MjYzNjE5",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "d4c5f9",
-                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
-                    "name": "Tests"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 12436,
-        "state": "OPEN",
-        "title": "[rpc] Adds a functional test to validate the transaction version number in the RPC output",
-        "updatedAt": "2018-04-10T02:13:09Z"
+        "updatedAt": "2018-04-24T09:22:53Z"
     },
     {
         "additions": 53,
@@ -25496,9 +25154,19 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM3MDU5MTMxMQ==",
                     "publishedAt": "2018-03-05T22:32:18Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12559#issuecomment-370591311"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+                        "login": "promag"
+                    },
+                    "body": "@laanwj that would be detected either by review or by lock order check?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk1ODQxOQ==",
+                    "publishedAt": "2018-04-24T14:42:27Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12559#issuecomment-383958419"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 4
         },
         "commits": {
             "nodes": [
@@ -25533,7 +25201,7 @@
         "number": 12559,
         "state": "OPEN",
         "title": "Avoid locking cs_main in some wallet RPC",
-        "updatedAt": "2018-03-05T22:32:19Z"
+        "updatedAt": "2018-04-24T14:42:27Z"
     },
     {
         "additions": 210,
@@ -26317,7 +25985,7 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12634,
         "state": "OPEN",
@@ -26431,116 +26099,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12639,
         "state": "OPEN",
         "title": "Reduce cs_main lock in listunspent",
         "updatedAt": "2018-04-17T14:51:45Z"
-    },
-    {
-        "additions": 7,
-        "author": {
-            "avatarUrl": "https://avatars3.githubusercontent.com/u/881253?v=4",
-            "login": "jimpo",
-            "url": "https://github.com/jimpo"
-        },
-        "body": "If there was an error loading the wallet after creating the instance, the instance would leak. This uses RAII to ensure the instance is cleaned up in that case. Issue found during review of #11687.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/2734?v=4",
-                        "login": "eklitzke"
-                    },
-                    "body": "This looks fine to me. It looks like the existing leak scenarios are for fatal errors, but more RAII pointer types is good in my opinion.\r\n\r\nIt's kind of weird that you're putting this in a `std::unique_ptr` and then later on giving the raw pointer to a `WalletRescanReserver()`; for that pattern I would have expected to see a `std::shared_ptr`. That being said `WalletRescanReserver()` looks like kind of a mess in general (e.g. it uses a mutex to access `fScanningWallet` in `reserve()`, but not in `isReserved()`).\r\n\r\nutACK 9378d89",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3MjA4NDExNA==",
-                    "publishedAt": "2018-03-11T02:26:48Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-372084114"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/881253?v=4",
-                        "login": "jimpo"
-                    },
-                    "body": "@eklitzke Thanks for the review. I think it is OK to use a `unique_ptr` there because `reserver` only exists within the lifetime of `walletInstance` so it will go out of scope before `walletInstance` releases or frees the allocated CWallet.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3MjE1OTA2Mw==",
-                    "publishedAt": "2018-03-11T23:21:19Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-372159063"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "utACK 7dc50d4. In the future we could move `CreateWalletFromFile` to `CWalletManager` (introduced in #12587).",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3MjY4MTAyMA==",
-                    "publishedAt": "2018-03-13T14:18:51Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-372681020"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars2.githubusercontent.com/u/7133040?v=4",
-                        "login": "ryanofsky"
-                    },
-                    "body": "> WalletRescanReserver() looks like kind of a mess in general (e.g. it uses a mutex to access fScanningWallet in reserve(), but not in isReserved()).\r\n\r\nThis should be fine because it's an atomic bool.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3NDYzNTg2Mg==",
-                    "publishedAt": "2018-03-20T15:16:04Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-374635862"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "Needs rebase",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3OTg0NzkxMw==",
-                    "publishedAt": "2018-04-09T18:25:50Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-379847913"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/881253?v=4",
-                        "login": "jimpo"
-                    },
-                    "body": "@MarcoFalke Rebased",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MTQ4Nzk0Ng==",
-                    "publishedAt": "2018-04-16T05:57:34Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12647#issuecomment-381487946"
-                }
-            ],
-            "totalCount": 6
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "5799e57b128e293aa4a133245bd33e9a73eb3cef"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-03-08T15:41:33Z",
-        "deletions": 6,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTczNzcwMTQ4",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "08a781",
-                    "id": "MDU6TGFiZWwxNDk0MjQ=",
-                    "name": "Wallet"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 12647,
-        "state": "OPEN",
-        "title": "wallet: Fix possible memory leak in CreateWalletFromFile.",
-        "updatedAt": "2018-04-18T17:20:24Z"
     },
     {
         "additions": 1022,
@@ -26737,7 +26301,7 @@
         "updatedAt": "2018-03-23T14:31:42Z"
     },
     {
-        "additions": 153,
+        "additions": 140,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
             "login": "practicalswift",
@@ -26934,14 +26498,14 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "9a17c13c04142c9eec204fff29b8ea6a07a75e37"
+                        "oid": "e68bf37b0f69adc97b7779f7eff60e55154a796b"
                     }
                 }
             ],
             "totalCount": 1
         },
         "createdAt": "2018-03-10T17:17:32Z",
-        "deletions": 139,
+        "deletions": 127,
         "id": "MDExOlB1bGxSZXF1ZXN0MTc0MTc5NzAz",
         "labels": {
             "nodes": [
@@ -26953,12 +26517,12 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "CONFLICTING",
+        "mergeable": "MERGEABLE",
         "mergedAt": null,
         "number": 12665,
         "state": "OPEN",
         "title": "Add compile time checking for run time locking assertions",
-        "updatedAt": "2018-04-22T13:00:22Z"
+        "updatedAt": "2018-04-24T21:39:08Z"
     },
     {
         "additions": 11,
@@ -27114,9 +26678,39 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM3MjgxNjY5Mw==",
                     "publishedAt": "2018-03-13T21:00:37Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12676#issuecomment-372816693"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/5836089?v=4",
+                        "login": "dexX7"
+                    },
+                    "body": "Hey guys, just to clarify: given there were mixed reactions, do you insist on removing the branch for the \"unknown\" case and replace it with an exception or is this PR good to go as it is?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg5MzcyNg==",
+                    "publishedAt": "2018-04-24T11:12:50Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12676#issuecomment-383893726"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/14220652?v=4",
+                        "login": "conscott"
+                    },
+                    "body": "@dexX7 - I was arguing over the `unknown`, but I am happy with it as is. ",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkwMDI1Ng==",
+                    "publishedAt": "2018-04-24T11:40:43Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12676#issuecomment-383900256"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "I just fail to see why it makes sense to burden rpc users with a third value that is never actually set.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk1OTE4Nw==",
+                    "publishedAt": "2018-04-24T14:44:28Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12676#issuecomment-383959187"
                 }
             ],
-            "totalCount": 6
+            "totalCount": 9
         },
         "commits": {
             "nodes": [
@@ -27146,7 +26740,7 @@
         "number": 12676,
         "state": "OPEN",
         "title": "Show \"bip125-replaceable\" flag, when retrieving mempool entries",
-        "updatedAt": "2018-03-23T06:44:09Z"
+        "updatedAt": "2018-04-24T14:44:28Z"
     },
     {
         "additions": 13,
@@ -30869,165 +30463,6 @@
         "updatedAt": "2018-04-20T08:00:40Z"
     },
     {
-        "additions": 186,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-            "login": "MarcoFalke",
-            "url": "https://github.com/MarcoFalke"
-        },
-        "body": "The wallet header defined some globals (they were called \"settings\"), that should be class members instead.\r\n\r\nThis commit is hopefully only refactoring, apart from a multiwallet bugfix: Calling the rpc `settxfee` for one wallet, would set (and change) the fee rate for all loaded wallets. (See added test case)",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "For testing you can checkout this commit and run `./test/functional/wallet_multiwallet.py` without compiling. It should fail.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM3OTQ5MDA5MQ==",
-                    "publishedAt": "2018-04-07T18:36:42Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-379490091"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "Concept ACK",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDMzNzc2NA==",
-                    "publishedAt": "2018-04-11T06:05:53Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-380337764"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "Removed `static` from three more members as requested by @ryanofsky",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MTgyMzI5Mg==",
-                    "publishedAt": "2018-04-17T03:24:30Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-381823292"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "`p2p_compactblocks.py` failed in Travis. Rebase on master to pick up fix?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjEwMDI4Mg==",
-                    "publishedAt": "2018-04-17T18:45:25Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-382100282"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "@jnewbery Travis seems to fetch from `git fetch origin +refs/pull/${PULL_NUMBER}/merge`, so a re-run should suffice?\r\n\r\nC.f. https://travis-ci.org/bitcoin/bitcoin/jobs/366515927#L356",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjEwMzYxMQ==",
-                    "publishedAt": "2018-04-17T18:56:00Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-382103611"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "Clean rebase to reduce the diff (getting rid of deleted node-interface methods)",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjczMDQxMQ==",
-                    "publishedAt": "2018-04-19T13:15:32Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-382730411"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "Sorry, needs rebase again",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzUyNDgzNQ==",
-                    "publishedAt": "2018-04-23T10:11:51Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-383524835"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/178464?v=4",
-                        "login": "jonasschnelli"
-                    },
-                    "body": "Concept ACK (utACK on eeeea3c066f8b1351b911593aac7b062f48f1976 which though requires rebase).\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzU1MDQyMg==",
-                    "publishedAt": "2018-04-23T12:00:46Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-383550422"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "Rebased",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzYwNDAzMw==",
-                    "publishedAt": "2018-04-23T14:53:18Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-383604033"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "> I think this could have release note.\r\n\r\nI don't think it's necessary. We don't add notes for every bugfix, and this seems very trivial.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzYyMzE4Mg==",
-                    "publishedAt": "2018-04-23T15:46:12Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-383623182"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "tested ACK fac0db0ff8e72ca30a0da8a64fc1d115dd2d6f8c",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzYzMDkxNA==",
-                    "publishedAt": "2018-04-23T16:07:44Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12909#issuecomment-383630914"
-                }
-            ],
-            "totalCount": 11
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "fac0db0ff8e72ca30a0da8a64fc1d115dd2d6f8c"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-04-07T18:36:04Z",
-        "deletions": 187,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgwMTE4NzAx",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "0052cc",
-                    "id": "MDU6TGFiZWw5ODI3OTE3Nw==",
-                    "name": "RPC/REST/ZMQ"
-                },
-                {
-                    "color": "08a781",
-                    "id": "MDU6TGFiZWwxNDk0MjQ=",
-                    "name": "Wallet"
-                }
-            ],
-            "totalCount": 2
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 12909,
-        "state": "OPEN",
-        "title": "wallet: Make fee settings to be non-static members",
-        "updatedAt": "2018-04-23T16:07:45Z"
-    },
-    {
         "additions": 30,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/250224?v=4",
@@ -31251,15 +30686,25 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzM2ODUyNA==",
                     "publishedAt": "2018-04-22T09:43:24Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12914#issuecomment-383368524"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "Rebased!",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA2MTM2OQ==",
+                    "publishedAt": "2018-04-24T20:02:51Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12914#issuecomment-384061369"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 4
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "4fc85c88b63b4ac6e35ff046e3bec0ebaead0dff"
+                        "oid": "220d5a8f7b8079488d78a3c5a4aaafdf46f3a01f"
                     }
                 }
             ],
@@ -31283,7 +30728,7 @@
         "number": 12914,
         "state": "OPEN",
         "title": "scripted-diff: Remove redundant license reference (HTTP URL). Update copyright year.",
-        "updatedAt": "2018-04-22T09:43:24Z"
+        "updatedAt": "2018-04-24T20:02:51Z"
     },
     {
         "additions": 82,
@@ -31633,9 +31078,19 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MjUyNzAwNQ==",
                     "publishedAt": "2018-04-18T20:57:42Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12929#issuecomment-382527005"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "Concept ACK, though I prefer @ryanofsky's suggestion to just pass wallet references where needed.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzc0MDIzOA==",
+                    "publishedAt": "2018-04-23T22:15:00Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12929#issuecomment-383740238"
                 }
             ],
-            "totalCount": 10
+            "totalCount": 11
         },
         "commits": {
             "nodes": [
@@ -31665,12 +31120,12 @@
             ],
             "totalCount": 2
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12929,
         "state": "OPEN",
         "title": "Remove CWallet dependency from CWalletTx",
-        "updatedAt": "2018-04-18T20:57:42Z"
+        "updatedAt": "2018-04-23T22:15:01Z"
     },
     {
         "additions": 819,
@@ -31712,9 +31167,19 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MTAwMTg4Mg==",
                     "publishedAt": "2018-04-13T02:26:09Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12934#issuecomment-381001882"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/195769?v=4",
+                        "login": "skeees"
+                    },
+                    "body": "Thank you for the review - one thing (general design related) to add to the discussion here:\r\n\r\nSince I've submitted this request - I happened to stumble upon two race conditions in validation that stem from concurrent calls to ProcessNewBlock (#12988, #13023) \r\nThis pr should simplify the concurrency model for block validation (a single validation thread pulls a block to validate from the queue and validates it completely before moving on to the next block) and would have inadvertently fixed those two referenced race conditions.\r\n\r\nExplicitly simplifying the concurrency model hopefully reduces a bit the cognitive burden of future code changes in validation and I don't think makes anything substantially less efficient - much of validation is already single threaded (because of cs_main), and certain pieces fundamentally cannot be concurrent (i.e. connecttip). Validation is already complicated enough to understand on its own without worrying about concurrency.\r\n\r\nSeems like the clarity gains will outweigh the minor efficiency hit here - +the async api into should allow all the stuff around validation to be more easily be parallelized with less risk of inadvertently introducing a consensus bug. And it makes process separation / alternate p2p more natural if that's ever to be a thing in the future.\r\n\r\nIf this design seems useful - my intention is to finish this pr up (some stuff around compact blocks that I still have to work through + refit the couple of places in rpc that call ProcessNewBlock) and explore subsequent prs to put a similar model in place around the mempool. I'd also like to explore feasibility for header processing.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzc0Nzc2MQ==",
+                    "publishedAt": "2018-04-23T22:52:16Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12934#issuecomment-383747761"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 4
         },
         "commits": {
             "nodes": [
@@ -31738,7 +31203,7 @@
         "number": 12934,
         "state": "OPEN",
         "title": "[WIP] [net] [validation] Call ProcessNewBlock() asynchronously",
-        "updatedAt": "2018-04-23T19:26:19Z"
+        "updatedAt": "2018-04-23T23:03:38Z"
     },
     {
         "additions": 759,
@@ -31868,8 +31333,19 @@
         "body": "The estimate_mode arg is optional in documentation and handling,\r\nbut the RPCTypeCheck applied to it did not allow null, therefore\r\nits presence was enforced. Note this only affected null values,\r\nnot entirely absent arguments because RPCTypeCheck only tests\r\nagainst the params list as exists and no farther, so this is a\r\nnarrow bug.\r\n\r\nThis also replaces redundant testing via RPCTypeCheck &\r\nRPCTypeCheckArgument in favor of non-redundant calls to\r\nRPCTypeCheckArgument. The prior redundancy existed due\r\nto the prior limitation of the RPCTypeCheckArgument not\r\nbeing able to allow null.\r\n\r\nAdded some call and light functional testing on estimatesmartfee\r\nand estimaterawfee as well.",
         "closedAt": null,
         "comments": {
-            "nodes": [],
-            "totalCount": 0
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars2.githubusercontent.com/u/5470?v=4",
+                        "login": "Empact"
+                    },
+                    "body": "From the developer-notes:\r\n\r\n> Missing arguments and 'null' should be treated the same: as default values. If there is no default value, both cases should fail in the same way. The easiest way to follow this guideline is detect unspecified arguments with params[x].isNull() instead of params.size() <= x. The former returns true if the argument is either null or missing, while the latter returns true if is missing, and false if it is null.\r\n> \r\n> Rationale: Avoids surprises when switching to name-based arguments. Missing name-based arguments are passed as 'null'.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzczNDE1Nw==",
+                    "publishedAt": "2018-04-23T21:48:36Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/12940#issuecomment-383734157"
+                }
+            ],
+            "totalCount": 1
         },
         "commits": {
             "nodes": [
@@ -31899,7 +31375,7 @@
         "number": 12940,
         "state": "OPEN",
         "title": "rpc: Fix estimatesmartfee to properly handle a null estimate_mode arg",
-        "updatedAt": "2018-04-11T10:44:47Z"
+        "updatedAt": "2018-04-23T21:48:36Z"
     },
     {
         "additions": 5,
@@ -31954,185 +31430,6 @@
         "state": "OPEN",
         "title": "[wallet] ScanforWalletTransactions should mark input txns as dirty",
         "updatedAt": "2018-04-17T15:25:28Z"
-    },
-    {
-        "additions": 370,
-        "author": {
-            "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-            "login": "jnewbery",
-            "url": "https://github.com/jnewbery"
-        },
-        "body": "Deprecate all accounts functionality and make it only accessible by using `-deprecatedrpc=accounts`.\r\n\r\nAccounts specific RPCs, account arguments, and account related results all require the `-deprecatedrpc=accunts` startup option now in order to see account things.\r\n\r\nSeveral wallet functional tests use the accounts system. Those tests are unchanged, except to start the nodes with `-deprecatedrpc=accounts`. We can slowly migrate those tests to use the 'label' API instead of the 'account' API before accounts are fully removed.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "This is @achow101's #11497 rebased and reworked. Notable differences:\r\n\r\n- I've moved the RPC method deprecation up into the `CRPCTable::execute()` function. That's perhaps a little bit messy (rpc/server.cpp ideally wouldn't have knowledge of individual Bitcoin RPCs), but it saves a lot of code duplication and will be removed in V0.18, so I decided it was acceptable to have it there.\r\n- Some methods (`sendmany` and `listtransactions`) have alternative help text depending on whether the `-deprecatedrpcs=accounts` switch is used. That means some duplicate text, but it makes the help text a lot clearer in all cases (since it's not filed with \"if using accounts this else that\").\r\n- I've avoided the argument repositioning that achow101 used, since that breaks the way rpc server fills in positional arguments from named arguments. That means that `sendmany` and `listtransactions` now have a dummy argument in the same way that `move` did. We can do another API change in a future version if that's offensive to people.\r\n\r\nThis PR also renames `rpc_listtransactions.py` to `wallet_listtransactions.py` (since it's a wallet test). This makes it clear that only wallet tests are affected by this change.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDU2MzExMw==",
-                    "publishedAt": "2018-04-11T19:08:58Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380563113"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "Concept ACK, will review.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDU4MzA4OQ==",
-                    "publishedAt": "2018-04-11T20:20:56Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380583089"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/250224?v=4",
-                        "login": "kallewoof"
-                    },
-                    "body": "Review hint: recommend append [?w=1](https://github.com/bitcoin/bitcoin/pull/12953/files?w=1) to end, to avoid having to review whitespace changes. Edit: I noticed you can't actually put review comments when you do, so limited use. :/",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDY0MTUzNw==",
-                    "publishedAt": "2018-04-12T01:01:44Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380641537"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "(Obvious) concept ACK",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDY2ODg2Nw==",
-                    "publishedAt": "2018-04-12T03:44:18Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380668867"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "> Since we're splitting the function anyway, why have the dummy at all?\r\n\r\nI mentioned this briefly in the PR text:\r\n\r\n> I've avoided the argument repositioning that achow101 used, since that breaks the way rpc server fills in positional arguments from named arguments.\r\n\r\n(@achow101's argument repositioning code is here: https://github.com/bitcoin/bitcoin/pull/11497/files#diff-df7d84ff2f53fcb2a0dc15a3a51e55ceR1086 for example)\r\n\r\nIn more detail:\r\n\r\n- the rpc/server.cpp function `transformNamedArguments()` uses the list of arguments from `CRPCTable ` to convert a keyed map of arguments into a univalue array.\r\n- That `CRPCTable` is constructed from the various `CRPCCommand` arrays in the rpc .cpp files. For `sendmany`, the entry is:\r\n```\r\n    { \"wallet\",             \"sendmany\",                         &sendmany,                      {\"fromaccount|dummy\",\"amounts\",\"minconf\",\"comment\",\"subtractfeefrom\",\"replaceable\",\"conf_target\",\"estimate_mode\"} },\r\n```\r\n- that means that when called with named arguments, the rpc server will eg place the `fromaccount` named argument into index 0 in the array, `amount` into index 1, and so on.\r\n- there's no way to change `CRPCTable` at runtime based on whether or not `-deprecatedrpc` was used. Changing that in rpc/server.cpp would be a very large change, and would involve placing more bitcoin-specific knowledge into the rpc server code.\r\n\r\nFunctionally, I think this is good behaviour anyway - users who were calling `sendmany` with an empty string as the `account` argument will not see any difference when they upgrade. Users who were using `sendmany` with accounts will see an immediate obvious break, and can either change to stop using accounts or use `-deprecatedrpc=accounts` for one more release.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgxMzAzOA==",
-                    "publishedAt": "2018-04-12T13:53:44Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380813038"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "Thanks for the review @kallewoof and @promag! Your comments are addressed in the latest push.\r\n\r\nThis requires an update to the release notes. I'll do that once the new code/functionality is stable.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgxODcyMw==",
-                    "publishedAt": "2018-04-12T14:10:05Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380818723"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "Thanks @jnewbery for the details.\r\n\r\nIIUC:\r\n - accounts are deprecated but API wise the arguments are still there;\r\n - in 0.18 accounts will be gone even dummy arguments.\r\n\r\nIf that's the case then I'm sorry to NACK - it's not possible to refactor existing software to face 0.18. In 0.17 we should provide both scenarios API wise!\r\n\r\nI haven't thought about the positional and named arguments thing with `CRPCTable` but I believe we should find a solution.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgyNTI0Nw==",
-                    "publishedAt": "2018-04-12T14:28:38Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380825247"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "> in 0.18 accounts will be gone even dummy arguments.\r\n\r\nNo - there's no firm plan to remove the dummy arguments. At some point, we *could* remove them, but that would be a breaking API change.\r\n\r\nThe API change in this PR should be minimally invasive. For users calling `sendmany` and `listtransactions` without accounts, there's no change in the way they need to call the RPC. Changing the argument ordering as you've suggested would require *all* users of those PRC methods to change their client code, regardless of whether they're currently using accounts.\r\n\r\nDoes that address your concern? If not, could you elaborate a bit more?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgyODk3MQ==",
-                    "publishedAt": "2018-04-12T14:39:08Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380828971"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
-                        "login": "promag"
-                    },
-                    "body": "> No - there's no firm plan to remove the dummy arguments\r\n\r\nIf we do then:\r\n - it will be breaking change - and there is nothing wrong with that IMO\r\n - we must provide a new deprecation flag in 0.18 and only remove in 0.19.\r\n\r\n> Does that address your concern? \r\n\r\nYes, all clear.\r\n\r\nRestarted travis job. Will review again.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgzMjA4MA==",
-                    "publishedAt": "2018-04-12T14:47:36Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380832080"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "> we must provide a new deprecation flag in 0.18 and only remove in 0.19.\r\n\r\nYes - any breaking API change should be protected by a deprecation switch (or API versions if we ever implement something like that)",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MDgzNDc5NQ==",
-                    "publishedAt": "2018-04-12T14:55:24Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-380834795"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "Moved the RPC method deprecation into rpcwallet.cpp as requested by @laanwj . Also added tests for those deprecated methods.\r\n\r\nStill to do:\r\n\r\n- ~deprecation tests for the changes in _Deprecate wallet 'account' API_~\r\n- ~release notes~",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MTcwODc4NQ==",
-                    "publishedAt": "2018-04-16T18:46:27Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-381708785"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "Looks like `test/functional/test_runner.py  --coverage` fails:\r\n```\r\ntest_framework.authproxy.JSONRPCException: getaccount is deprecated and will be removed in V0.18. To use this command, start bitcoind with -deprecatedrpc=accounts. (-32)\r\n2018-04-17T09:18:09.208000Z TestFramework (INFO): Stopping nodes\r\n```\r\nI think this is due to the `help` command failing, while getting help for the account calls.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MTkxNjM3MQ==",
-                    "publishedAt": "2018-04-17T09:19:53Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-381916371"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "Yes, `--coverage` caught a genuine bug. Hat tip to @jamesob .\r\n\r\nNow fixed, and regression tests and release notes added.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjA5NDAxMA==",
-                    "publishedAt": "2018-04-17T18:25:14Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/12953#issuecomment-382094010"
-                }
-            ],
-            "totalCount": 13
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "cead28bbecf032b49c01ca3ae4f47aa2536cbc55"
-                    }
-                }
-            ],
-            "totalCount": 7
-        },
-        "createdAt": "2018-04-11T19:02:28Z",
-        "deletions": 91,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgwOTk4MjI5",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "0052cc",
-                    "id": "MDU6TGFiZWw5ODI3OTE3Nw==",
-                    "name": "RPC/REST/ZMQ"
-                },
-                {
-                    "color": "08a781",
-                    "id": "MDU6TGFiZWwxNDk0MjQ=",
-                    "name": "Wallet"
-                }
-            ],
-            "totalCount": 2
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 12953,
-        "state": "OPEN",
-        "title": "Deprecate accounts",
-        "updatedAt": "2018-04-23T19:20:20Z"
     },
     {
         "additions": 197,
@@ -32486,13 +31783,13 @@
         "updatedAt": "2018-04-18T23:17:39Z"
     },
     {
-        "additions": 90,
+        "additions": 85,
         "author": {
             "avatarUrl": "https://avatars2.githubusercontent.com/u/863730?v=4",
             "login": "fanquake",
             "url": "https://github.com/fanquake"
         },
-        "body": "Backports:\r\n- #12626 Limit the number of IPs addrman learns from each DNS seeder\r\n- #12650 gui: Fix issue: \"default port not shown correctly in settings dialog\"\r\n- #12756 [config] Remove blockmaxsize option\r\n- #12985 Windows: Avoid launching as admin when NSIS installer ends.\r\n- #12946 depends: Fix Qt build with XCode 9.3\r\n\r\nto the 0.16 branch.",
+        "body": "Backports:\r\n- #12626 Limit the number of IPs addrman learns from each DNS seeder\r\n- #12650 gui: Fix issue: \"default port not shown correctly in settings dialog\"\r\n- #12756 [config] Remove blockmaxsize option\r\n- #12985 Windows: Avoid launching as admin when NSIS installer ends.\r\n- #12946 depends: Fix Qt build with XCode 9.3\r\n- #12999 qt: Show the Window when double clicking the taskbar icon\r\n\r\nto the 0.16 branch.",
         "closedAt": null,
         "comments": {
             "nodes": [
@@ -32531,7 +31828,7 @@
                         "avatarUrl": "https://avatars2.githubusercontent.com/u/863730?v=4",
                         "login": "fanquake"
                     },
-                    "body": "@sdaftuar I've added #12902 along with a few other commits. Will have a look at #12904 as well.",
+                    "body": "~~~@sdaftuar I've added #12902 along with a few other commits. Will have a look at #12904 as well.~~~\r\nTest changes are happening in #13049.",
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MjM0MzE3OA==",
                     "publishedAt": "2018-04-18T10:36:09Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/12967#issuecomment-382343178"
@@ -32543,7 +31840,7 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "c366c12a8e034c939af6db7c3fa02f1976c2d529"
+                        "oid": "da37d8342b1f0ffb0b05794140c8413dc6bd1a7e"
                     }
                 }
             ],
@@ -32567,7 +31864,7 @@
         "number": 12967,
         "state": "OPEN",
         "title": "[0.16] Backports",
-        "updatedAt": "2018-04-18T10:36:09Z"
+        "updatedAt": "2018-04-24T04:26:44Z"
     },
     {
         "additions": 291,
@@ -32755,7 +32052,7 @@
             ],
             "totalCount": 2
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12979,
         "state": "OPEN",
@@ -33041,7 +32338,7 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 12992,
         "state": "OPEN",
@@ -33182,9 +32479,29 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MjU3OTYyOQ==",
                     "publishedAt": "2018-04-19T01:25:44Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13002#issuecomment-382579629"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/881253?v=4",
+                        "login": "jimpo"
+                    },
+                    "body": "utACK 7d0f80b",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAzMzM3NA==",
+                    "publishedAt": "2018-04-24T18:27:03Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13002#issuecomment-384033374"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+                        "login": "promag"
+                    },
+                    "body": "utACK 7d0f80b.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA4MTQ0Nw==",
+                    "publishedAt": "2018-04-24T21:11:33Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13002#issuecomment-384081447"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 5
         },
         "commits": {
             "nodes": [
@@ -33214,7 +32531,7 @@
         "number": 13002,
         "state": "OPEN",
         "title": "Do not treat bare multisig outputs as IsMine unless watched",
-        "updatedAt": "2018-04-20T04:10:53Z"
+        "updatedAt": "2018-04-24T21:11:33Z"
     },
     {
         "additions": 116,
@@ -33236,19 +32553,29 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MTk0MzY5Ng==",
                     "publishedAt": "2018-04-17T10:43:04Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13003#issuecomment-381943696"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Added a commit to address the documentation nit",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAxODk1MA==",
+                    "publishedAt": "2018-04-24T17:41:02Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13003#issuecomment-384018950"
                 }
             ],
-            "totalCount": 1
+            "totalCount": 2
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "fadfbd33ab4ea57f1efa2d10a346c25c4ad18b58"
+                        "oid": "fa02c5b38b4343e70ddb656c971c9707075f5a8f"
                     }
                 }
             ],
-            "totalCount": 1
+            "totalCount": 2
         },
         "createdAt": "2018-04-17T03:17:32Z",
         "deletions": 26,
@@ -33268,7 +32595,7 @@
         "number": 13003,
         "state": "OPEN",
         "title": "qa: Add test for orphan handling",
-        "updatedAt": "2018-04-17T23:38:56Z"
+        "updatedAt": "2018-04-24T17:41:02Z"
     },
     {
         "additions": 36,
@@ -33560,7 +32887,7 @@
         "number": 13010,
         "state": "OPEN",
         "title": "Trivial: Language Cleanup",
-        "updatedAt": "2018-04-19T14:20:01Z"
+        "updatedAt": "2018-04-23T21:57:53Z"
     },
     {
         "additions": 18,
@@ -33657,70 +32984,6 @@
         "updatedAt": "2018-04-23T10:11:16Z"
     },
     {
-        "additions": 30,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-            "login": "MarcoFalke",
-            "url": "https://github.com/MarcoFalke"
-        },
-        "body": "",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "Makes sense - utACK fa3bb183adaf086a70fbbe2bb1981f471a3281ce",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjI4Nzg5OQ==",
-                    "publishedAt": "2018-04-18T07:16:18Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13013#issuecomment-382287899"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "Just for reference a plot of the benchmark results:\r\n\r\n* The first commit (which obviously makes the loop faster by moving stuff out)\r\n* The second commit (which makes slower due to witness)\r\n* tag of version 0.16.0 for reference\r\n\r\n![mempooleviction](https://user-images.githubusercontent.com/6399679/38935450-5c02704a-42ec-11e8-90b3-91596969fffe.png)\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjM5MDM2Ng==",
-                    "publishedAt": "2018-04-18T13:41:54Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13013#issuecomment-382390366"
-                }
-            ],
-            "totalCount": 2
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "fa3bb183adaf086a70fbbe2bb1981f471a3281ce"
-                    }
-                }
-            ],
-            "totalCount": 2
-        },
-        "createdAt": "2018-04-17T23:53:46Z",
-        "deletions": 11,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgyMzM0MTE5",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "d4c5f9",
-                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
-                    "name": "Tests"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13013,
-        "state": "OPEN",
-        "title": "bench: Amend mempool_eviction test for witness txs",
-        "updatedAt": "2018-04-18T13:41:54Z"
-    },
-    {
         "additions": 96,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/178464?v=4",
@@ -33785,90 +33048,6 @@
         "updatedAt": "2018-04-23T21:09:40Z"
     },
     {
-        "additions": 24,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/73197?v=4",
-            "login": "jamesob",
-            "url": "https://github.com/jamesob"
-        },
-        "body": "In the midst of fighting with https://github.com/bitcoin/bitcoin/pull/12873 it became apparent that there're a number of assertions and print statements which are emitted by test nodes but don't identify the node in question. This change makes debugging a bit easier by adding identifying information to non-logger test_node-related error messages.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars2.githubusercontent.com/u/5470?v=4",
-                        "login": "Empact"
-                    },
-                    "body": "utACK da93b39\r\n\r\nA few style nits (ymmv):\r\n* `_with_node_id` feels like an implementation detail to me. A name like `_node_msg` could be clear without being overly so.\r\n* For `raise_assertion` - I'd either remove the indirection or apply it to all raises on the object, given they all use the node id treatment.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjUzNTE1OA==",
-                    "publishedAt": "2018-04-18T21:27:52Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13022#issuecomment-382535158"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/73197?v=4",
-                        "login": "jamesob"
-                    },
-                    "body": "@Empact thanks for the review. I've incorporated your good feedback.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjc1MTg3NQ==",
-                    "publishedAt": "2018-04-19T14:13:03Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13022#issuecomment-382751875"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/195769?v=4",
-                        "login": "skeees"
-                    },
-                    "body": "concept ACK\r\nmight also be useful to print out the ports that each node{k} is on - afaict those aren't printed anywhere - and very useful as each bitcoind log identifies peer by a different index and the only way that i'm aware of to tie these to the python test framework indexing is by port num",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzM4MjM3OA==",
-                    "publishedAt": "2018-04-22T13:40:01Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13022#issuecomment-383382378"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/14220652?v=4",
-                        "login": "conscott"
-                    },
-                    "body": "utACK 80a5e59532925a3445f523a8b3bc29e2e11e8848",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzU2MjIxMw==",
-                    "publishedAt": "2018-04-23T12:45:58Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13022#issuecomment-383562213"
-                }
-            ],
-            "totalCount": 4
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "80a5e59532925a3445f523a8b3bc29e2e11e8848"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-04-18T19:21:58Z",
-        "deletions": 13,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgyNTc3OTM1",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "d4c5f9",
-                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
-                    "name": "Tests"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13022,
-        "state": "OPEN",
-        "title": "[qa] Attach node index to test_node AssertionError and print messages",
-        "updatedAt": "2018-04-23T12:45:58Z"
-    },
-    {
         "additions": 219,
         "author": {
             "avatarUrl": "https://avatars0.githubusercontent.com/u/195769?v=4",
@@ -33921,170 +33100,6 @@
         "state": "OPEN",
         "title": "Always refresh most work chain when reacquiring cs_main in ActivateBestChain()",
         "updatedAt": "2018-04-23T18:38:22Z"
-    },
-    {
-        "additions": 48,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
-            "login": "ken2812221",
-            "url": "https://github.com/ken2812221"
-        },
-        "body": "This PR adds a rpcauth pair that is randomly generated. Also checks that rpcauth.py works fine.\r\nResolve #12995",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
-                        "login": "ken2812221"
-                    },
-                    "body": "Can this resolve #12995?",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjU1MjIyOA==",
-                    "publishedAt": "2018-04-18T22:43:40Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382552228"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "> Can this resolve #12995?\r\n\r\nYes - looks good to me",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjcyNTQ4Nw==",
-                    "publishedAt": "2018-04-19T13:01:08Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382725487"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
-                        "login": "ken2812221"
-                    },
-                    "body": "@MarcoFalke Done. ",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjc0MjM3Mg==",
-                    "publishedAt": "2018-04-19T13:48:10Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382742372"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars2.githubusercontent.com/u/120117?v=4",
-                        "login": "cdecker"
-                    },
-                    "body": "ACK",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjc4ODQ2MA==",
-                    "publishedAt": "2018-04-19T15:56:20Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382788460"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "I've just skimmed the code, but I'm NACKish on this. I don't think we should be adding dependencies to the functional tests (even if they're internal project dependencies).\r\n\r\nBetter to just have a unit test for rpcauth.py.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjg1MzUwNg==",
-                    "publishedAt": "2018-04-19T19:28:03Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382853506"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "@jnewbery Mind to elaborate on that. Unlike the unit tests, which are shipped in a single executable, the functional tests are only used by developers, who have all the project files.\r\n\r\nAdding a python unit test to rpcauth would add yet another test target that is run by no one (execpt by travis, if we add it to the yaml). And the rpcauth unit test would need to borrow a ton from the functional tests anyway... I don't see the advantage.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjg3OTg5Mg==",
-                    "publishedAt": "2018-04-19T21:02:57Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382879892"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "See my comment in #12995. I don't think it's good practice to have functional tests calling out to random scripts in the share directory, and certainly isn't a good idea to hard code the relative path to that directory.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mjg4MjIyMQ==",
-                    "publishedAt": "2018-04-19T21:12:05Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382882221"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-                        "login": "MarcoFalke"
-                    },
-                    "body": "> certainly isn't a good idea to hard code the relative path to that directory\r\n\r\nThat could easily be fixed by adjusting `configure.ac` to create an appropriate link in the `test` directory. (And read the BUILDDIR from our `confg.ini`)",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjkwNDY3Mg==",
-                    "publishedAt": "2018-04-19T22:52:54Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382904672"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
-                        "login": "ken2812221"
-                    },
-                    "body": "~~I modified `configure.ac`, it can generate a symlink during `./configure `~~\r\nNow I just add rpcauth path to config.ini",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MjkzMDkzMg==",
-                    "publishedAt": "2018-04-20T01:08:06Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-382930932"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "> I don't think it's good practice to have functional tests calling out to random scripts in the share directory\r\n\r\nIt also calls out to \"random executables\" in the `src` directory. It's a good default assumption.\r\n\r\nHowever, I do agree that the path ideally needs to be override-able with an environment variable, like `BITCOIND` and `BITCOINCLI` are.\r\n\r\n> Better to just have a unit test for rpcauth.py.\r\n\r\nThis doesn't exclude *also* adding a unit test later. But IMO the integration test as it is makes sense, as this is how the script is supposed to be used with bitcoind (this will find both problems with rpcauth.py and with bitcoind's authentication based on those tokens).",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzI3MTEzNQ==",
-                    "publishedAt": "2018-04-21T06:16:12Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-383271135"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
-                        "login": "jnewbery"
-                    },
-                    "body": "> It also calls out to \"random executables\" in the src directory.\r\n\r\nNo - it calls out specifically to the bitcoind, bitcoin-qt and bitcoin-cli executables, which is what the functional test framework should be testing in my opinion. I don't think expanding the functional test framework to also test scripts in the source directory is a good idea. We already drive far too much testing through the functional test framework.\r\n\r\nEdit: I won't stand in the way if everyone else thinks this is a good idea, but using the functional test framework to also test python scripts just seems like the wrong approach to me.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzQxNjU4NA==",
-                    "publishedAt": "2018-04-22T22:14:43Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-383416584"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "> Edit: I won't stand in the way if everyone else thinks this is a good idea, but using the functional test framework to also test python scripts just seems like the wrong approach to me.\r\n\r\nI think the functional test framework should be able to test everything that is supposed to be used by the user.\r\nSo probably not developer/maintainer scripts such as `github-merge.py`, but yes this script is something of a grey area.\r\n(But just that it is written in python is not a valid argument, IMO, to not test it in the framework)\r\n\r\n(in similar vein I've also wondered before why this script isn't installed on `make install`)",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzQ1ODUzNg==",
-                    "publishedAt": "2018-04-23T05:29:14Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13024#issuecomment-383458536"
-                }
-            ],
-            "totalCount": 12
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "8b8032e283ae1dff00de71e2d9d28c0df626fc23"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-04-18T21:40:44Z",
-        "deletions": 0,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgyNjEwNzM4",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "d4c5f9",
-                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
-                    "name": "Tests"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13024,
-        "state": "OPEN",
-        "title": "test: Add rpcauth pair that generated by rpcauth.py",
-        "updatedAt": "2018-04-23T05:29:14Z"
     },
     {
         "additions": 7,
@@ -34144,7 +33159,7 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "c6f5b4fd0d1de27b75da185ed2c250bd7a97eb70"
+                        "oid": "e2f58f421b1a6e360bbf7efdfbba398918ce19d3"
                     }
                 }
             ],
@@ -34168,7 +33183,7 @@
         "number": 13028,
         "state": "OPEN",
         "title": "Make vpwallets usage thread safe",
-        "updatedAt": "2018-04-23T18:09:23Z"
+        "updatedAt": "2018-04-24T16:26:27Z"
     },
     {
         "additions": 93,
@@ -34190,9 +33205,29 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4Mjc2MDEwMg==",
                     "publishedAt": "2018-04-19T14:34:58Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13029#issuecomment-382760102"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "I'm not entirely sure about this. Guessing values for options according to context has the drawback that the system becomes less transparent, harder to troubleshoot. \r\n\r\nAlso it's good to avoid `IsArgSet` as much as possible as it's not possible to re-set an argument back to unset state, even by clearing it.\r\n\r\nIt also seems a large code change for what feels like a small argument handling change.\r\n\r\nAnd if we do this, should we do the same for txindex?\r\n",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzgyNTg3NQ==",
+                    "publishedAt": "2018-04-24T07:04:33Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13029#issuecomment-383825875"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/178464?v=4",
+                        "login": "jonasschnelli"
+                    },
+                    "body": "@Sjors: can you elaborate a little bit the use case this solves?\r\n\r\nAgree with @laanwj that other arguments would have the same problem (if we would agree it is a problem).\r\nIt seems that this adds unnecessary complexity.\r\nI think the current behaviour of refusing to run pruned blockchains where `prune=` is not set is correct.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg0MzM2Mw==",
+                    "publishedAt": "2018-04-24T08:12:02Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13029#issuecomment-383843363"
                 }
             ],
-            "totalCount": 1
+            "totalCount": 3
         },
         "commits": {
             "nodes": [
@@ -34216,7 +33251,7 @@
         "number": 13029,
         "state": "OPEN",
         "title": "Interpret absense of prune= as prune=1 if there are pruned blocks",
-        "updatedAt": "2018-04-20T09:11:50Z"
+        "updatedAt": "2018-04-24T08:12:02Z"
     },
     {
         "additions": 12,
@@ -34278,55 +33313,7 @@
         "updatedAt": "2018-04-20T16:12:26Z"
     },
     {
-        "additions": 2,
-        "author": {
-            "avatarUrl": "https://avatars2.githubusercontent.com/u/4500994?v=4",
-            "login": "kristapsk",
-            "url": "https://github.com/kristapsk"
-        },
-        "body": "It is already done this way for \"mempool min fee not met\" error.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "utACK 1accfbcf465db19a9482d2ba129a66ded316f46e",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzYyMjgwMQ==",
-                    "publishedAt": "2018-04-23T15:45:06Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13032#issuecomment-383622801"
-                }
-            ],
-            "totalCount": 1
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "1accfbcf465db19a9482d2ba129a66ded316f46e"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-04-19T23:55:04Z",
-        "deletions": 2,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgyOTI4MTI4",
-        "labels": {
-            "nodes": [],
-            "totalCount": 0
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13032,
-        "state": "OPEN",
-        "title": "Output values for \"min relay fee not met\" error",
-        "updatedAt": "2018-04-23T15:45:07Z"
-    },
-    {
-        "additions": 767,
+        "additions": 758,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/881253?v=4",
             "login": "jimpo",
@@ -34355,32 +33342,22 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzYyOTM3Mg==",
                     "publishedAt": "2018-04-23T16:03:11Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13033#issuecomment-383629372"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "I cannot view this PR (github always gives me the unicorn when I try to view it)\nLast IRC meeting more people had the problem.\nProbably best to reopen it as a new PR...\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzY3MTkzNA==",
-                    "publishedAt": "2018-04-23T18:15:18Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13033#issuecomment-383671934"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 2
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "3272b17637c5f72f077ce1a5bf7f4e09847883a0"
+                        "oid": "40eabf6a71eef65cf66b20300988323fcc1afcb5"
                     }
                 }
             ],
             "totalCount": 12
         },
         "createdAt": "2018-04-20T00:11:26Z",
-        "deletions": 97,
+        "deletions": 86,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgyOTMwMTA4",
         "labels": {
             "nodes": [
@@ -34397,10 +33374,10 @@
         "number": 13033,
         "state": "OPEN",
         "title": "Build txindex in parallel with validation",
-        "updatedAt": "2018-04-23T21:13:03Z"
+        "updatedAt": "2018-04-24T20:30:09Z"
     },
     {
-        "additions": 144,
+        "additions": 129,
         "author": {
             "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
             "login": "promag",
@@ -34459,22 +33436,62 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzEyNDUwOA==",
                     "publishedAt": "2018-04-20T15:00:32Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13034#issuecomment-383124508"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "needs rebase",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk4NjQ2NA==",
+                    "publishedAt": "2018-04-24T15:59:37Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13034#issuecomment-383986464"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+                        "login": "promag"
+                    },
+                    "body": "Rebased.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk5NjY0MA==",
+                    "publishedAt": "2018-04-24T16:30:09Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13034#issuecomment-383996640"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "Seems reasonable. Is the plan for `WalletManager` to eventually subsume `WalletInit`?\r\n\r\nTested ACK d04cd68d5d1a6b1ddaa36b9eb6884014f62da6ea",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAyMDM5Mg==",
+                    "publishedAt": "2018-04-24T17:45:42Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13034#issuecomment-384020392"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+                        "login": "promag"
+                    },
+                    "body": "@jnewbery thanks for the review.\r\n\r\n> Is the plan for WalletManager to eventually subsume WalletInit?\r\n\r\nIMO some code in `WalletInit` could be moved to `WalletManager`, especially the one that can be used by dynamic wallet load/unloading. `WalletInit` would call those new methods.\r\n\r\nSome other code of `CWallet` could be moved here too. I'll follow up.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAyOTM3OQ==",
+                    "publishedAt": "2018-04-24T18:13:53Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13034#issuecomment-384029379"
                 }
             ],
-            "totalCount": 5
+            "totalCount": 9
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "8dd937087cccc3d5b9a3bdf43137d6d1a080ed3f"
+                        "oid": "d04cd68d5d1a6b1ddaa36b9eb6884014f62da6ea"
                     }
                 }
             ],
-            "totalCount": 5
+            "totalCount": 2
         },
         "createdAt": "2018-04-20T01:53:23Z",
-        "deletions": 42,
+        "deletions": 64,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgyOTQxMDA5",
         "labels": {
             "nodes": [
@@ -34496,10 +33513,10 @@
         "number": 13034,
         "state": "OPEN",
         "title": "Introduce WalletManager",
-        "updatedAt": "2018-04-22T20:51:25Z"
+        "updatedAt": "2018-04-24T18:13:53Z"
     },
     {
-        "additions": 112,
+        "additions": 203,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
             "login": "practicalswift",
@@ -34578,15 +33595,45 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzYyMTEyMw==",
                     "publishedAt": "2018-04-23T15:40:23Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13041#issuecomment-383621123"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "utACK 29b73b509f1aa537a835f9e75878622c3a18335f",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzgxNTQ5Mw==",
+                    "publishedAt": "2018-04-24T06:13:49Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13041#issuecomment-383815493"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "@theuni @sipa Your language expertise is needed :-)\r\n\r\nIf you have time to review this PR \u2013 does  `LOCALE_DEPENDENT_FUNCTIONS` look reasonable? :-)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg2NjM3NA==",
+                    "publishedAt": "2018-04-24T09:28:49Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13041#issuecomment-383866374"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "Updated:\r\n* Added more functions to `LOCALE_DEPENDENT_FUNCTIONS`.\r\n* Added known `atoi(\u2026)` violations for `bitcoin-tx.cpp`, `init.cpp`, `qt/rpcconsole.cpp`, `torcontrol.cpp`, `util.cpp`, `utilstrencodings.cpp` and `utilstrencodings.h`.\r\n* Added known `*printf(\u2026)` violations for `dbwrapper.cpp`, `test/dbwrapper_tests.cpp` and `util.cpp`.\r\n* Now invoking `git grep` only once in order to minimize run-time.\r\n\r\nPlease re-review :-)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkxMTUzNA==",
+                    "publishedAt": "2018-04-24T12:26:34Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13041#issuecomment-383911534"
                 }
             ],
-            "totalCount": 7
+            "totalCount": 10
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "29b73b509f1aa537a835f9e75878622c3a18335f"
+                        "oid": "ddb17190afd89b120f6ac7f9b0b0458d092ffade"
                     }
                 }
             ],
@@ -34610,7 +33657,7 @@
         "number": 13041,
         "state": "OPEN",
         "title": "build: Add linter checking for accidental introduction of locale dependence",
-        "updatedAt": "2018-04-23T15:40:23Z"
+        "updatedAt": "2018-04-24T16:22:02Z"
     },
     {
         "additions": 4,
@@ -34622,8 +33669,19 @@
         "body": "#### There are two reasons to remove the code(as you see):\r\n- The calculated nBits will be replaced by the following GetNextWorkRequired(.) function. So calculating difficulty(nBits) in UpdateTime() function is meaningless. The main chain does not matter. But testnet will exec twice.\r\n- UpdateTime() function should remain single role for updating timestamp item of block.",
         "closedAt": null,
         "comments": {
-            "nodes": [],
-            "totalCount": 0
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/20664531?v=4",
+                        "login": "qshuai"
+                    },
+                    "body": "As mentioned above(testnet will exec twice), the referenced code is [here](https://github.com/bitcoin/bitcoin/blob/master/src/miner.cpp#L168-L169).\r\n```\r\nUpdateTime(pblock, chainparams.GetConsensus(), pindexPrev); \r\npblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());\r\n```",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzgxOTMyNA==",
+                    "publishedAt": "2018-04-24T06:34:02Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13042#issuecomment-383819324"
+                }
+            ],
+            "totalCount": 1
         },
         "commits": {
             "nodes": [
@@ -34653,7 +33711,7 @@
         "number": 13042,
         "state": "OPEN",
         "title": "Calculated nBits will be replaced by the following GetNextWorkRequire\u2026",
-        "updatedAt": "2018-04-23T15:43:30Z"
+        "updatedAt": "2018-04-24T06:34:03Z"
     },
     {
         "additions": 128,
@@ -34730,7 +33788,7 @@
         "updatedAt": "2018-04-23T13:27:20Z"
     },
     {
-        "additions": 7,
+        "additions": 9,
         "author": {
             "avatarUrl": "https://avatars0.githubusercontent.com/u/5767891?v=4",
             "login": "instagibbs",
@@ -34787,14 +33845,14 @@
             "nodes": [
                 {
                     "commit": {
-                        "oid": "a61ea427d59432c9d2e163fa4ccda026fb85a57d"
+                        "oid": "b45a45672c29616782db6231f0e7d727c026fd35"
                     }
                 }
             ],
             "totalCount": 1
         },
         "createdAt": "2018-04-20T17:26:06Z",
-        "deletions": 3,
+        "deletions": 4,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgzMTI0MTI5",
         "labels": {
             "nodes": [
@@ -34811,61 +33869,7 @@
         "number": 13045,
         "state": "OPEN",
         "title": "[p2p] getblock for 1-block reorgs in response to compact block message",
-        "updatedAt": "2018-04-23T14:09:12Z"
-    },
-    {
-        "additions": 121,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
-            "login": "MarcoFalke",
-            "url": "https://github.com/MarcoFalke"
-        },
-        "body": "Similar to #12967 this contains all relevant bugfixes and improvements to the functional test suite.\r\n\r\nI didn't include fixes to make the tests run on Windows, since that is still an ongoing effort and doesn't seem worth to backport.\r\n\r\nAs all of these are clean cherry-picks, I suggest reviewers redo the cherry-picks to get the same branch and then run the extended test suite.",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "ACK on commit list.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzU4MjU5Mw==",
-                    "publishedAt": "2018-04-23T13:51:38Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13049#issuecomment-383582593"
-                }
-            ],
-            "totalCount": 1
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "7460945e0b663585a7af3cde6c8675cbe21b4111"
-                    }
-                }
-            ],
-            "totalCount": 9
-        },
-        "createdAt": "2018-04-20T22:52:42Z",
-        "deletions": 65,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgzMTg3MTYy",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "d4c5f9",
-                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
-                    "name": "Tests"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13049,
-        "state": "OPEN",
-        "title": "[0.16] qa: Backports",
-        "updatedAt": "2018-04-23T13:51:38Z"
+        "updatedAt": "2018-04-24T13:38:31Z"
     },
     {
         "additions": 9,
@@ -34877,8 +33881,19 @@
         "body": "WIP:\r\nThis PR speeds up several unit tests, as a partial fix to issue [#10026](https://github.com/bitcoin/bitcoin/issues/10026):\r\n\r\ntest_big_witness_transaction: reduced run time in about 70%.\r\n...more to come",
         "closedAt": null,
         "comments": {
-            "nodes": [],
-            "totalCount": 0
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "Travis issue was an intermittent issue, it's passing now.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzg2MzQ1MA==",
+                    "publishedAt": "2018-04-24T09:19:10Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13050#issuecomment-383863450"
+                }
+            ],
+            "totalCount": 1
         },
         "commits": {
             "nodes": [
@@ -34908,7 +33923,7 @@
         "number": 13050,
         "state": "OPEN",
         "title": "[WIP] [tests] improvements to slow unit tests",
-        "updatedAt": "2018-04-21T22:50:02Z"
+        "updatedAt": "2018-04-24T09:19:10Z"
     },
     {
         "additions": 21,
@@ -34962,10 +33977,10 @@
         "number": 13051,
         "state": "OPEN",
         "title": "qa: Normalize executable location",
-        "updatedAt": "2018-04-23T07:14:34Z"
+        "updatedAt": "2018-04-24T04:32:28Z"
     },
     {
-        "additions": 164,
+        "additions": 162,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
             "login": "practicalswift",
@@ -34994,22 +34009,42 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzQ3MzU5MQ==",
                     "publishedAt": "2018-04-23T06:57:49Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13054#issuecomment-383473591"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Just as a note: As a work around when writing tests, I replace the import list with a wildcard-star and then run some de-wildcard python script before submitting the pull request.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk4MTIwNw==",
+                    "publishedAt": "2018-04-24T15:45:06Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13054#issuecomment-383981207"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "@MarcoFalke That's a convenient workflow! What tool do you use? [`dewildcard`](https://github.com/quentinsf/dewildcard)?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk5NTcwMA==",
+                    "publishedAt": "2018-04-24T16:27:15Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13054#issuecomment-383995700"
                 }
             ],
-            "totalCount": 2
+            "totalCount": 4
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "b403bc69c1cdeb254f24b5dbc6a1f0eb6ea23d77"
+                        "oid": "b3e92defbeff40a04062396d2dd496886dba292e"
                     }
                 }
             ],
             "totalCount": 2
         },
         "createdAt": "2018-04-22T18:10:39Z",
-        "deletions": 101,
+        "deletions": 97,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgzMjg2MTY3",
         "labels": {
             "nodes": [
@@ -35026,74 +34061,10 @@
         "number": 13054,
         "state": "OPEN",
         "title": "tests: Enable automatic detection of undefined names in Python tests scripts. Remove wildcard imports.",
-        "updatedAt": "2018-04-23T06:57:49Z"
+        "updatedAt": "2018-04-24T16:27:15Z"
     },
     {
-        "additions": 4,
-        "author": {
-            "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-            "login": "laanwj",
-            "url": "https://github.com/laanwj"
-        },
-        "body": "Default `-printtoconsole` to false for the GUI. GUI programs should not print to the console unnecessarily. For example, when launched by the window manager, the output might end up in the X session log file,\r\nresulting in duplicate logging. On Windows, it is pointless as well because bitcoin-qt isn't a console application.\r\n\r\nThis same mechanism is used to set `-server` to true by default for bitcoind: https://github.com/bitcoin/bitcoin/blob/master/src/bitcoind.cpp#L116\r\n\r\n(fixes #13004)",
-        "closedAt": null,
-        "comments": {
-            "nodes": [
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars3.githubusercontent.com/u/178464?v=4",
-                        "login": "jonasschnelli"
-                    },
-                    "body": "I'm not sure if changing the printtoconsole default in #13004 was reasonable. IMO forgetting to pass-in `-noprintoconsole` during debugging/developing quickly leads to lost data required for debugging.\r\n\r\nutACK aee80b0ef9f9e82fb696ca3a05c06f089926bf04.",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzU1MTIzMg==",
-                    "publishedAt": "2018-04-23T12:04:04Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13055#issuecomment-383551232"
-                },
-                {
-                    "author": {
-                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
-                        "login": "laanwj"
-                    },
-                    "body": "> I'm not sure if changing the printtoconsole default in #13004 was reasonable. IMO forgetting to pass-in -noprintoconsole during debugging/developing quickly leads to lost data required for debugging.\r\n\r\nI think it's reasonable: the default (when not `-daemon`) is to log to *both* the log file and the console.  After #13004 logging to the console no longer implies not logging the file. That's only done when `-nodebuglogfile` is provided.\r\n",
-                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzU1MzcxOA==",
-                    "publishedAt": "2018-04-23T12:14:05Z",
-                    "url": "https://github.com/bitcoin/bitcoin/pull/13055#issuecomment-383553718"
-                }
-            ],
-            "totalCount": 2
-        },
-        "commits": {
-            "nodes": [
-                {
-                    "commit": {
-                        "oid": "aee80b0ef9f9e82fb696ca3a05c06f089926bf04"
-                    }
-                }
-            ],
-            "totalCount": 1
-        },
-        "createdAt": "2018-04-23T07:28:52Z",
-        "deletions": 0,
-        "id": "MDExOlB1bGxSZXF1ZXN0MTgzMzQ3MTE2",
-        "labels": {
-            "nodes": [
-                {
-                    "color": "02d7e1",
-                    "id": "MDU6TGFiZWwxMzU5NDY=",
-                    "name": "GUI"
-                }
-            ],
-            "totalCount": 1
-        },
-        "mergeable": "MERGEABLE",
-        "mergedAt": null,
-        "number": 13055,
-        "state": "OPEN",
-        "title": "qt: Don't log to console by default",
-        "updatedAt": "2018-04-23T12:14:06Z"
-    },
-    {
-        "additions": 78,
+        "additions": 81,
         "author": {
             "avatarUrl": "https://avatars1.githubusercontent.com/u/198132?v=4",
             "login": "nixbox",
@@ -35112,22 +34083,62 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzYwNjM4Nw==",
                     "publishedAt": "2018-04-23T14:59:14Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13056#issuecomment-383606387"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/198132?v=4",
+                        "login": "nixbox"
+                    },
+                    "body": "Fixed the lint issues.\r\n\r\nFixed the \"No such file or directory\" problem as well.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzc3MzM2Mw==",
+                    "publishedAt": "2018-04-24T01:27:07Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13056#issuecomment-383773363"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "utACK ebff14786b7addd4bcc6e74691394a77019f2bf6",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkwNzE1NA==",
+                    "publishedAt": "2018-04-24T12:09:52Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13056#issuecomment-383907154"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/198132?v=4",
+                        "login": "nixbox"
+                    },
+                    "body": "Mistakenly did a force push. Addressed all of your nits.\r\n\r\nThanks for the feedback!",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAxMTgxNg==",
+                    "publishedAt": "2018-04-24T17:18:25Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13056#issuecomment-384011816"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "Tested ACK 6674a75bfbdf680d0a3648f44c6591ff5fc983cf.\r\n\r\nTravis failure was unrelated failure in `mining_prioritisetransaction.py`. I've restarted the job.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA0Nzk5Mg==",
+                    "publishedAt": "2018-04-24T19:15:49Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13056#issuecomment-384047992"
                 }
             ],
-            "totalCount": 1
+            "totalCount": 5
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "a123bda5ced69ec0e81f1afdaef6050935da2341"
+                        "oid": "6674a75bfbdf680d0a3648f44c6591ff5fc983cf"
                     }
                 }
             ],
             "totalCount": 1
         },
         "createdAt": "2018-04-23T07:47:56Z",
-        "deletions": 18,
+        "deletions": 19,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgzMzUwNzkz",
         "labels": {
             "nodes": [
@@ -35144,16 +34155,16 @@
         "number": 13056,
         "state": "OPEN",
         "title": "[tests] Make rpcauth.py testable and add unit tests",
-        "updatedAt": "2018-04-23T14:59:14Z"
+        "updatedAt": "2018-04-24T19:15:49Z"
     },
     {
-        "additions": 7,
+        "additions": 45,
         "author": {
             "avatarUrl": "https://avatars0.githubusercontent.com/u/5767891?v=4",
             "login": "instagibbs",
             "url": "https://github.com/instagibbs"
         },
-        "body": "This section of code loops over the same coins twice, in two different ways depending on whether other inputs are allowed, even though the net effect is just an early return in one case. One used the available coins list(pruned to just preselected coins) and the other the preselected coins directly. Instead just do it once, and return early if no other inputs are allowed.\r\n\r\nNote that by definition coin control is in use, so \"fSpendable\" will always be true, so filtering for this is a NOP.",
+        "body": "This section of code loops over the same coins twice, in two different ways depending on whether other inputs are allowed, even though the net effect is just an early return in one case. One used the available coins list(pruned to just preselected coins) and the other the preselected coins directly. Instead just do it once, and return early if no other inputs are allowed.\r\n\r\nNote that by definition coin control is in use, so \"fSpendable\" will always be true, so filtering for this is a NOP.\r\n\r\nAdded basic unit test case as well.",
         "closedAt": null,
         "comments": {
             "nodes": [
@@ -35186,22 +34197,42 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzcxNjcxNQ==",
                     "publishedAt": "2018-04-23T20:44:54Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13057#issuecomment-383716715"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "> The fact that the test suite passes with this removal is a smell though - how about a test for CreateTransaction or SelectCoins that fails with this removal?\r\n\r\nThis is what I was afraid of - I don't think we test the part of the wallet code that is used by the GUI coin selection very well.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzgxMjU5OA==",
+                    "publishedAt": "2018-04-24T05:57:16Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13057#issuecomment-383812598"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/5767891?v=4",
+                        "login": "instagibbs"
+                    },
+                    "body": "did some additional refactoring to make flow easier to follow(early return if you captured enough value with presets), and added a basic unit test that should have failed with previous broken iteration",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk2MzYwMw==",
+                    "publishedAt": "2018-04-24T14:56:02Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13057#issuecomment-383963603"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 5
         },
         "commits": {
             "nodes": [
                 {
                     "commit": {
-                        "oid": "4aaa5ba43781b9a4d811bb65b715006c0542b1fe"
+                        "oid": "358c298ff8b35834ad0cb6ebb492b8ca5305430a"
                     }
                 }
             ],
             "totalCount": 1
         },
         "createdAt": "2018-04-23T13:47:33Z",
-        "deletions": 16,
+        "deletions": 28,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgzNDQwMjk1",
         "labels": {
             "nodes": [
@@ -35222,8 +34253,8 @@
         "mergedAt": null,
         "number": 13057,
         "state": "OPEN",
-        "title": "remove redundant pre-selected coin code",
-        "updatedAt": "2018-04-23T20:44:54Z"
+        "title": "refactor pre-selected coin code",
+        "updatedAt": "2018-04-24T14:56:02Z"
     },
     {
         "additions": 207,
@@ -35272,15 +34303,15 @@
             ],
             "totalCount": 1
         },
-        "mergeable": "MERGEABLE",
+        "mergeable": "CONFLICTING",
         "mergedAt": null,
         "number": 13058,
         "state": "OPEN",
         "title": "[wallet] `createwallet` RPC - create new wallet at runtime",
-        "updatedAt": "2018-04-23T18:20:43Z"
+        "updatedAt": "2018-04-24T14:06:05Z"
     },
     {
-        "additions": 452,
+        "additions": 90,
         "author": {
             "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
             "login": "jnewbery",
@@ -35319,9 +34350,39 @@
                     "id": "MDEyOklzc3VlQ29tbWVudDM4MzcwOTk4Mw==",
                     "publishedAt": "2018-04-23T20:22:12Z",
                     "url": "https://github.com/bitcoin/bitcoin/pull/13060#issuecomment-383709983"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "> It could also be good to update release notes with a workaround for the deprecated getaccountadddress, though I couldn't think of anything very straightforward.\r\n\r\nThere are two suggested workarounds here: https://github.com/bitcoin/bitcoin/pull/7729#issuecomment-200219840 and here: https://github.com/bitcoin/bitcoin/pull/7729#issuecomment-206929678.\r\n\r\nI'm happy to add those to the release notes if you think that's a good idea.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzczMjc4MA==",
+                    "publishedAt": "2018-04-23T21:43:04Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13060#issuecomment-383732780"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "Concept ACK. Will review in detail after #12953 merged.\r\n(it has been merged, please rebase)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkxMTI3OQ==",
+                    "publishedAt": "2018-04-24T12:25:31Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13060#issuecomment-383911279"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Purged GitHub to get rid of the merged commits without rebase:\r\n\r\n<details><summary></summary>\r\n\r\n```\r\ngit push git@github.com:jnewbery/bitcoin.git a3d7d6ad9ff3b40904fae0b8d97b46126e810f3b:remove_getlabeladdress && git push git@github.com:jnewbery/bitcoin.git 8d22e03929f1c6fdcf8669fb01246b7099d861f2:remove_getlabeladdress -f\r\n```\r\n</details>",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkzNDQ1OQ==",
+                    "publishedAt": "2018-04-24T13:40:54Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13060#issuecomment-383934459"
                 }
             ],
-            "totalCount": 3
+            "totalCount": 6
         },
         "commits": {
             "nodes": [
@@ -35331,20 +34392,391 @@
                     }
                 }
             ],
-            "totalCount": 9
+            "totalCount": 2
         },
         "createdAt": "2018-04-23T19:21:11Z",
-        "deletions": 163,
+        "deletions": 80,
         "id": "MDExOlB1bGxSZXF1ZXN0MTgzNTMyMDA5",
         "labels": {
-            "nodes": [],
-            "totalCount": 0
+            "nodes": [
+                {
+                    "color": "08a781",
+                    "id": "MDU6TGFiZWwxNDk0MjQ=",
+                    "name": "Wallet"
+                }
+            ],
+            "totalCount": 1
         },
         "mergeable": "MERGEABLE",
         "mergedAt": null,
         "number": 13060,
         "state": "OPEN",
         "title": "[wallet] [rpc] Remove getlabeladdress RPC",
-        "updatedAt": "2018-04-23T20:22:12Z"
+        "updatedAt": "2018-04-24T13:40:54Z"
+    },
+    {
+        "additions": 120,
+        "author": {
+            "avatarUrl": "https://avatars1.githubusercontent.com/u/548488?v=4",
+            "login": "sipa",
+            "url": "https://github.com/sipa"
+        },
+        "body": "This introduces versions of `GetScriptOp`, `EvalScript`, and `VerifyScript` that operate on scripts represented by `Span<const unsigned char>`. This makes it possible to use different representation types for scripts.\r\n\r\nThis is also a step towards reducing the consensus-criticalness of CScript, but not entirely. The interpreter code still uses CScript internally for a few purposes (notably `DecodeOP_N`, and `operator<<`).",
+        "closedAt": null,
+        "comments": {
+            "nodes": [],
+            "totalCount": 0
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "2a26aced5322a0f42cc535a8bf9b5950a58fe576"
+                    }
+                }
+            ],
+            "totalCount": 6
+        },
+        "createdAt": "2018-04-23T23:11:37Z",
+        "deletions": 49,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzNTgxNDEz",
+        "labels": {
+            "nodes": [
+                {
+                    "color": "009800",
+                    "id": "MDU6TGFiZWwxOTIyMDIwMDA=",
+                    "name": "Consensus"
+                },
+                {
+                    "color": "E6F6D6",
+                    "id": "MDU6TGFiZWwxMzU5NjE=",
+                    "name": "Refactoring"
+                }
+            ],
+            "totalCount": 2
+        },
+        "mergeable": "MERGEABLE",
+        "mergedAt": null,
+        "number": 13062,
+        "state": "OPEN",
+        "title": "Make script interpreter independent from storage type CScript",
+        "updatedAt": "2018-04-24T09:04:26Z"
+    },
+    {
+        "additions": 329,
+        "author": {
+            "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+            "login": "promag",
+            "url": "https://github.com/promag"
+        },
+        "body": "Currently there are 3 places where it makes sense to retain a wallet shared pointer:\r\n - `WalletManager` internal registry;\r\n - `interfaces::Wallet` interface instance - used by the UI;\r\n - wallet RPC functions - given by `GetWalletForJSONRPCRequest`.\r\n\r\nThis PR replaces #11402, and builds on top of #13034.",
+        "closedAt": null,
+        "comments": {
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/1063656?v=4",
+                        "login": "jnewbery"
+                    },
+                    "body": "needs rebase",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk4NjQ5Ng==",
+                    "publishedAt": "2018-04-24T15:59:43Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13063#issuecomment-383986496"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/3534524?v=4",
+                        "login": "promag"
+                    },
+                    "body": "Rebased.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk5NjgyMw==",
+                    "publishedAt": "2018-04-24T16:30:38Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13063#issuecomment-383996823"
+                }
+            ],
+            "totalCount": 2
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "58962fd6b7169e04c7819dca81cc663371506ef6"
+                    }
+                }
+            ],
+            "totalCount": 3
+        },
+        "createdAt": "2018-04-23T23:11:45Z",
+        "deletions": 160,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzNTgxNDMy",
+        "labels": {
+            "nodes": [
+                {
+                    "color": "08a781",
+                    "id": "MDU6TGFiZWwxNDk0MjQ=",
+                    "name": "Wallet"
+                }
+            ],
+            "totalCount": 1
+        },
+        "mergeable": "MERGEABLE",
+        "mergedAt": null,
+        "number": 13063,
+        "state": "OPEN",
+        "title": "Use shared pointer to retain wallet instance",
+        "updatedAt": "2018-04-24T16:30:38Z"
+    },
+    {
+        "additions": 149,
+        "author": {
+            "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
+            "login": "ken2812221",
+            "url": "https://github.com/ken2812221"
+        },
+        "body": "The cron job that runs every day would fail because of git checkout a single commit, not a branch.\r\n\r\n#12708 introduce a method to check whether merges are clean.\r\nHowever, there are four merges are not clean.\r\nSo, I add a list of merges that are dirty and ignore them.\r\n\r\nAlso, I modify the current shell script to python, it makes the script speed up a lot.\r\nThe python code `tree_sha512sum` was copied from `github-merge.py`\r\n\r\nThe travis job to test this: https://travis-ci.org/ken2812221/bitcoin/jobs/370542817",
+        "closedAt": null,
+        "comments": {
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "> The cron job that runs every day would fail because of git checkout a single commit, not a branch.\r\n\r\nMind to elaborate why it wouldn't work on a \"single commit\"?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkzMjQ1NA==",
+                    "publishedAt": "2018-04-24T13:35:01Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13066#issuecomment-383932454"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/11154118?v=4",
+                        "login": "ken2812221"
+                    },
+                    "body": "`git rev-parse --abbrev-ref HEAD` does not work with commit, it always returns `HEAD`.\r\nAnd git would not return to latest commit after the script.\r\nBut I don't know if this is the exact reason. I just test on my PC, the script failed to check signature at random commit.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4MzkzNzYzNQ==",
+                    "publishedAt": "2018-04-24T13:49:36Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13066#issuecomment-383937635"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/126646?v=4",
+                        "login": "laanwj"
+                    },
+                    "body": "> Also, I modify the current shell script to python, it makes the script speed up a lot.\r\n> The python code tree_sha512sum was copied from github-merge.py\r\n\r\nThanks! Yes, the current implementation has been slow especially the treehash512 checking, my implementation from `github-merge.py` only uses a single call to `ls-tree` which makes it more efficient.\r\n\r\nConcept ACK.\r\n",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk3NTA2NQ==",
+                    "publishedAt": "2018-04-24T15:27:57Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13066#issuecomment-383975065"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "I think we should remove the shell script after this has been converted to python. Objections, @TheBlueMatt ?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk3NzYxMg==",
+                    "publishedAt": "2018-04-24T15:35:03Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13066#issuecomment-383977612"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars1.githubusercontent.com/u/548488?v=4",
+                        "login": "sipa"
+                    },
+                    "body": "All the unclean merge commits are from 2016 or earlier. Perhaps instead there can just be a threshold that skips the validation below a certain age (say, 1 month)?",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDAzMDM0OQ==",
+                    "publishedAt": "2018-04-24T18:17:01Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13066#issuecomment-384030349"
+                }
+            ],
+            "totalCount": 5
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "902e9f986685d9e428221f7b251b81fa0c3e4fca"
+                    }
+                }
+            ],
+            "totalCount": 2
+        },
+        "createdAt": "2018-04-24T12:42:40Z",
+        "deletions": 2,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzNzIyODQy",
+        "labels": {
+            "nodes": [
+                {
+                    "color": "d4c5f9",
+                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
+                    "name": "Tests"
+                }
+            ],
+            "totalCount": 1
+        },
+        "mergeable": "MERGEABLE",
+        "mergedAt": null,
+        "number": 13066,
+        "state": "OPEN",
+        "title": "Make travis run verify-commits",
+        "updatedAt": "2018-04-24T18:17:01Z"
+    },
+    {
+        "additions": 41,
+        "author": {
+            "avatarUrl": "https://avatars2.githubusercontent.com/u/18324680?v=4",
+            "login": "ccdle12",
+            "url": "https://github.com/ccdle12"
+        },
+        "body": "fixes #12583\r\n\r\nContinuing on the work of @chrislennon.\r\n\r\nI've applied his changes to the tests and also updated: \r\n\r\n`unit_test_directory(const std::string fileName)` \r\n\r\n* It now passes in the the current fileName to be used as part of the temp directory file path.\r\n\r\nAny guidance on further improvements or refactored would be very much welcomed ",
+        "closedAt": null,
+        "comments": {
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Needs rebase",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4Mzk1ODE4Nw==",
+                    "publishedAt": "2018-04-24T14:41:47Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13067#issuecomment-383958187"
+                }
+            ],
+            "totalCount": 1
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "73f239ed07a520b78b7c936a1ee5f6ef4e128dd0"
+                    }
+                }
+            ],
+            "totalCount": 4
+        },
+        "createdAt": "2018-04-24T13:53:02Z",
+        "deletions": 11,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzNzQ0MjQx",
+        "labels": {
+            "nodes": [
+                {
+                    "color": "d4c5f9",
+                    "id": "MDU6TGFiZWw2Mjk2MzUxNg==",
+                    "name": "Tests"
+                }
+            ],
+            "totalCount": 1
+        },
+        "mergeable": "CONFLICTING",
+        "mergedAt": null,
+        "number": 13067,
+        "state": "OPEN",
+        "title": "[WIP] Unit test sub-directories - Continued",
+        "updatedAt": "2018-04-24T14:41:47Z"
+    },
+    {
+        "additions": 0,
+        "author": {
+            "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+            "login": "practicalswift",
+            "url": "https://github.com/practicalswift"
+        },
+        "body": "Remove unused constant `MAX_INV_SZ`.\r\n\r\nLast use removed in 9c92c8c82716d0c35b638142a1125d07b3f240a8.",
+        "closedAt": null,
+        "comments": {
+            "nodes": [],
+            "totalCount": 0
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "d66943d453c2541d918bb867000045d8dea7066d"
+                    }
+                }
+            ],
+            "totalCount": 1
+        },
+        "createdAt": "2018-04-24T19:06:31Z",
+        "deletions": 1,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzODM0NjIx",
+        "labels": {
+            "nodes": [],
+            "totalCount": 0
+        },
+        "mergeable": "MERGEABLE",
+        "mergedAt": null,
+        "number": 13068,
+        "state": "OPEN",
+        "title": "tests: Remove unused constant MAX_INV_SZ",
+        "updatedAt": "2018-04-24T19:06:31Z"
+    },
+    {
+        "additions": 2,
+        "author": {
+            "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+            "login": "practicalswift",
+            "url": "https://github.com/practicalswift"
+        },
+        "body": "Fix typos.",
+        "closedAt": null,
+        "comments": {
+            "nodes": [
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Thanks for fixing those, but I'd prefer if we had a single pull request for those and not separate for each typo (c.f. #13052 from two days ago)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA0OTQ3MA==",
+                    "publishedAt": "2018-04-24T19:21:10Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13069#issuecomment-384049470"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars3.githubusercontent.com/u/7826565?v=4",
+                        "login": "practicalswift"
+                    },
+                    "body": "@MarcoFalke I submit typos as I find them (otherwise I would forget them!). If I have an already existing open typo PR then I add the newly found typo to that one. Is that not the recommended procedure? :-)",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA1MjE5NQ==",
+                    "publishedAt": "2018-04-24T19:30:41Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13069#issuecomment-384052195"
+                },
+                {
+                    "author": {
+                        "avatarUrl": "https://avatars0.githubusercontent.com/u/6399679?v=4",
+                        "login": "MarcoFalke"
+                    },
+                    "body": "Fine, I will leave this one open until next month.",
+                    "id": "MDEyOklzc3VlQ29tbWVudDM4NDA1NTM0OQ==",
+                    "publishedAt": "2018-04-24T19:42:06Z",
+                    "url": "https://github.com/bitcoin/bitcoin/pull/13069#issuecomment-384055349"
+                }
+            ],
+            "totalCount": 3
+        },
+        "commits": {
+            "nodes": [
+                {
+                    "commit": {
+                        "oid": "fdbe55337fc609ba48ce5fc11222b78b2256c7be"
+                    }
+                }
+            ],
+            "totalCount": 1
+        },
+        "createdAt": "2018-04-24T19:14:30Z",
+        "deletions": 2,
+        "id": "MDExOlB1bGxSZXF1ZXN0MTgzODM2NTYz",
+        "labels": {
+            "nodes": [],
+            "totalCount": 0
+        },
+        "mergeable": "MERGEABLE",
+        "mergedAt": null,
+        "number": 13069,
+        "state": "OPEN",
+        "title": "docs: Fix typos",
+        "updatedAt": "2018-04-24T19:42:06Z"
     }
 ]
