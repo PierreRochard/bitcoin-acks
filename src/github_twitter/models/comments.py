@@ -20,7 +20,7 @@ class Comments(Base):
     url = Column(String, nullable=False)
 
     pull_request_id = Column(String, nullable=False)
-    author_id = Column(String, nullable=False)
+    author_id = Column(String)
 
     auto_detected_ack = Column(String)
     corrected_ack = Column(String)
