@@ -70,10 +70,45 @@ def comments_formatter(view, context, model, name):
             label = 'label-danger'
         else:
             raise Exception('unreconized ack')
+
+        full_text = Markup.escape(comment.body)
         output += '<div style="white-space: nowrap; overflow: hidden;"><img src="{2}" style="height:16px; border-radius: 50%;"> <span title="{0}" class="label {1}">{3}</span></div>'.format(
-            comment.body,
+            full_text,
             label,
             comment.author.avatar_url,
             comment.author.login)
         authors.append(comment.author.login)
     return Markup(output)
+
+
+def mergeable_formatter(view, context, model, name):
+    text = getattr(model, name).capitalize()
+    if text == 'Mergeable':
+        label = 'label-success'
+    elif text == 'Conflicting':
+        label = 'label-danger'
+    elif text == 'Unknown':
+        label = 'label-default'
+    else:
+        raise Exception('unrecognized mergeable status')
+    return Markup(' <span class="label {0}">{1}</span>'.format(
+        label,
+        text))
+
+
+def last_commit_state_formatter(view, context, model, name):
+    text = getattr(model, name)
+    if text == 'Expected' or text == 'Success':
+        label = 'label-success'
+    elif text == 'Error' or text == 'Failure':
+        label = 'label-danger'
+    elif text == 'Pending':
+        label = 'label-default'
+    elif text is None:
+        return ''
+    else:
+        raise Exception('unrecognized last commit status')
+    return Markup('<span title="{0}" class="label {1}">{2}</span>'.format(
+        model.last_commit_state_description,
+        label,
+        text))

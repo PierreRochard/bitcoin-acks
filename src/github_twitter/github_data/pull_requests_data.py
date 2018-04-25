@@ -61,7 +61,7 @@ class PullRequestsData(RepositoriesData):
     def upsert(self, data: dict):
         with session_scope() as session:
             try:
-                pull_request_record = (
+                record = (
                     session
                         .query(PullRequests)
                         .filter(
@@ -71,29 +71,37 @@ class PullRequestsData(RepositoriesData):
                         .one()
                 )
             except NoResultFound:
-                pull_request_record = PullRequests()
-                pull_request_record.repository_id = self.repo.id
-                pull_request_record.number = data['number']
-                session.add(pull_request_record)
+                record = PullRequests()
+                record.repository_id = self.repo.id
+                record.number = data['number']
+                session.add(record)
 
             author = data.pop('author')
             comments = data.pop('comments')
             commits = data.pop('commits')
+            record.commit_count = commits['totalCount']
+            last_commit = commits['nodes'][0]['commit']
+            last_commit_status = last_commit.get('status')
+            if last_commit_status:
+                record.last_commit_state = last_commit_status['state'].capitalize()
+                descriptions = [s['description'] for s in last_commit_status['contexts']]
+                record.last_commit_state_description = ', '.join(descriptions)
+
             labels = data.pop('labels')
 
             user_id = UsersData().upsert(data=author)
-            pull_request_record.author_id = user_id
-            pull_request_record.comments_count = comments['totalCount']
+            record.author_id = user_id
+            record.comments_count = comments['totalCount']
 
             for key, value in data.items():
-                setattr(pull_request_record, key, value)
+                setattr(record, key, value)
 
             for comment in comments['nodes']:
-                CommentsData().upsert(pull_request_id=pull_request_record.id,
+                CommentsData().upsert(pull_request_id=record.id,
                                       data=comment)
 
-            diff = requests.get(pull_request_record.diff_url).text
-            DiffsData().insert(pull_request_record.id, diff)
+            diff = requests.get(record.diff_url).text
+            DiffsData().insert(record.id, diff)
 
     def update_database(self, state: str = None):
         data = self.get_all(state=state)
