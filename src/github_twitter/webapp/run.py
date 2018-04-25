@@ -17,4 +17,4 @@ with session_scope() as session:
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, session))
 
-app.run(port=5023)
+app.run(port=5024)
