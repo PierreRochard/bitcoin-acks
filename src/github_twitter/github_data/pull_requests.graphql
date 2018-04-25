@@ -54,6 +54,12 @@ query($prCursor: String = null, $prState: PullRequestState = null){
                         nodes {
                             commit {
                                 oid
+                                status {
+                                    state
+                                    contexts {
+                                        description
+                                    }
+                                }
                             }
                         }
                     }

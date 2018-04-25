@@ -5,7 +5,8 @@ from github_twitter.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
     author_link_formatter,
-    humanize_date_formatter, line_count_formatter, comments_formatter)
+    humanize_date_formatter, line_count_formatter, comments_formatter,
+    mergeable_formatter, last_commit_state_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -36,13 +37,15 @@ class PullRequestsModelView(ModelView):
         'additions',
         'deletions',
         'comments',
+        'mergeable',
+        'last_commit_state',
         'created_at',
         'updated_at',
         'merged_at',
         'closed_at'
     ]
     column_filters = column_list
-    column_sortable_list = column_list
+    column_sortable_list = [c for c in column_list if c != 'comments']
     column_formatters = {
         'body': body_formatter,
         'number': pr_link_formatter,
@@ -53,17 +56,19 @@ class PullRequestsModelView(ModelView):
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
         'deletions': line_count_formatter,
-        'comments': comments_formatter
-
+        'comments': comments_formatter,
+        'mergeable': mergeable_formatter,
+        'last_commit_state': last_commit_state_formatter
     }
     column_default_sort = ('number', True)
     column_labels = {
-        'user.login': 'Author',
+        'author.login': 'Author',
         'additions': '+',
         'deletions': '-',
         'created_at': 'Created',
         'updated_at': 'Updated',
         'merged_at': 'Merged',
         'closed_at': 'Closed',
-        'comments': 'ACKs'
+        'comments': 'ACKs',
+        'last_commit_state': 'CI'
     }

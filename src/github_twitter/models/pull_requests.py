@@ -5,7 +5,7 @@ from sqlalchemy import (
     Numeric,
     String,
     UniqueConstraint,
-    and_)
+    and_, Boolean)
 from sqlalchemy.orm import relationship, synonym
 
 from github_twitter.database.base import Base
@@ -26,6 +26,10 @@ class PullRequests(Base):
     additions = Column(Integer)
     deletions = Column(Integer)
 
+    mergeable = Column(String)
+    last_commit_state = Column(String)
+    last_commit_state_description = Column(String)
+
     state = Column(String, nullable=False)
     title = Column(String, nullable=False)
     body = Column(String)
@@ -36,6 +40,7 @@ class PullRequests(Base):
     closed_at = Column(DateTime)
 
     comments_count = Column(Integer)
+    commit_count = Column(Integer)
 
     createdAt = synonym('created_at')
     updatedAt = synonym('updated_at')
