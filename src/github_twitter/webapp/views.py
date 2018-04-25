@@ -5,7 +5,7 @@ from github_twitter.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
     author_link_formatter,
-    humanize_date_formatter, line_count_formatter)
+    humanize_date_formatter, line_count_formatter, comments_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -35,6 +35,7 @@ class PullRequestsModelView(ModelView):
         'body',
         'additions',
         'deletions',
+        'comments',
         'created_at',
         'updated_at',
         'merged_at',
@@ -52,6 +53,7 @@ class PullRequestsModelView(ModelView):
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
         'deletions': line_count_formatter,
+        'comments': comments_formatter
 
     }
     column_default_sort = ('number', True)
@@ -62,6 +64,6 @@ class PullRequestsModelView(ModelView):
         'created_at': 'Created',
         'updated_at': 'Updated',
         'merged_at': 'Merged',
-        'closed_at': 'Closed'
-
+        'closed_at': 'Closed',
+        'comments': 'ACKs'
     }
