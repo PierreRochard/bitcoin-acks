@@ -91,14 +91,27 @@ class PullRequestsData(RepositoriesData):
 
             user_id = UsersData().upsert(data=author)
             record.author_id = user_id
-            record.comments_count = comments['totalCount']
+            record.comment_count = comments['totalCount']
 
             for key, value in data.items():
                 setattr(record, key, value)
 
-            for comment in comments['nodes']:
-                CommentsData().upsert(pull_request_id=record.id,
-                                      data=comment)
+            ack_comment_authors = []
+
+            comments = comments['nodes']
+            comments = sorted(comments, key=lambda k: k['publishedAt'], reverse=True)
+
+            for comment in comments:
+                if comment['author'] is None:
+                    continue
+                comment_author_name = comment['author']['login']
+                if (comment_author_name != author['login']
+                        and comment_author_name not in ack_comment_authors):
+                    is_ack = CommentsData().upsert(pull_request_id=record.id,
+                                                   data=comment)
+                    if is_ack:
+                        ack_comment_authors.append(comment_author_name)
+            record.ack_comment_count = len(ack_comment_authors)
 
             diff = requests.get(record.diff_url).text
             DiffsData().insert(record.id, diff)

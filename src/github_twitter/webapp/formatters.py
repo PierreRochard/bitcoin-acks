@@ -49,8 +49,8 @@ def author_link_formatter(view, context, model, name):
     return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
 
 
-def comments_formatter(view, context, model, name):
-    comments = getattr(model, name)
+def ack_comment_count_formatter(view, context, model, name):
+    comments = getattr(model, 'comments')
     output = ''
     authors = []
     for comment in comments:

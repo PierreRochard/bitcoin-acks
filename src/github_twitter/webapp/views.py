@@ -5,7 +5,7 @@ from github_twitter.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
     author_link_formatter,
-    humanize_date_formatter, line_count_formatter, comments_formatter,
+    humanize_date_formatter, line_count_formatter, ack_comment_count_formatter,
     mergeable_formatter, last_commit_state_formatter)
 
 
@@ -36,7 +36,7 @@ class PullRequestsModelView(ModelView):
         'body',
         'additions',
         'deletions',
-        'comments',
+        'ack_comment_count',
         'mergeable',
         'last_commit_state',
         'created_at',
@@ -56,7 +56,7 @@ class PullRequestsModelView(ModelView):
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
         'deletions': line_count_formatter,
-        'comments': comments_formatter,
+        'ack_comment_count': ack_comment_count_formatter,
         'mergeable': mergeable_formatter,
         'last_commit_state': last_commit_state_formatter
     }
@@ -69,6 +69,6 @@ class PullRequestsModelView(ModelView):
         'updated_at': 'Updated',
         'merged_at': 'Merged',
         'closed_at': 'Closed',
-        'comments': 'ACKs',
+        'ack_comment_count': 'ACKs',
         'last_commit_state': 'CI'
     }
