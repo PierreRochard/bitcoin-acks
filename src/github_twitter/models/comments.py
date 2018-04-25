@@ -2,9 +2,10 @@ from sqlalchemy import (
     Column,
     DateTime,
     String)
-from sqlalchemy.orm import synonym
+from sqlalchemy.orm import synonym, relationship
 
 from github_twitter.database.base import Base
+from github_twitter.models.users import Users
 
 
 class Comments(Base):
@@ -24,3 +25,9 @@ class Comments(Base):
 
     auto_detected_ack = Column(String)
     corrected_ack = Column(String)
+
+    author = relationship(Users,
+                          primaryjoin=author_id == Users.id,
+                          foreign_keys='[Comments.author_id]',
+                          backref='comments'
+                          )

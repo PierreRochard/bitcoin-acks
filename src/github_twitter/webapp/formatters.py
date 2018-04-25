@@ -47,3 +47,29 @@ def pr_link_formatter(view, context, model, name):
 
 def author_link_formatter(view, context, model, name):
     return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
+
+
+def comments_formatter(view, context, model, name):
+    comments = getattr(model, name)
+    output = ''
+    for comment in comments:
+        if comment.corrected_ack is None:
+            ack = comment.auto_detected_ack
+        else:
+            ack = comment.corrected_ack
+        if ack == 'Concept ACK':
+            label = 'label-primary'
+        elif ack == 'Tested ACK':
+            label = 'label-success'
+        elif ack == 'utACK':
+            label = 'label-warning'
+        elif ack == 'NACK':
+            label = 'label-danger'
+        else:
+            raise Exception('unreconized ack')
+        output += '<div style="white-space: nowrap; overflow: hidden;"><img src="{2}" style="height:16px; border-radius: 50%;"> <span title="{0}" class="label {1}">{3}</span></div>'.format(
+            comment.body,
+            label,
+            comment.author.avatar_url,
+            comment.author.login)
+    return Markup(output)

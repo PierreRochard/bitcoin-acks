@@ -4,11 +4,12 @@ from sqlalchemy import (
     Integer,
     Numeric,
     String,
-    UniqueConstraint
-)
+    UniqueConstraint,
+    and_)
 from sqlalchemy.orm import relationship, synonym
 
 from github_twitter.database.base import Base
+from github_twitter.models import Comments
 from github_twitter.models.users import Users
 
 
@@ -49,7 +50,16 @@ class PullRequests(Base):
                           primaryjoin=author_id == Users.id,
                           foreign_keys='[PullRequests.author_id]',
                           backref='pull_requests'
-                            )
+                          )
+
+    comments = relationship(Comments,
+                            primaryjoin=and_(
+                                id == Comments.pull_request_id,
+                                Comments.auto_detected_ack.isnot(None)
+                            ),
+                            foreign_keys='[Comments.pull_request_id]',
+                            backref='pull_request',
+                            order_by=Comments.published_at)
 
     @property
     def diff_url(self):
