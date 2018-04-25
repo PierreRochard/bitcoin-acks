@@ -39,7 +39,9 @@ class PullRequests(Base):
     merged_at = Column(DateTime)
     closed_at = Column(DateTime)
 
-    comments_count = Column(Integer)
+    comment_count = Column(Integer)
+    # NB counts all of (nack, utack, tested ack, concept ack)
+    ack_comment_count = Column(Integer)
     commit_count = Column(Integer)
 
     createdAt = synonym('created_at')

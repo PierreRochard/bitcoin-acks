@@ -22,7 +22,11 @@ class CommentsData(GitHubData):
         else:
             return None
 
-    def upsert(self, pull_request_id: str, data: dict) -> str:
+    def upsert(self, pull_request_id: str, data: dict)  -> bool:
+        ack = self.identify_ack(data['body'])
+        if not ack:
+            return False
+
         with session_scope() as session:
             try:
                 record = (
@@ -42,5 +46,4 @@ class CommentsData(GitHubData):
             for key, value in data.items():
                 setattr(record, key, value)
             record.auto_detected_ack = self.identify_ack(record.body)
-            session.commit()
-            return record.id
+        return True
