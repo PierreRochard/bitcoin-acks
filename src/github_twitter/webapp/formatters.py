@@ -72,11 +72,17 @@ def ack_comment_count_formatter(view, context, model, name):
             raise Exception('unreconized ack')
 
         full_text = Markup.escape(comment.body)
-        output += '<div style="white-space: nowrap; overflow: hidden;"><img src="{2}" style="height:16px; border-radius: 50%;"> <span title="{0}" class="label {1}">{3}</span></div>'.format(
+        output += '<a href={4} style="color: #FFFFFF; text-decoration: none;">' \
+                  '<div style="white-space: nowrap; overflow: hidden;">' \
+                  '<img src="{2}" style="height:16px; border-radius: 50%;">' \
+                  ' <span title="{0}" class="label {1}">{3}</span>' \
+                  '</div>' \
+                  '</a>'.format(
             full_text,
             label,
             comment.author.avatar_url,
-            comment.author.login)
+            comment.author.login,
+            comment.url)
         authors.append(comment.author.login)
     return Markup(output)
 
