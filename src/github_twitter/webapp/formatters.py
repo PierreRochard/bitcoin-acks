@@ -52,7 +52,10 @@ def author_link_formatter(view, context, model, name):
 def comments_formatter(view, context, model, name):
     comments = getattr(model, name)
     output = ''
+    authors = []
     for comment in comments:
+        if comment.author.login in authors:
+            continue
         if comment.corrected_ack is None:
             ack = comment.auto_detected_ack
         else:
@@ -72,4 +75,5 @@ def comments_formatter(view, context, model, name):
             label,
             comment.author.avatar_url,
             comment.author.login)
+        authors.append(comment.author.login)
     return Markup(output)

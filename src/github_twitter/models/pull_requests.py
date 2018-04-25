@@ -55,11 +55,12 @@ class PullRequests(Base):
     comments = relationship(Comments,
                             primaryjoin=and_(
                                 id == Comments.pull_request_id,
-                                Comments.auto_detected_ack.isnot(None)
+                                Comments.auto_detected_ack.isnot(None),
+                                Comments.author_id != author_id
                             ),
                             foreign_keys='[Comments.pull_request_id]',
                             backref='pull_request',
-                            order_by=Comments.published_at)
+                            order_by=Comments.published_at.desc())
 
     @property
     def diff_url(self):
