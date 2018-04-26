@@ -52,7 +52,10 @@ class PullRequestsData(RepositoriesData):
             results = [r['node'] for r in results]
             pull_requests.extend(results)
 
-            logging.info(msg=(len(pull_requests), total_to_fetch))
+            logging.info(msg=(last_cursor, len(pull_requests), total_to_fetch))
+
+            for item in results:
+                self.upsert(item)
         return pull_requests
 
     def upsert(self, data: dict):
@@ -78,8 +81,12 @@ class PullRequestsData(RepositoriesData):
             commits = data.pop('commits')
             labels = data.pop('labels')
 
-            user_id = UsersData().upsert(data=author)
-            record.author_id = user_id
+            if author:
+                author_login = author['login']
+                user_id = UsersData().upsert(data=author)
+                record.author_id = user_id
+            else:
+                author_login = None
             record.comment_count = comments['totalCount']
 
             for key, value in data.items():
@@ -87,12 +94,13 @@ class PullRequestsData(RepositoriesData):
 
             # Last commit is used to determine CI status
             record.commit_count = commits['totalCount']
-            last_commit = commits['nodes'][0]['commit']
-            last_commit_status = last_commit.get('status')
-            if last_commit_status:
-                record.last_commit_state = last_commit_status['state'].capitalize()
-                descriptions = [s['description'] for s in last_commit_status['contexts']]
-                record.last_commit_state_description = ', '.join(descriptions)
+            if commits['nodes']:
+                last_commit = commits['nodes'][0]['commit']
+                last_commit_status = last_commit.get('status')
+                if last_commit_status:
+                    record.last_commit_state = last_commit_status['state'].capitalize()
+                    descriptions = [s['description'] for s in last_commit_status['contexts']]
+                    record.last_commit_state_description = ', '.join(descriptions)
 
             for label in labels['nodes']:
                 LabelsData.upsert(pull_request_id=record.id, data=label)
@@ -104,7 +112,7 @@ class PullRequestsData(RepositoriesData):
                 if comment['author'] is None:
                     continue
                 comment_author_name = comment['author']['login']
-                if (comment_author_name != author['login']
+                if (comment_author_name != author_login
                         and comment_author_name not in ack_comment_authors):
                     is_ack = CommentsData().upsert(pull_request_id=record.id,
                                                    data=comment)
@@ -123,4 +131,6 @@ class PullRequestsData(RepositoriesData):
 
 if __name__ == '__main__':
 
-    PullRequestsData('bitcoin', 'bitcoin').update_database(state='OPEN')
+    PullRequestsData('bitcoin', 'bitcoin').update_database(
+        # state='OPEN'
+    )

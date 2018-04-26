@@ -52,7 +52,7 @@ class PullRequests(Base):
     closedAt = synonym('closed_at')
 
     repository_id = Column(Integer, nullable=False)
-    author_id = Column(String, nullable=False)
+    author_id = Column(String)
     tweet_id = Column(Integer, unique=True)
 
     author = relationship(Users,
