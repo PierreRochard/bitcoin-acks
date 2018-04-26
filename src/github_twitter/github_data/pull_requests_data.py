@@ -3,7 +3,6 @@ import logging
 from pprint import pformat
 from typing import List
 
-import re
 import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -11,6 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from github_twitter.database import session_scope
 from github_twitter.github_data.comments_data import CommentsData
 from github_twitter.github_data.diffs_data import DiffsData
+from github_twitter.github_data.labels_data import LabelsData
 from github_twitter.github_data.repositories_data import RepositoriesData
 from github_twitter.github_data.users_data import UsersData
 from github_twitter.models import PullRequests
@@ -79,14 +79,6 @@ class PullRequestsData(RepositoriesData):
             author = data.pop('author')
             comments = data.pop('comments')
             commits = data.pop('commits')
-            record.commit_count = commits['totalCount']
-            last_commit = commits['nodes'][0]['commit']
-            last_commit_status = last_commit.get('status')
-            if last_commit_status:
-                record.last_commit_state = last_commit_status['state'].capitalize()
-                descriptions = [s['description'] for s in last_commit_status['contexts']]
-                record.last_commit_state_description = ', '.join(descriptions)
-
             labels = data.pop('labels')
 
             user_id = UsersData().upsert(data=author)
@@ -96,11 +88,21 @@ class PullRequestsData(RepositoriesData):
             for key, value in data.items():
                 setattr(record, key, value)
 
-            ack_comment_authors = []
+            # Last commit is used to determine CI status
+            record.commit_count = commits['totalCount']
+            last_commit = commits['nodes'][0]['commit']
+            last_commit_status = last_commit.get('status')
+            if last_commit_status:
+                record.last_commit_state = last_commit_status['state'].capitalize()
+                descriptions = [s['description'] for s in last_commit_status['contexts']]
+                record.last_commit_state_description = ', '.join(descriptions)
 
+            for label in labels['nodes']:
+                LabelsData.upsert(pull_request_id=record.id, data=label)
+
+            ack_comment_authors = []
             comments = comments['nodes']
             comments = sorted(comments, key=lambda k: k['publishedAt'], reverse=True)
-
             for comment in comments:
                 if comment['author'] is None:
                     continue
@@ -123,4 +125,5 @@ class PullRequestsData(RepositoriesData):
 
 
 if __name__ == '__main__':
+
     PullRequestsData('bitcoin', 'bitcoin').update_database(state='OPEN')
