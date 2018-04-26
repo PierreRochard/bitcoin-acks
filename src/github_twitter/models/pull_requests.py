@@ -5,11 +5,13 @@ from sqlalchemy import (
     Numeric,
     String,
     UniqueConstraint,
-    and_, Boolean)
+    and_
+)
 from sqlalchemy.orm import relationship, synonym
 
 from github_twitter.database.base import Base
-from github_twitter.models import Comments
+from github_twitter.models import Comments, Labels
+from github_twitter.models.pull_requests_labels import PullRequestsLabels
 from github_twitter.models.users import Users
 
 
@@ -68,6 +70,14 @@ class PullRequests(Base):
                             foreign_keys='[Comments.pull_request_id]',
                             backref='pull_request',
                             order_by=Comments.published_at.desc())
+
+    labels = relationship(Labels,
+                          secondary=PullRequestsLabels.__table__,
+                          primaryjoin=id == PullRequestsLabels.pull_request_id,
+                          secondaryjoin=PullRequestsLabels.label_id == Labels.id,
+                          # foreign_keys='[Labels.pull_request_id]',
+                          backref='pull_request',
+                          order_by=Labels.name)
 
     @property
     def diff_url(self):
