@@ -53,9 +53,6 @@ class PullRequestsData(RepositoriesData):
             pull_requests.extend(results)
 
             logging.info(msg=(len(pull_requests), total_to_fetch))
-
-            with open('pull_requests.json', 'w') as output_file:
-                json.dump(pull_requests, output_file, indent=4, sort_keys=True)
         return pull_requests
 
     def upsert(self, data: dict):

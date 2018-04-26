@@ -118,3 +118,17 @@ def last_commit_state_formatter(view, context, model, name):
         model.last_commit_state_description,
         label,
         text))
+
+
+def labels_formatter(view, context, model, name):
+    labels = getattr(model, name)
+    output = ''
+    for label in labels:
+        output += '<a href={label_url} style="color: #FFFFFF; text-decoration: none;">' \
+                  '<div style="white-space: nowrap; overflow: hidden;">' \
+                  ' <span class="label" style="background-color: #{label_color};" >{label_name}</span>' \
+                  '</div>' \
+                  '</a>'.format(label_name=label.name,
+                                label_url='#',
+                                label_color=label.color)
+    return Markup(output)

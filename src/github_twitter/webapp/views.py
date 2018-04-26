@@ -6,7 +6,7 @@ from github_twitter.webapp.formatters import (
     pr_link_formatter,
     author_link_formatter,
     humanize_date_formatter, line_count_formatter, ack_comment_count_formatter,
-    mergeable_formatter, last_commit_state_formatter)
+    mergeable_formatter, last_commit_state_formatter, labels_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -32,6 +32,7 @@ class PullRequestsModelView(ModelView):
     column_list = [
         'number',
         'author.login',
+        'labels',
         'title',
         'body',
         'additions',
@@ -45,7 +46,7 @@ class PullRequestsModelView(ModelView):
         'closed_at'
     ]
     column_filters = column_list
-    column_sortable_list = [c for c in column_list if c != 'comments']
+    column_sortable_list = [c for c in column_list if c != 'labels']
     column_formatters = {
         'body': body_formatter,
         'number': pr_link_formatter,
@@ -58,7 +59,8 @@ class PullRequestsModelView(ModelView):
         'deletions': line_count_formatter,
         'ack_comment_count': ack_comment_count_formatter,
         'mergeable': mergeable_formatter,
-        'last_commit_state': last_commit_state_formatter
+        'last_commit_state': last_commit_state_formatter,
+        'labels': labels_formatter
     }
     column_default_sort = ('number', True)
     column_labels = {
