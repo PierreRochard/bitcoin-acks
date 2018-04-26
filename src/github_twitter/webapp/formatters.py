@@ -46,6 +46,8 @@ def pr_link_formatter(view, context, model, name):
 
 
 def author_link_formatter(view, context, model, name):
+    if model.author is None:
+        return ''
     return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
 
 
