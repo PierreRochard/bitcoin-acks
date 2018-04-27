@@ -104,8 +104,9 @@ class PullRequestsData(RepositoriesData):
                         descriptions = [s['description'] for s in last_commit_status['contexts']]
                         record.last_commit_state_description = ', '.join(descriptions)
 
-            for label in labels['nodes']:
-                LabelsData.upsert(pull_request_id=record.id, data=label)
+            if labels:
+                for label in labels['nodes']:
+                    LabelsData.upsert(pull_request_id=record.id, data=label)
 
             record.comment_count = 0
             if comments:
