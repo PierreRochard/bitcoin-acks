@@ -1,8 +1,8 @@
-import json
 import logging
 from pprint import pformat
 from typing import List
 
+import os
 import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -22,7 +22,9 @@ class PullRequestsData(RepositoriesData):
                                                repository_name=repository_name)
 
     def get_all(self, state: str = None) -> List[dict]:
-        with open('pull_requests.graphql', 'r') as query_file:
+        path = os.path.dirname(os.path.abspath(__file__))
+        graphql_file = os.path.join(path, 'pull_requests.graphql')
+        with open(graphql_file, 'r') as query_file:
             query = query_file.read()
 
         pull_requests = []
@@ -132,5 +134,5 @@ class PullRequestsData(RepositoriesData):
 if __name__ == '__main__':
 
     PullRequestsData('bitcoin', 'bitcoin').update_database(
-        # state='OPEN'
+        state='OPEN'
     )

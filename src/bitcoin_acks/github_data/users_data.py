@@ -1,3 +1,4 @@
+import os
 from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.database import session_scope
@@ -8,7 +9,9 @@ from bitcoin_acks.models import Users
 class UsersData(GitHubData):
 
     def get(self, login: str) -> dict:
-        with open('user.graphql', 'r') as query_file:
+        path = os.path.dirname(os.path.abspath(__file__))
+        graphql_file = os.path.join(path, 'user.graphql')
+        with open(graphql_file, 'r') as query_file:
             query = query_file.read()
 
         variables = {
