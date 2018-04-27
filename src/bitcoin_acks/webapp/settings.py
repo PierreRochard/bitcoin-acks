@@ -5,7 +5,7 @@ import string
 
 def generate_secret():
     alphanumeric = string.ascii_uppercase + string.ascii_lowercase + string.digits
-    x = ''.join(random.choice(alphanumeric) for _ in range(32))
+    x = ''.join(random.choices(alphanumeric, k=32))
     return x
 
 
