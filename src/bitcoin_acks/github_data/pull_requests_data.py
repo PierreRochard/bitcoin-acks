@@ -93,15 +93,16 @@ class PullRequestsData(RepositoriesData):
             for key, value in data.items():
                 setattr(record, key, value)
 
-            # Last commit is used to determine CI status
-            record.commit_count = commits['totalCount']
-            if commits['nodes']:
-                last_commit = commits['nodes'][0]['commit']
-                last_commit_status = last_commit.get('status')
-                if last_commit_status:
-                    record.last_commit_state = last_commit_status['state'].capitalize()
-                    descriptions = [s['description'] for s in last_commit_status['contexts']]
-                    record.last_commit_state_description = ', '.join(descriptions)
+            if commits:
+                # Last commit is used to determine CI status
+                record.commit_count = commits['totalCount']
+                if commits['nodes']:
+                    last_commit = commits['nodes'][0]['commit']
+                    last_commit_status = last_commit.get('status')
+                    if last_commit_status:
+                        record.last_commit_state = last_commit_status['state'].capitalize()
+                        descriptions = [s['description'] for s in last_commit_status['contexts']]
+                        record.last_commit_state_description = ', '.join(descriptions)
 
             for label in labels['nodes']:
                 LabelsData.upsert(pull_request_id=record.id, data=label)
