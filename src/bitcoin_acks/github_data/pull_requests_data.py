@@ -131,7 +131,11 @@ class PullRequestsData(RepositoriesData):
     def update_database(self, state: str = None):
         data = self.get_all(state=state)
         for item in data:
-            self.upsert(item)
+            try:
+                self.upsert(item)
+            except:
+                print(pformat(item))
+                raise
 
 
 if __name__ == '__main__':
