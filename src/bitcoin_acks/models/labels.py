@@ -3,7 +3,7 @@ from sqlalchemy import (
     String
 )
 
-from github_twitter.database.base import Base
+from bitcoin_acks.database.base import Base
 
 
 class Labels(Base):

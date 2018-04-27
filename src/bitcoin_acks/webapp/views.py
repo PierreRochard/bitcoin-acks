@@ -1,7 +1,7 @@
 from flask_admin.contrib.sqla import ModelView
 
-from github_twitter.models import PullRequests
-from github_twitter.webapp.formatters import (
+from bitcoin_acks.models import PullRequests
+from bitcoin_acks.webapp.formatters import (
     body_formatter,
     pr_link_formatter,
     author_link_formatter,

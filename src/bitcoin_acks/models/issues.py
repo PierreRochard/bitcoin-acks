@@ -6,10 +6,10 @@ from sqlalchemy import (
     String,
     Boolean)
 
-from github_twitter.database.base import Base
-from github_twitter.models.milestones import Milestones
-from github_twitter.models.users import Users
-from github_twitter.models.repositories import Repositories
+from bitcoin_acks.database.base import Base
+from bitcoin_acks.models.milestones import Milestones
+from bitcoin_acks.models.users import Users
+from bitcoin_acks.models.repositories import Repositories
 
 
 class Issues(Base):

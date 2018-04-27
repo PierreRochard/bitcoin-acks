@@ -4,9 +4,9 @@ import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database import session_scope
-from github_twitter.github_data.github_data import GitHubData
-from github_twitter.models import Repositories
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.github_data.github_data import GitHubData
+from bitcoin_acks.models import Repositories
 
 
 class RepositoriesData(GitHubData):

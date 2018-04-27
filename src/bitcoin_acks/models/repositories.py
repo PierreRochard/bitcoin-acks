@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from github_twitter.database.base import Base
+from bitcoin_acks.database.base import Base
 
 
 class Repositories(Base):

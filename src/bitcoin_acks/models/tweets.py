@@ -2,7 +2,7 @@ import datetime
 
 from sqlalchemy import Column, DateTime, Integer
 
-from github_twitter.database.base import Base
+from bitcoin_acks.database.base import Base
 
 
 class Tweets(Base):

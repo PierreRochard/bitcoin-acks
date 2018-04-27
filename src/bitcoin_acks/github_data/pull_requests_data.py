@@ -7,13 +7,13 @@ import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database import session_scope
-from github_twitter.github_data.comments_data import CommentsData
-from github_twitter.github_data.diffs_data import DiffsData
-from github_twitter.github_data.labels_data import LabelsData
-from github_twitter.github_data.repositories_data import RepositoriesData
-from github_twitter.github_data.users_data import UsersData
-from github_twitter.models import PullRequests
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.github_data.comments_data import CommentsData
+from bitcoin_acks.github_data.diffs_data import DiffsData
+from bitcoin_acks.github_data.labels_data import LabelsData
+from bitcoin_acks.github_data.repositories_data import RepositoriesData
+from bitcoin_acks.github_data.users_data import UsersData
+from bitcoin_acks.models import PullRequests
 
 
 class PullRequestsData(RepositoriesData):

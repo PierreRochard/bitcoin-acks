@@ -7,9 +7,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database.base import Base
-from github_twitter.database.session import session_scope
-from github_twitter.models.users import Users
+from bitcoin_acks.database.base import Base
+from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.models.users import Users
 
 
 class Milestones(Base):

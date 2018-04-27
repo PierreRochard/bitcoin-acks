@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from github_twitter.github_data.issues_data import IssuesData
+from bitcoin_acks.github_data.issues_data import IssuesData
 from tests import issues_file_path
 
 

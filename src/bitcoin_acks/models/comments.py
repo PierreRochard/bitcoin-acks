@@ -4,8 +4,8 @@ from sqlalchemy import (
     String)
 from sqlalchemy.orm import synonym, relationship
 
-from github_twitter.database.base import Base
-from github_twitter.models.users import Users
+from bitcoin_acks.database.base import Base
+from bitcoin_acks.models.users import Users
 
 
 class Comments(Base):

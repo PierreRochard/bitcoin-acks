@@ -9,10 +9,10 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship, synonym
 
-from github_twitter.database.base import Base
-from github_twitter.models import Comments, Labels
-from github_twitter.models.pull_requests_labels import PullRequestsLabels
-from github_twitter.models.users import Users
+from bitcoin_acks.database.base import Base
+from bitcoin_acks.models import Comments, Labels
+from bitcoin_acks.models.pull_requests_labels import PullRequestsLabels
+from bitcoin_acks.models.users import Users
 
 
 class PullRequests(Base):

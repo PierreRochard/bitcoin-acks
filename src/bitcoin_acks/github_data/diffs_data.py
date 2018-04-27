@@ -4,8 +4,8 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 from unidiff import PatchSet
 
-from github_twitter.database import session_scope
-from github_twitter.models.diffs import Diffs
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.models.diffs import Diffs
 
 
 class DiffsData(object):
