@@ -5,9 +5,9 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database import session_scope
-from github_twitter.github_data.repositories_data import RepositoriesData
-from github_twitter.models import Issues, Milestones, Users
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.github_data.repositories_data import RepositoriesData
+from bitcoin_acks.models import Issues, Milestones, Users
 
 
 class IssuesData(RepositoriesData):

@@ -1,7 +1,7 @@
-from github_twitter.database.session import session_scope
-from github_twitter.database.base import Base
+from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.database.base import Base
 
-import github_twitter.models
+import bitcoin_acks.models
 
 
 def create_database(echo=True):

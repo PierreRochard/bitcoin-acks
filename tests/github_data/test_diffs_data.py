@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from github_twitter.github_data.diffs_data import DiffsData
+from bitcoin_acks.github_data.diffs_data import DiffsData
 
 
 class TestDiffsData(object):

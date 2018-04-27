@@ -1,9 +1,9 @@
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
-from github_twitter.database import session_scope
-from github_twitter.models import Labels
-from github_twitter.models.pull_requests_labels import PullRequestsLabels
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.models import Labels
+from bitcoin_acks.models.pull_requests_labels import PullRequestsLabels
 
 
 class LabelsData(object):

@@ -2,9 +2,9 @@ import json
 import pytest
 from collections import defaultdict
 
-from github_twitter.database import session_scope
-from github_twitter.github_data.pull_requests_data import PullRequestsData
-from github_twitter.models import PullRequests
+from bitcoin_acks.database import session_scope
+from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
+from bitcoin_acks.models import PullRequests
 from tests import pull_requests_file_path
 
 

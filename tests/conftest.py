@@ -15,15 +15,15 @@ def set_log_level(caplog):
 @pytest.fixture(autouse=True)
 def use_test_database(monkeypatch):
     monkeypatch.setattr('github_twitter.database.session.is_test', True)
-    from github_twitter.database.createdb import create_database, drop_database
+    from bitcoin_acks.database.createdb import create_database, drop_database
     drop_database(echo=False)
     create_database(echo=False)
 
 
 @pytest.fixture
 def repository():
-    from github_twitter.models.repositories import Repositories
-    from github_twitter.database.session import session_scope
+    from bitcoin_acks.models.repositories import Repositories
+    from bitcoin_acks.database.session import session_scope
     r = Repositories()
     r.path = 'bitcoin'
     r.name = 'bitcoin'

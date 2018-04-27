@@ -4,7 +4,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import synonym
 
-from github_twitter.database.base import Base
+from bitcoin_acks.database.base import Base
 
 
 class Users(Base):

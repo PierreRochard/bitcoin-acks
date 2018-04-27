@@ -4,9 +4,9 @@ import os
 import requests
 from twython import Twython
 
-from github_twitter.database.session import session_scope
-from github_twitter.models import PullRequests
-from github_twitter.models.tweets import Tweets
+from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.models import PullRequests
+from bitcoin_acks.models.tweets import Tweets
 
 
 def send_tweet():

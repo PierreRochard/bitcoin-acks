@@ -1,7 +1,7 @@
 from sqlalchemy import func
 
-from github_twitter.database.session import session_scope
-from github_twitter.models import Issues
+from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.models import Issues
 
 
 class IssuesAnalytics(object):
