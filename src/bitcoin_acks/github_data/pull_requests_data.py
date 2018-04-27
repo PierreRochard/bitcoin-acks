@@ -89,7 +89,6 @@ class PullRequestsData(RepositoriesData):
                 record.author_id = user_id
             else:
                 author_login = None
-            record.comment_count = comments['totalCount']
 
             for key, value in data.items():
                 setattr(record, key, value)
@@ -107,20 +106,23 @@ class PullRequestsData(RepositoriesData):
             for label in labels['nodes']:
                 LabelsData.upsert(pull_request_id=record.id, data=label)
 
-            ack_comment_authors = []
-            comments = comments['nodes']
-            comments = sorted(comments, key=lambda k: k['publishedAt'], reverse=True)
-            for comment in comments:
-                if comment['author'] is None:
-                    continue
-                comment_author_name = comment['author']['login']
-                if (comment_author_name != author_login
-                        and comment_author_name not in ack_comment_authors):
-                    is_ack = CommentsData().upsert(pull_request_id=record.id,
-                                                   data=comment)
-                    if is_ack:
-                        ack_comment_authors.append(comment_author_name)
-            record.ack_comment_count = len(ack_comment_authors)
+            record.comment_count = 0
+            if comments:
+                record.comment_count = comments['totalCount']
+                ack_comment_authors = []
+                comments = comments['nodes']
+                comments = sorted(comments, key=lambda k: k['publishedAt'], reverse=True)
+                for comment in comments:
+                    if comment['author'] is None:
+                        continue
+                    comment_author_name = comment['author']['login']
+                    if (comment_author_name != author_login
+                            and comment_author_name not in ack_comment_authors):
+                        is_ack = CommentsData().upsert(pull_request_id=record.id,
+                                                       data=comment)
+                        if is_ack:
+                            ack_comment_authors.append(comment_author_name)
+                record.ack_comment_count = len(ack_comment_authors)
 
             diff = requests.get(record.diff_url).text
             DiffsData().insert(record.id, diff)
