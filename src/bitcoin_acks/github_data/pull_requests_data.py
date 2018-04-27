@@ -78,10 +78,10 @@ class PullRequestsData(RepositoriesData):
                 record.number = data['number']
                 session.add(record)
 
-            author = data.pop('author')
-            comments = data.pop('comments')
-            commits = data.pop('commits')
-            labels = data.pop('labels')
+            author = data.pop('author', None)
+            comments = data.pop('comments', None)
+            commits = data.pop('commits', None)
+            labels = data.pop('labels', None)
 
             if author:
                 author_login = author['login']
