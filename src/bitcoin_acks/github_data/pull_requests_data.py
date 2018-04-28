@@ -20,6 +20,20 @@ class PullRequestsData(RepositoriesData):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
                                                repository_name=repository_name)
 
+    def get(self, number: int) -> dict:
+        path = os.path.dirname(os.path.abspath(__file__))
+        graphql_file = os.path.join(path, 'graphql_queries', 'pull_request.graphql')
+        with open(graphql_file, 'r') as query_file:
+            query = query_file.read()
+
+        json_object = {
+            'query': query,
+            'variables': {'prNumber': number}
+        }
+        data = self.graphql_post(json_object=json_object).json()
+
+        return data['data']['repository']['pullRequest']
+
     def get_all(self, state: str = None) -> List[dict]:
         path = os.path.dirname(os.path.abspath(__file__))
         graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
@@ -111,13 +125,17 @@ class PullRequestsData(RepositoriesData):
 
         self.upsert(pull_request)
 
-    def update_database(self, state: str = None):
+    def update_all(self, state: str = None):
         data = self.get_all(state=state)
         for pull_request in data:
             self.upsert_nested_data(pull_request)
 
+    def update(self, number: int):
+        data = self.get(number=number)
+        self.upsert_nested_data(data)
+
 
 if __name__ == '__main__':
-    PullRequestsData('bitcoin', 'bitcoin').update_database(
-        state='OPEN'
+    PullRequestsData('bitcoin', 'bitcoin').update_all(
+        # state='OPEN'
     )
