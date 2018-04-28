@@ -7,6 +7,7 @@ import time
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 
+import sys; print(sys.path)
 
 class PullRequestEvents(RepositoriesData):
     def __init__(self, repository_path: str, repository_name: str):
