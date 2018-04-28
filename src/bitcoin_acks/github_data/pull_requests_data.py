@@ -93,7 +93,8 @@ class PullRequestsData(RepositoriesData):
 
     def upsert_nested_data(self, pull_request: dict):
         author_data = pull_request.pop('author')
-        pull_request['author_id'] = UsersData().upsert(data=author_data)
+        if author_data is not None:
+            pull_request['author_id'] = UsersData().upsert(data=author_data)
 
         comments_data = pull_request.pop('comments')
         pull_request['comment_count'] = comments_data['totalCount']
