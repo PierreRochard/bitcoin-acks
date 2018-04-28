@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from pprint import pformat
 from typing import Tuple
 
 import requests
