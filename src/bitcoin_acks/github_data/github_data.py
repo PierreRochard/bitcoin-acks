@@ -16,12 +16,12 @@ class GitHubData(object):
     password = os.environ.get('GITHUB_API_TOKEN')
 
     @property
-    def _auth(self) -> Tuple[str, str]:
+    def auth(self) -> Tuple[str, str]:
         return self.user_name, self.password
 
     def get_graphql_schema(self):
         r = requests.get(self.api_url + 'graphql',
-                         auth=self._auth)
+                         auth=self.auth)
         r.raise_for_status()
         with open('graphql_schema.json', 'w') as output_file:
             json.dump(r.json(), output_file, indent=4, sort_keys=True)
@@ -29,7 +29,7 @@ class GitHubData(object):
     def graphql_post(self, json_object: dict):
         try:
             r = requests.post(self.api_url + 'graphql',
-                              auth=self._auth,
+                              auth=self.auth,
                               json=json_object)
             r.raise_for_status()
         except HTTPError as e:

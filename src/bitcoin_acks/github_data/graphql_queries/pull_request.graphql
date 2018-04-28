@@ -1,0 +1,65 @@
+query($prNumber: Int = 183124129){
+    rateLimit {
+        limit
+        cost
+        remaining
+        resetAt
+    }
+    repository(owner: "bitcoin", name: "bitcoin") {
+        pullRequest(number: $prNumber) {
+            id
+            number
+            title
+            mergeable
+            labels(last: 100) {
+                totalCount
+                nodes {
+                    id
+                    name
+                    color
+                }
+            }
+            author {
+                login
+                url
+                avatarUrl
+            }
+            body
+            additions
+            deletions
+            createdAt
+            updatedAt
+            mergedAt
+            closedAt
+            state
+            comments(last: 100) {
+                totalCount
+                nodes {
+                    id
+                    publishedAt
+                    author {
+                        login
+                        avatarUrl
+                    }
+                    body
+                    url
+                }
+            }
+            commits(last: 1) {
+                totalCount
+                nodes {
+                    commit {
+                        oid
+                        status {
+                            state
+                            contexts {
+                                description
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
