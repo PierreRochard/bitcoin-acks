@@ -1,9 +1,8 @@
-import logging
 from pprint import pformat
 from typing import List
-
+import logging
 import os
-import requests
+
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -23,7 +22,7 @@ class PullRequestsData(RepositoriesData):
 
     def get_all(self, state: str = None) -> List[dict]:
         path = os.path.dirname(os.path.abspath(__file__))
-        graphql_file = os.path.join(path, 'pull_requests.graphql')
+        graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
         with open(graphql_file, 'r') as query_file:
             query = query_file.read()
 
@@ -55,9 +54,6 @@ class PullRequestsData(RepositoriesData):
             pull_requests.extend(results)
 
             logging.info(msg=(last_cursor, len(pull_requests), total_to_fetch))
-
-            for item in results:
-                self.upsert(item)
         return pull_requests
 
     def upsert(self, data: dict):
@@ -78,69 +74,50 @@ class PullRequestsData(RepositoriesData):
                 record.number = data['number']
                 session.add(record)
 
-            author = data.pop('author', None)
-            comments = data.pop('comments', None)
-            commits = data.pop('commits', None)
-            labels = data.pop('labels', None)
-
-            if author:
-                author_login = author['login']
-                user_id = UsersData().upsert(data=author)
-                record.author_id = user_id
-            else:
-                author_login = None
-
             for key, value in data.items():
                 setattr(record, key, value)
 
-            if commits:
-                # Last commit is used to determine CI status
-                record.commit_count = commits['totalCount']
-                if commits['nodes']:
-                    last_commit = commits['nodes'][0]['commit']
-                    last_commit_status = last_commit.get('status')
-                    if last_commit_status:
-                        record.last_commit_state = last_commit_status['state'].capitalize()
-                        descriptions = [s['description'] for s in last_commit_status['contexts']]
-                        record.last_commit_state_description = ', '.join(descriptions)
+    def upsert_nested_data(self, pull_request: dict):
+        author_data = pull_request.pop('author')
+        pull_request['author_id'] = UsersData().upsert(data=author_data)
 
-            if labels:
-                for label in labels['nodes']:
-                    LabelsData.upsert(pull_request_id=record.id, data=label)
+        comments_data = pull_request.pop('comments')
+        pull_request['comment_count'] = comments_data['totalCount']
+        pull_request['ack_comment_count'] = CommentsData().bulk_upsert(
+            pull_request_id=pull_request['id'],
+            comments=comments_data['nodes'])
 
-            record.comment_count = 0
-            if comments:
-                record.comment_count = comments['totalCount']
-                ack_comment_authors = []
-                comments = comments['nodes']
-                comments = sorted(comments, key=lambda k: k['publishedAt'], reverse=True)
-                for comment in comments:
-                    if comment['author'] is None:
-                        continue
-                    comment_author_name = comment['author']['login']
-                    if (comment_author_name != author_login
-                            and comment_author_name not in ack_comment_authors):
-                        is_ack = CommentsData().upsert(pull_request_id=record.id,
-                                                       data=comment)
-                        if is_ack:
-                            ack_comment_authors.append(comment_author_name)
-                record.ack_comment_count = len(ack_comment_authors)
+        # Last commit is used to determine CI status
+        last_commit_status = None
+        commits = pull_request.pop('commits')
+        pull_request['commit_count'] = commits['totalCount']
+        if commits['nodes']:
+            last_commit = commits['nodes'][0]['commit']
+            last_commit_status = last_commit.get('status')
 
-            diff = requests.get(record.diff_url).text
-            DiffsData().insert(record.id, diff)
+        if last_commit_status is not None:
+            pull_request['last_commit_state'] = last_commit_status['state'].capitalize()
+            descriptions = [s['description'] for s in last_commit_status['contexts']]
+            pull_request['last_commit_state_description'] = ', '.join(descriptions)
+
+        labels = pull_request.pop('labels')
+        for label in labels['nodes']:
+            LabelsData.upsert(pull_request_id=pull_request['id'], data=label)
+
+        DiffsData().get(repository_path=self.repo.path,
+                        repository_name=self.repo.name,
+                        pull_request_number=pull_request['number'],
+                        pull_request_id=pull_request['id'])
+
+        self.upsert(pull_request)
 
     def update_database(self, state: str = None):
         data = self.get_all(state=state)
-        for item in data:
-            try:
-                self.upsert(item)
-            except:
-                print(pformat(item))
-                raise
+        for pull_request in data:
+            self.upsert_nested_data(pull_request)
 
 
 if __name__ == '__main__':
-
     PullRequestsData('bitcoin', 'bitcoin').update_database(
         state='OPEN'
     )

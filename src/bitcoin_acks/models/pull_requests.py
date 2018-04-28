@@ -80,11 +80,6 @@ class PullRequests(Base):
                           order_by=Labels.name)
 
     @property
-    def diff_url(self):
-        url = 'https://patch-diff.githubusercontent.com/raw/{0}/{1}/pull/{2}.diff'
-        return url.format('bitcoin', 'bitcoin', self.number)
-
-    @property
     def html_url(self):
         url = 'https://github.com/bitcoin/bitcoin/pull/{0}'
         return url.format(self.number)
