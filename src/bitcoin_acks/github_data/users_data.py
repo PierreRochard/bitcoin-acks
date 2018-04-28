@@ -1,4 +1,5 @@
 import os
+
 from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.database import session_scope

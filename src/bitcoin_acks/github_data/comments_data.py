@@ -24,7 +24,7 @@ class CommentsData(GitHubData):
 
     def upsert(self, pull_request_id: str, data: dict)  -> bool:
         ack = self.identify_ack(data['body'])
-        if not ack:
+        if ack is None:
             return False
 
         with session_scope() as session:

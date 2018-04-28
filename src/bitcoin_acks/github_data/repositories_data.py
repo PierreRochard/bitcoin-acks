@@ -1,6 +1,3 @@
-from typing import List
-
-import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
