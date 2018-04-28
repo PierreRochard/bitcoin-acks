@@ -1,5 +1,6 @@
 import hashlib
 
+import requests
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 from unidiff import PatchSet
@@ -9,6 +10,17 @@ from bitcoin_acks.models.diffs import Diffs
 
 
 class DiffsData(object):
+
+    @classmethod
+    def get(cls,
+            repository_path: str,
+            repository_name: str,
+            pull_request_number: int,
+            pull_request_id: str):
+        url = 'https://patch-diff.githubusercontent.com/raw/{0}/{1}/pull/{2}.diff'
+        url = url.format(repository_path, repository_name, pull_request_number)
+        diff = requests.get(url).text
+        cls.insert(pull_request_id, diff)
 
     @classmethod
     def insert(cls, pull_request_id: str, diff: str):

@@ -11,7 +11,7 @@ class UsersData(GitHubData):
 
     def get(self, login: str) -> dict:
         path = os.path.dirname(os.path.abspath(__file__))
-        graphql_file = os.path.join(path, 'user.graphql')
+        graphql_file = os.path.join(path, 'graphql_queries', 'user.graphql')
         with open(graphql_file, 'r') as query_file:
             query = query_file.read()
 
