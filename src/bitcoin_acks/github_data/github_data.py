@@ -7,7 +7,7 @@ import requests
 import time
 from requests import HTTPError
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.ERROR)
 
 
 class GitHubData(object):
