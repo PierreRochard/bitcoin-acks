@@ -7,7 +7,6 @@ import time
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 
-import sys; print(sys.path)
 
 class PullRequestEvents(RepositoriesData):
     def __init__(self, repository_path: str, repository_name: str):
@@ -16,6 +15,7 @@ class PullRequestEvents(RepositoriesData):
         self.etag = None
         self.rate_limit_remaining = None
         self.rate_limit_reset = None
+        self.last_update = datetime.utcnow()
 
     def get(self):
         url = self.api_url + 'repos/{0}/{1}/events?page=1&per_page=300'.format(
@@ -50,8 +50,15 @@ class PullRequestEvents(RepositoriesData):
 
 if __name__ == '__main__':
     pr_events = PullRequestEvents('bitcoin', 'bitcoin')
+    pr_data = PullRequestsData(repository_path='bitcoin',
+                               repository_name='bitcoin')
     while True:
         pr_events.get()
         sleep_time = (datetime.utcnow() - pr_events.rate_limit_reset).seconds/pr_events.rate_limit_remaining
         time.sleep(math.ceil(sleep_time))
-        print(pr_events.etag, sleep_time)
+
+        now = datetime.utcnow()
+        if pr_events.last_update.day != now.day:
+            pr_data.update_all()
+        elif pr_events.last_update.hour != now.hour:
+            pr_data.update_all(state='OPEN')
