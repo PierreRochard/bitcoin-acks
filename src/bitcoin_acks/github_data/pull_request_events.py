@@ -62,3 +62,4 @@ if __name__ == '__main__':
             pr_data.update_all()
         elif pr_events.last_update.hour != now.hour:
             pr_data.update_all(state='OPEN')
+        pr_events.last_update = now
