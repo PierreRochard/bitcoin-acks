@@ -137,6 +137,13 @@ class PullRequestsData(RepositoriesData):
 
 
 if __name__ == '__main__':
-    PullRequestsData('bitcoin', 'bitcoin').update_all(
-        # state='OPEN'
-    )
+    import argparse
+    parser = argparse.ArgumentParser(description='Update pull request')
+    parser.add_argument('-s',
+                        dest='state',
+                        type=str,
+                        choices=['OPEN', 'CLOSED', 'MERGED'],
+                        default=None
+                        )
+    args = parser.parse_args()
+    PullRequestsData('bitcoin', 'bitcoin').update_all(state=args.state)
