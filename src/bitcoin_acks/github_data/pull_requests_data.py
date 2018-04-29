@@ -34,7 +34,7 @@ class PullRequestsData(RepositoriesData):
 
         return data['data']['repository']['pullRequest']
 
-    def get_all(self, state: str = None) -> List[dict]:
+    def get_all(self, state: str = None):
         path = os.path.dirname(os.path.abspath(__file__))
         graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
         with open(graphql_file, 'r') as query_file:
@@ -68,7 +68,9 @@ class PullRequestsData(RepositoriesData):
             pull_requests.extend(results)
 
             logging.info(msg=(last_cursor, len(pull_requests), total_to_fetch))
-        return pull_requests
+
+            for pull_request in results:
+                self.upsert_nested_data(pull_request)
 
     def upsert(self, data: dict):
         with session_scope() as session:
@@ -127,9 +129,7 @@ class PullRequestsData(RepositoriesData):
         self.upsert(pull_request)
 
     def update_all(self, state: str = None):
-        data = self.get_all(state=state)
-        for pull_request in data:
-            self.upsert_nested_data(pull_request)
+        self.get_all(state=state)
 
     def update(self, number: int):
         data = self.get(number=number)
