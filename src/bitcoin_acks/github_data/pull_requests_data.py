@@ -45,7 +45,7 @@ class PullRequestsData(RepositoriesData):
         variables = {}
         while True:
             if last_cursor is not None:
-                variables['prCursor'] = last_cursor
+                variables['prCursorAfter'] = last_cursor
             if state is not None:
                 variables['prState'] = state
 
