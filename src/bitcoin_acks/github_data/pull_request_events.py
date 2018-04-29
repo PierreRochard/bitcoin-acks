@@ -55,7 +55,7 @@ if __name__ == '__main__':
     while True:
         pr_events.get()
         sleep_time = (datetime.utcnow() - pr_events.rate_limit_reset).seconds/pr_events.rate_limit_remaining
-        time.sleep(math.ceil(sleep_time))
+        time.sleep(math.ceil(sleep_time)+2)
 
         now = datetime.utcnow()
         if pr_events.last_update.day != now.day:
