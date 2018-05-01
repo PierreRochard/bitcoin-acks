@@ -55,9 +55,9 @@ if __name__ == '__main__':
     while True:
         pr_events.get()
         sleep_time = (datetime.utcnow() - pr_events.rate_limit_reset).seconds/pr_events.rate_limit_remaining
-        time.sleep(math.ceil(sleep_time)+2)
+        time.sleep(math.ceil(sleep_time)+30)
 
         now = datetime.utcnow()
-        if pr_events.last_update.hour != now.hour:
+        if pr_events.last_update.day != now.day:
             pr_data.update_all(state='OPEN')
         pr_events.last_update = now
