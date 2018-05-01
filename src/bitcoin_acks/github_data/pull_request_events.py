@@ -58,8 +58,6 @@ if __name__ == '__main__':
         time.sleep(math.ceil(sleep_time)+2)
 
         now = datetime.utcnow()
-        if pr_events.last_update.day != now.day:
-            pr_data.update_all()
-        elif pr_events.last_update.hour != now.hour:
+        if pr_events.last_update.hour != now.hour:
             pr_data.update_all(state='OPEN')
         pr_events.last_update = now
