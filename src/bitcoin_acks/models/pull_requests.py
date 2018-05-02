@@ -31,6 +31,7 @@ class PullRequests(Base):
     mergeable = Column(String)
     last_commit_state = Column(String)
     last_commit_state_description = Column(String)
+    last_commit_short_hash = Column(String)
 
     state = Column(String, nullable=False)
     title = Column(String, nullable=False)

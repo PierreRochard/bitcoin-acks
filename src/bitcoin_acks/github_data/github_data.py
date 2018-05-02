@@ -34,7 +34,7 @@ class GitHubData(object):
             r.raise_for_status()
         except HTTPError as e:
             logging.warning(e)
-            time.sleep(60)
+            time.sleep(2)
             r = self.graphql_post(json_object=json_object)
         return r
 

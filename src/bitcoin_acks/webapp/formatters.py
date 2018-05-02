@@ -60,10 +60,12 @@ def ack_comment_count_formatter(view, context, model, name):
     for comment in comments:
         if comment.author.login in authors:
             continue
+
         if comment.corrected_ack is None:
             ack = comment.auto_detected_ack
         else:
             ack = comment.corrected_ack
+
         if ack == 'Concept ACK':
             label = 'label-primary'
         elif ack == 'Tested ACK':
@@ -73,20 +75,28 @@ def ack_comment_count_formatter(view, context, model, name):
         elif ack == 'NACK':
             label = 'label-danger'
         else:
-            raise Exception('unreconized ack')
+            raise Exception('unrecognized ack')
+
+        is_stale = model.last_commit_short_hash and model.last_commit_short_hash not in comment.body
+        if ack == 'Tested ACK' and is_stale:
+            style = 'background-color: #2d672d;'
+        elif ack == 'utACK' and is_stale:
+            style = 'background-color: #b06d0f'
+        else:
+            style = ''
 
         full_text = Markup.escape(comment.body)
-        output += '<a href={4} style="color: #FFFFFF; text-decoration: none;">' \
+        output += '<a href={comment_url} style="color: #FFFFFF; text-decoration: none;">' \
                   '<div style="white-space: nowrap; overflow: hidden;">' \
-                  '<img src="{2}" style="height:16px; border-radius: 50%;">' \
-                  ' <span title="{0}" class="label {1}">{3}</span>' \
+                  '<img src="{avatar_url}" style="height:16px; border-radius: 50%;">' \
+                  ' <span title="{full_text}" class="label {label}" style="{style}">{author_login}</span>' \
                   '</div>' \
-                  '</a>'.format(
-            full_text,
-            label,
-            comment.author.avatar_url,
-            comment.author.login,
-            comment.url)
+                  '</a>'.format(full_text=full_text,
+                                label=label,
+                                avatar_url=comment.author.avatar_url,
+                                author_login=comment.author.login,
+                                comment_url=comment.url,
+                                style=style)
         authors.append(comment.author.login)
     return Markup(output)
 
