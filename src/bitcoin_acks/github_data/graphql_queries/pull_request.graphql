@@ -24,7 +24,7 @@ query($prNumber: Int = 183124129){
                 url
                 avatarUrl
             }
-            body
+            bodyHTML
             additions
             deletions
             createdAt

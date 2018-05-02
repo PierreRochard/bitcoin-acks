@@ -22,6 +22,8 @@ class PullRequestsModelView(ModelView):
     can_edit = False
     can_view_details = True
 
+    details_modal = True
+
     column_searchable_list = [
         PullRequests.number,
         'title',
@@ -45,6 +47,7 @@ class PullRequestsModelView(ModelView):
         'merged_at',
         'closed_at'
     ]
+    column_details_list = column_list
     column_filters = column_list
     column_sortable_list = [c for c in column_list if c != 'labels']
     column_formatters = {

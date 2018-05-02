@@ -46,6 +46,7 @@ class PullRequests(Base):
     ack_comment_count = Column(Integer)
     commit_count = Column(Integer)
 
+    bodyHTML = synonym('body')
     createdAt = synonym('created_at')
     updatedAt = synonym('updated_at')
     mergedAt = synonym('merged_at')
