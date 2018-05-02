@@ -1,5 +1,5 @@
 flask
-flask-admin
+flask-admin>=1.5.1
 graphene
 humanize
 markupsafe

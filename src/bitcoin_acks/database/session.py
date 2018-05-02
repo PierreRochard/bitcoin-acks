@@ -14,7 +14,7 @@ def session_scope(echo=False,
                   raise_integrity_error=True,
                   raise_programming_error=True):
 
-    db_name = (os.environ['GH_PGDATABASE']
+    db_name = (os.environ.get('GH_PGDATABASE', 'github')
                if not is_test else os.environ['TEST_GH_PGDATABASE'])
 
     pg_url = URL(drivername='postgresql+psycopg2',
