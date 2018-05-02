@@ -19,6 +19,8 @@ def line_count_formatter(view, context, model, name):
 
 
 def body_formatter(view, context, model, name):
+    if 'details' in context.name:
+        return Markup(model.body)
     full_text = display_text = Markup.escape(model.body)
     max_length = 200
     if len(full_text) > max_length:
