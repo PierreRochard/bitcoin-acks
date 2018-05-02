@@ -16,7 +16,10 @@ def create_app(config_object: str):
         """ Logging after every request. """
 
         record = Logs()
-        record.ip = request.remote_addr
+        if request.headers.getlist("X-Forwarded-For"):
+            record.ip = request.headers.getlist("X-Forwarded-For")[0]
+        else:
+            record.ip = request.remote_addr
         record.method = request.method
         record.full_path = request.full_path
         record.path = request.path
