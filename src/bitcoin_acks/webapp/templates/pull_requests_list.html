@@ -1,0 +1,17 @@
+{% extends 'admin/model/list.html' %}
+
+{% block model_menu_bar_after_filters %}
+<div class="col-md-4 hidden-xs hidden-sm">
+    <div class="well well-sm">
+        <small style="padding-right:1em"><em>Legend</em></small>
+        <span class="label label-primary">Concept ACK</span>
+        <span class="label label-success">Tested ACK</span>
+        <span class="label label-success" style="background-color: #2d672d;">Stale Tested ACK</span>
+        <span class="label label-warning">utACK</span>
+        <span class="label label-warning" style="background-color: #b06d0f;">Stale utACK</span>
+        <span class="label label-danger">NACK</span>
+    </div>
+</div>
+
+{{ super() }}
+{% endblock %}

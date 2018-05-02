@@ -17,6 +17,7 @@ class PullRequestsModelView(ModelView):
         self.endpoint = 'admin'
         self.name = 'Pull Requests'
 
+    list_template = 'pull_requests_list.html'
     can_delete = False
     can_create = False
     can_edit = False
