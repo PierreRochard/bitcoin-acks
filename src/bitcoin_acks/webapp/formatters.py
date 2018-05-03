@@ -102,6 +102,8 @@ def ack_comment_count_formatter(view, context, model, name):
 
 
 def mergeable_formatter(view, context, model, name):
+    if model.merged_at is not None or model.closed_at is not None:
+        return ''
     text = getattr(model, name).capitalize()
     if text == 'Mergeable':
         label = 'label-success'
@@ -117,6 +119,8 @@ def mergeable_formatter(view, context, model, name):
 
 
 def last_commit_state_formatter(view, context, model, name):
+    if model.merged_at is not None or model.closed_at is not None:
+        return ''
     text = getattr(model, name)
     if text == 'Expected' or text == 'Success':
         label = 'label-success'
