@@ -15,3 +15,13 @@
 
 {{ super() }}
 {% endblock %}
+
+{% block list_row %}
+{% if get_value(row, 'is_high_priority') %}
+<tr class="info">
+{{ super() }}
+</tr>
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}
