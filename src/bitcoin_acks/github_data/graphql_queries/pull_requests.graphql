@@ -14,7 +14,12 @@ $prState: PullRequestState = null
         resetAt
     }
     repository(owner: $repositoryPath, name: $repositoryName) {
-        pullRequests(first: $prFirst, last: $prLast after: $prCursorAfter before: $prCursorBefore states: [$prState]) {
+        pullRequests(first: $prFirst,
+                     last: $prLast,
+                     after: $prCursorAfter,
+                     before: $prCursorBefore,
+                     states: [$prState],
+                     orderBy: {field: UPDATED_AT, direction: DESC}) {
             totalCount
             edges {
                 cursor
