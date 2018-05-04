@@ -1,6 +1,3 @@
-from pprint import pformat
-from typing import List
-import logging
 import os
 
 from sqlalchemy import and_
@@ -34,18 +31,27 @@ class PullRequestsData(RepositoriesData):
 
         return data['data']['repository']['pullRequest']
 
-    def get_all(self, state: str = None):
+    def get_all(self, state: str = None, newest_first: bool = False,
+                limit: int = None):
         path = os.path.dirname(os.path.abspath(__file__))
         graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
         with open(graphql_file, 'r') as query_file:
             query = query_file.read()
 
-        pull_requests = []
+        first_cursor = None
         last_cursor = None
         variables = {}
+        received = 0
         while True:
-            if last_cursor is not None:
+            if last_cursor is not None and not newest_first:
                 variables['prCursorAfter'] = last_cursor
+                variables['prFirst'] = 100
+                variables['prLast'] = None
+            elif last_cursor is not None and newest_first:
+                variables['prCursorBefore'] = first_cursor
+                variables['prFirst'] = None
+                variables['prLast'] = 100
+
             if state is not None:
                 variables['prState'] = state
 
@@ -56,18 +62,15 @@ class PullRequestsData(RepositoriesData):
 
             data = self.graphql_post(json_object=json_object).json()
 
-            logging.info(msg=pformat(data['data']['rateLimit']))
-
-            total_to_fetch = data['data']['repository']['pullRequests']['totalCount']
-
             results = data['data']['repository']['pullRequests']['edges']
             if not len(results):
                 break
             last_cursor = results[-1]['cursor']
+            first_cursor = results[0]['cursor']
             results = [r['node'] for r in results]
-            pull_requests.extend(results)
-
-            logging.info(msg=(last_cursor, len(pull_requests), total_to_fetch))
+            received += len(results)
+            if received >= limit:
+                break
 
             for pull_request in results:
                 self.upsert_nested_data(pull_request)
@@ -131,8 +134,9 @@ class PullRequestsData(RepositoriesData):
 
         self.upsert(pull_request)
 
-    def update_all(self, state: str = None):
-        self.get_all(state=state)
+    def update_all(self, state: str = None, newest_first: bool = False,
+                   limit: int = None):
+        self.get_all(state=state, newest_first=newest_first, limit=limit)
 
     def update(self, number: int):
         data = self.get(number=number)
@@ -148,5 +152,16 @@ if __name__ == '__main__':
                         choices=['OPEN', 'CLOSED', 'MERGED'],
                         default=None
                         )
+    parser.add_argument('-l',
+                        dest='limit',
+                        type=int,
+                        default=None
+                        )
+    parser.add_argument('-n',
+                        dest='newest_first',
+                        action='store_true',
+                        default=False)
     args = parser.parse_args()
-    PullRequestsData('bitcoin', 'bitcoin').update_all(state=args.state)
+    PullRequestsData('bitcoin', 'bitcoin').update_all(state=args.state,
+                                                      newest_first=args.newest_first,
+                                                      limit=args.limit)
