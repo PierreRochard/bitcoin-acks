@@ -12,8 +12,8 @@ logging.basicConfig(level=logging.ERROR)
 
 class GitHubData(object):
     api_url = 'https://api.github.com/'
-    user_name = os.environ.get('GITHUB_USER')
-    password = os.environ.get('GITHUB_API_TOKEN')
+    user_name = os.environ['GITHUB_USER']
+    password = os.environ['GITHUB_API_TOKEN']
 
     @property
     def auth(self) -> Tuple[str, str]:
