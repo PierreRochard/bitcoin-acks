@@ -31,7 +31,9 @@ class PullRequestsData(RepositoriesData):
 
         return data['data']['repository']['pullRequest']
 
-    def get_all(self, state: str = None, newest_first: bool = False,
+    def get_all(self,
+                state: str = None,
+                newest_first: bool = False,
                 limit: int = None):
         path = os.path.dirname(os.path.abspath(__file__))
         graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
@@ -68,12 +70,12 @@ class PullRequestsData(RepositoriesData):
             last_cursor = results[-1]['cursor']
             first_cursor = results[0]['cursor']
             results = [r['node'] for r in results]
-            received += len(results)
-            if received >= limit:
-                break
 
             for pull_request in results:
-                self.upsert_nested_data(pull_request)
+                yield pull_request
+                received += 1
+                if limit is not None and received == limit:
+                    break
 
     def upsert(self, data: dict):
         with session_scope() as session:
@@ -136,7 +138,11 @@ class PullRequestsData(RepositoriesData):
 
     def update_all(self, state: str = None, newest_first: bool = False,
                    limit: int = None):
-        self.get_all(state=state, newest_first=newest_first, limit=limit)
+
+        for pull_request in self.get_all(state=state,
+                                         newest_first=newest_first,
+                                         limit=limit):
+            self.upsert_nested_data(pull_request)
 
     def update(self, number: int):
         data = self.get(number=number)
@@ -162,6 +168,7 @@ if __name__ == '__main__':
                         action='store_true',
                         default=False)
     args = parser.parse_args()
-    PullRequestsData('bitcoin', 'bitcoin').update_all(state=args.state,
-                                                      newest_first=args.newest_first,
-                                                      limit=args.limit)
+    pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
+    pull_requests_data.update_all(state=args.state,
+                                  newest_first=args.newest_first,
+                                  limit=args.limit)
