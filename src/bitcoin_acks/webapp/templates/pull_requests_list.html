@@ -13,6 +13,9 @@
     </div>
 </div>
 
+<div>
+    <a role="button" class="btn btn-primary" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1)}}">Open PRs</a>
+</div>
 {{ super() }}
 {% endblock %}
 

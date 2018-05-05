@@ -30,6 +30,8 @@ class PullRequestsModelView(ModelView):
     can_edit = False
     can_view_details = True
 
+    named_filter_urls = True
+
     details_modal = True
 
     column_searchable_list = [
