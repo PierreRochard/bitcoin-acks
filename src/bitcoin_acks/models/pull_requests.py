@@ -25,6 +25,8 @@ class PullRequests(Base):
     id = Column(String, primary_key=True)
     number = Column(Numeric, nullable=False)
 
+    is_high_priority = Column(DateTime)
+
     additions = Column(Integer)
     deletions = Column(Integer)
 
