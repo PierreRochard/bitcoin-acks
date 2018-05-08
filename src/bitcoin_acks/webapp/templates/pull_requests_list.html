@@ -37,3 +37,14 @@
 
 {{ super() }}
 {% endblock %}
+
+{% block head_css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gh.css') }}">
+{% endblock %}
+
+
+{% block page_body %}
+<a class="github-fork-ribbon" href="https://github.com/pierrerochard/bitcoin-acks/issues" data-ribbon="File an issue" title="File an issue">File an issue</a>
+{{ super() }}
+{% endblock %}
