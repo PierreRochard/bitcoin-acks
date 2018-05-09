@@ -75,7 +75,7 @@ class PullRequestsModelView(ModelView):
         'last_commit_state': last_commit_state_formatter,
         'labels': labels_formatter
     }
-    column_default_sort = ('number', True)
+    column_default_sort = ('updated_at', True)
     column_labels = {
         'author.login': 'Author',
         'additions': '+',
