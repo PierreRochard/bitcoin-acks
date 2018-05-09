@@ -3,6 +3,7 @@ import os
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
+from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.comments_data import CommentsData
 from bitcoin_acks.github_data.diffs_data import DiffsData
@@ -32,7 +33,7 @@ class PullRequestsData(RepositoriesData):
         return data['data']['repository']['pullRequest']
 
     def get_all(self,
-                state: str = None,
+                state: PullRequestState = None,
                 newest_first: bool = False,
                 limit: int = None):
         path = os.path.dirname(os.path.abspath(__file__))
@@ -72,10 +73,10 @@ class PullRequestsData(RepositoriesData):
             results = [r['node'] for r in results]
 
             for pull_request in results:
-                yield pull_request
-                received += 1
                 if limit is not None and received == limit:
                     break
+                yield pull_request
+                received += 1
 
     def upsert(self, data: dict):
         with session_scope() as session:
