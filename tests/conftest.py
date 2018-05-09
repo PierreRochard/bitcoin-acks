@@ -14,7 +14,7 @@ def set_log_level(caplog):
 
 @pytest.fixture(autouse=True)
 def use_test_database(monkeypatch):
-    monkeypatch.setattr('github_twitter.database.session.is_test', True)
+    monkeypatch.setattr('bitcoin_acks.database.session.is_test', True)
     from bitcoin_acks.database.createdb import create_database, drop_database
     drop_database(echo=False)
     create_database(echo=False)
@@ -46,3 +46,8 @@ def pull_requests_data() -> List[dict]:
     with open(pull_requests_file_path, 'r') as outfile:
         pull_requests = json.load(outfile)
         return pull_requests
+
+
+@pytest.fixture(scope="session")
+def valid_pr_number() -> int:
+    return 10757
