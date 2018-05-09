@@ -114,3 +114,6 @@ pip-selfcheck.json
 !/coverage_parser/coverage/models/branches.py
 
 graphql.config.json
+
+src/tests/fixtures_data
+/tests/fixtures_data/*
