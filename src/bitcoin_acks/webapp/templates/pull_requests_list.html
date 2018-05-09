@@ -13,5 +13,38 @@
     </div>
 </div>
 
+<div>
+    <a role="button" class="btn btn-primary" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1)}}">Open PRs</a>
+</div>
+{{ super() }}
+{% endblock %}
+
+{% block list_row %}
+{% if get_value(row, 'is_high_priority') %}
+<tr class="info">
+{{ super() }}
+</tr>
+{% else %}
+{{ super() }}
+{% endif %}
+{% endblock %}
+
+{% block list_row_actions %}
+{% if get_value(row, 'is_high_priority') %}
+<p><small><span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
+    High Priority Review</small></p>
+{% endif %}
+
+{{ super() }}
+{% endblock %}
+
+{% block head_css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gh.css') }}">
+{% endblock %}
+
+
+{% block page_body %}
+<a class="github-fork-ribbon" href="https://github.com/pierrerochard/bitcoin-acks/issues" data-ribbon="File an issue" title="File an issue">File an issue</a>
 {{ super() }}
 {% endblock %}
