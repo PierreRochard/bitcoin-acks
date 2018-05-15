@@ -45,18 +45,22 @@ class PullRequestsData(RepositoriesData):
         last_cursor = None
         variables = {}
         received = 0
-        while True:
+        while limit is None or received < limit:
+            if limit is None:
+                quantity = 100
+            else:
+                quantity = limit - received
             if last_cursor is not None and not newest_first:
                 variables['prCursorAfter'] = last_cursor
-                variables['prFirst'] = 100
+                variables['prFirst'] = quantity
                 variables['prLast'] = None
             elif last_cursor is not None and newest_first:
                 variables['prCursorBefore'] = first_cursor
                 variables['prFirst'] = None
-                variables['prLast'] = 100
+                variables['prLast'] = quantity
 
             if state is not None:
-                variables['prState'] = state
+                variables['prState'] = state.value
 
             json_object = {
                 'query': query,
