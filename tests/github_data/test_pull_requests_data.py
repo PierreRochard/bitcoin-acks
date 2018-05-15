@@ -16,7 +16,7 @@ class TestPullRequestsData(object):
         pr_data = PullRequestsData(repository_name=repository.name,
                                    repository_path=repository.path)
         pr = pr_data.get(number=valid_pr_number)
-        assert len(pr.keys()) == 16
+        assert pr
         with open(pull_request_file_path, 'w') as outfile:
             json.dump(pr, outfile, indent=4, sort_keys=True)
 
@@ -29,11 +29,10 @@ class TestPullRequestsData(object):
     def test_get_all(self, repository, state, newest_first, limit):
         pr_data = PullRequestsData(repository_name=repository.name,
                                    repository_path=repository.path)
-        prs = pr_data.get_all(state=state,
-                              newest_first=newest_first,
-                              limit=limit)
-        for pr in prs:
-            assert len(pr.keys()) == 16
+        prs = [p for p in pr_data.get_all(state=state,
+                                          newest_first=newest_first,
+                                          limit=limit)]
+        assert prs
         file_path = pull_requests_file_path.format(state=str(state),
                                                    newest_first=str(newest_first),
                                                    limit=str(limit))
