@@ -49,7 +49,7 @@ class PullRequestsData(RepositoriesData):
             if limit is None:
                 quantity = 100
             else:
-                quantity = limit - received
+                quantity = min(limit - received, 100)
             if last_cursor is not None and not newest_first:
                 variables['prCursorAfter'] = last_cursor
                 variables['prFirst'] = quantity
@@ -68,8 +68,11 @@ class PullRequestsData(RepositoriesData):
             }
 
             data = self.graphql_post(json_object=json_object).json()
-
-            results = data['data']['repository']['pullRequests']['edges']
+            try:
+                results = data['data']['repository']['pullRequests']['edges']
+            except TypeError:
+                print('here')
+                raise
             if not len(results):
                 break
             last_cursor = results[-1]['cursor']
