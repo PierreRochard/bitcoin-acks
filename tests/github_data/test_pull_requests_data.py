@@ -32,7 +32,7 @@ class TestPullRequestsData(object):
         prs = [p for p in pr_data.get_all(state=state,
                                           newest_first=newest_first,
                                           limit=limit)]
-        assert prs
+        assert len(prs) == limit
         file_path = pull_requests_file_path.format(state=str(state),
                                                    newest_first=str(newest_first),
                                                    limit=str(limit))
