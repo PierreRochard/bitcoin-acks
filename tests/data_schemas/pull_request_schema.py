@@ -31,7 +31,7 @@ class StatusSchema(Schema):
 
 class CommitSchema(Schema):
     oid = fields.Str()
-    status = fields.Nested(StatusSchema)
+    status = fields.Nested(StatusSchema, allow_none=True)
 
 
 class PullRequestCommitSchema(Schema):
