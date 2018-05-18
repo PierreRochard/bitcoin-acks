@@ -4,6 +4,7 @@ import math
 import requests
 import time
 
+from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
@@ -66,7 +67,7 @@ if __name__ == '__main__':
 
         now = datetime.utcnow()
         if pr_events.last_update.hour != now.hour:
-            pr_data.update_all(state='OPEN')
+            pr_data.update_all(state=PullRequestState.OPEN)
             polling_data.update(last_open_update=True)
         elif pr_events.last_update.day != now.day:
             pr_data.update_all(newest_first=True)

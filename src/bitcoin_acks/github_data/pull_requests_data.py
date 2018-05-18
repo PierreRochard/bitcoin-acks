@@ -144,7 +144,9 @@ class PullRequestsData(RepositoriesData):
 
         self.upsert(pull_request)
 
-    def update_all(self, state: str = None, newest_first: bool = False,
+    def update_all(self,
+                   state: PullRequestState = None,
+                   newest_first: bool = False,
                    limit: int = None):
 
         for pull_request in self.get_all(state=state,
@@ -177,6 +179,6 @@ if __name__ == '__main__':
                         default=False)
     args = parser.parse_args()
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
-    pull_requests_data.update_all(state=args.state,
+    pull_requests_data.update_all(state=PullRequestState[args.state],
                                   newest_first=args.newest_first,
                                   limit=args.limit)
