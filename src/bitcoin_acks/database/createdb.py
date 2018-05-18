@@ -15,5 +15,15 @@ def drop_database(echo=True):
 
 
 if __name__ == '__main__':
-    drop_database()
+    import argparse
+    parser = argparse.ArgumentParser(description='Change the schema')
+
+    parser.add_argument('-d',
+                        dest='drop',
+                        type=bool,
+                        default=False
+                        )
+    args = parser.parse_args()
+    if args.drop:
+        drop_database()
     create_database()
