@@ -42,4 +42,4 @@ def create_app(config_object: str):
 if __name__ == '__main__':
     app = create_app('bitcoin_acks.webapp.settings.Config')
     app.debug = True
-    app.run(port=7380)
+    app.run(host='0.0.0.0', port=7378)
