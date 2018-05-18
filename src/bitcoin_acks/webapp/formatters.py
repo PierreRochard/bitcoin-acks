@@ -87,6 +87,7 @@ def ack_comment_count_formatter(view, context, model, name):
 
         # Show comments in detail view only
         if 'details' in context.name:
+            outer_style = ''
             comment_markup = '<div style="color: #000000;"> {body}</div>'.format(body=comment.body)
 
             # Don't add <hr/> after the last comment
@@ -94,11 +95,12 @@ def ack_comment_count_formatter(view, context, model, name):
                 comment_markup += '<hr/>'
 
         else:
+            outer_style = 'white-space: nowrap;'
             comment_markup = ''
 
         full_text = Markup.escape(comment.body)
         output += '<a href={comment_url} style="color: #FFFFFF; text-decoration: none;">' \
-                  '<div style="overflow: hidden;">' \
+                  '<div style="{outer_style} overflow: hidden;">' \
                   '<img src="{avatar_url}" style="height:16px; border-radius: 50%;">' \
                   ' <span title="{full_text}" class="label {label}" style="{style}">{author_login}</span>' \
                   '{comment_markup}' \
@@ -109,7 +111,8 @@ def ack_comment_count_formatter(view, context, model, name):
                                 author_login=comment.author.login,
                                 comment_url=comment.url,
                                 comment_markup=comment_markup,
-                                style=style)
+                                style=style,
+                                outer_style=outer_style)
         authors.append(comment.author.login)
     return Markup(output)
 
