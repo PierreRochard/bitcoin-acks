@@ -4,6 +4,8 @@ import math
 import requests
 import time
 
+from bitcoin_acks.constants import PullRequestState
+from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 
@@ -49,15 +51,25 @@ class PullRequestEvents(RepositoriesData):
 
 
 if __name__ == '__main__':
-    pr_events = PullRequestEvents('bitcoin', 'bitcoin')
-    pr_data = PullRequestsData(repository_path='bitcoin',
-                               repository_name='bitcoin')
+    repository_path = 'bitcoin'
+    repository_name = 'bitcoin'
+    pr_events = PullRequestEvents(repository_path=repository_path,
+                                  repository_name=repository_name)
+    pr_data = PullRequestsData(repository_path=repository_path,
+                               repository_name=repository_name)
+    polling_data = PollingData(repository_path=repository_path,
+                               repository_name=repository_name)
     while True:
         pr_events.get()
+        polling_data.update(last_event=True)
         sleep_time = (datetime.utcnow() - pr_events.rate_limit_reset).seconds/pr_events.rate_limit_remaining
-        time.sleep(math.ceil(sleep_time)+30)
+        time.sleep(math.ceil(sleep_time)+5)
 
         now = datetime.utcnow()
-        if pr_events.last_update.day != now.day:
-            pr_data.update_all(state='OPEN')
+        if pr_events.last_update.hour != now.hour:
+            pr_data.update_all(state=PullRequestState.OPEN)
+            polling_data.update(last_open_update=True)
+        elif pr_events.last_update.day != now.day:
+            pr_data.update_all(newest_first=True)
+            polling_data.update(last_full_update=True)
         pr_events.last_update = now
