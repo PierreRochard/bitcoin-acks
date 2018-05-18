@@ -87,7 +87,7 @@ def ack_comment_count_formatter(view, context, model, name):
 
         # Show comments in detail view only
         if 'details' in context.name:
-            comment_markup = f'<div style="color: #000000;"> {comment.body}</div>'
+            comment_markup = '<div style="color: #000000;"> {body}</div>'.format(body=comment.body)
 
             # Don't add <hr/> after the last comment
             if comments.index(comment) < len(comments) - 1:
