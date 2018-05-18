@@ -116,3 +116,7 @@ pip-selfcheck.json
 # Random
 .vscode
 creds.env
+graphql.config.json
+
+src/tests/fixtures_data
+/tests/fixtures_data/*

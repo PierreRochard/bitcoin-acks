@@ -3,8 +3,10 @@ flask-admin>=1.5.1
 graphene
 humanize
 markupsafe
+marshmallow
 mock
 psycopg2
+python-dateutil
 pytest>=3.4.2
 requests
 sqlalchemy
