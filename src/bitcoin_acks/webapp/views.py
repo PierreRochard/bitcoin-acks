@@ -84,6 +84,6 @@ class PullRequestsModelView(ModelView):
         'updated_at': 'Updated',
         'merged_at': 'Merged',
         'closed_at': 'Closed',
-        'ack_comment_count': 'ACKs',
+        'ack_comment_count': 'Reviews',
         'last_commit_state': 'CI'
     }
