@@ -112,3 +112,7 @@ pip-selfcheck.json
 !/coverage_parser/coverage/scripts/
 !/coverage_parser/coverage/models/source_files.py
 !/coverage_parser/coverage/models/branches.py
+
+# Random
+.vscode
+creds.env
