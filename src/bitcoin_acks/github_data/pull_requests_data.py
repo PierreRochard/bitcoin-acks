@@ -182,7 +182,7 @@ if __name__ == '__main__':
     parser.add_argument('-p',
                         dest='pr_number',
                         type=int,
-                        default=False)
+                        default=None)
     args = parser.parse_args()
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
 
