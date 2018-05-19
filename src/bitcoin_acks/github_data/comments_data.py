@@ -1,6 +1,7 @@
 from typing import List
 
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import and_
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.users_data import UsersData
@@ -20,13 +21,16 @@ class CommentsData(object):
             return 'utACK'
         elif 'nack' in text:
             return 'NACK'
+        elif text.startswith('ack '):
+            return 'Tested ACK'
         else:
             return None
 
     def upsert(self, pull_request_id: str, data: dict) -> bool:
         ack = self.identify_ack(data['body'])
-        if ack is None:
-            return False
+
+        author = data.pop('author')
+        author_id = UsersData().upsert(data=author)
 
         with session_scope() as session:
             try:
@@ -38,15 +42,15 @@ class CommentsData(object):
             except NoResultFound:
                 record = Comments()
                 record.pull_request_id = pull_request_id
+                record.author_id = author_id
                 session.add(record)
-
-            author = data.pop('author')
-            if author is not None:
-                record.author_id = UsersData().upsert(data=author)
 
             for key, value in data.items():
                 setattr(record, key, value)
-            record.auto_detected_ack = self.identify_ack(record.body)
+            record.auto_detected_ack = ack
+
+        if ack is None:
+            return False
         return True
 
     def bulk_upsert(self, pull_request_id: str, comments: List[dict]) -> int:
@@ -54,9 +58,8 @@ class CommentsData(object):
         comments = sorted(comments,
                           key=lambda k: k['publishedAt'],
                           reverse=True)
+        comments = [c for c in comments if c['body'] and c['author'] is not None]
         for comment in comments:
-            if comment['author'] is None:
-                continue
             comment_author_name = comment['author']['login']
             if comment_author_name not in ack_comment_authors:
                 is_ack = self.upsert(pull_request_id=pull_request_id,
