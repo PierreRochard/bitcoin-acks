@@ -68,13 +68,12 @@ class PullRequestsData(RepositoriesData):
             }
 
             data = self.graphql_post(json_object=json_object).json()
-            try:
-                results = data['data']['repository']['pullRequests']['edges']
-            except TypeError:
-                print('here')
-                raise
+
+            results = data['data']['repository']['pullRequests']['edges']
+
             if not len(results):
                 break
+
             last_cursor = results[-1]['cursor']
             first_cursor = results[0]['cursor']
             results = [r['node'] for r in results]
