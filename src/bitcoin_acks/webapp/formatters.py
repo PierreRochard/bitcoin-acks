@@ -95,12 +95,12 @@ def ack_comment_count_formatter(view, context, model, name):
                 comment_markup += '<hr/>'
 
         else:
-            outer_style = 'white-space: nowrap;'
+            outer_style = 'white-space: nowrap; overflow: hidden;'
             comment_markup = ''
 
         full_text = Markup.escape(comment.body)
         output += '<a target=blank href={comment_url} style="color: #FFFFFF; text-decoration: none;">' \
-                  '<div style="{outer_style} overflow: hidden;">' \
+                  '<div style="{outer_style}">' \
                   '<img src="{avatar_url}" style="height:16px; border-radius: 50%;">' \
                   ' <span title="{full_text}" class="label {label}" style="{style}">{author_login}</span>' \
                   '{comment_markup}' \

@@ -48,3 +48,10 @@
 <a target=blank class="github-fork-ribbon" href="https://github.com/pierrerochard/bitcoin-acks/issues" data-ribbon="File an issue" title="File an issue">File an issue</a>
 {{ super() }}
 {% endblock %}
+
+{% block tail_js %}
+{{ super() }}
+<script>
+    document.getElementById("fa_modal_window").childNodes[1].classList.add("modal-lg");
+</script>
+{% endblock %}
