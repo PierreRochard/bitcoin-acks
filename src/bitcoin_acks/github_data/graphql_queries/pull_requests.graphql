@@ -49,6 +49,19 @@ $prState: PullRequestState = null
                     mergedAt
                     closedAt
                     state
+                    reviews(last: 100) {
+                        totalCount
+                        nodes {
+                            id
+                            publishedAt
+                            author {
+                                login
+                                avatarUrl
+                            }
+                            body
+                            url
+                        }
+                    }
                     comments(last: 100) {
                         totalCount
                         nodes {

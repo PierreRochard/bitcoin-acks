@@ -112,10 +112,12 @@ class PullRequestsData(RepositoriesData):
             pull_request['author_id'] = UsersData().upsert(data=author_data)
 
         comments_data = pull_request.pop('comments')
+        reviews_data = pull_request.pop('reviews')
         pull_request['comment_count'] = comments_data['totalCount']
+        comments_and_reviews = comments_data['nodes'] + reviews_data['nodes']
         pull_request['ack_comment_count'] = CommentsData().bulk_upsert(
             pull_request_id=pull_request['id'],
-            comments=comments_data['nodes'])
+            comments=comments_and_reviews)
 
         # Last commit is used to determine CI status
         last_commit_status = None
@@ -177,8 +179,21 @@ if __name__ == '__main__':
                         dest='newest_first',
                         action='store_true',
                         default=False)
+    parser.add_argument('-p',
+                        dest='pr_number',
+                        type=int,
+                        default=False)
     args = parser.parse_args()
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
-    pull_requests_data.update_all(state=PullRequestState[args.state],
-                                  newest_first=args.newest_first,
-                                  limit=args.limit)
+
+    if args.pr_number is not None:
+        pull_requests_data.update(number=args.pr_number)
+
+    else:
+        # Transform state into enum element
+        if args.state is not None:
+            args.state = PullRequestState[args.state]
+
+        pull_requests_data.update_all(state=args.state,
+                                      newest_first=args.newest_first,
+                                      limit=args.limit)
