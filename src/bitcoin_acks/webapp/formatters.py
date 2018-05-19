@@ -44,13 +44,13 @@ def humanize_date_formatter(view, context, model, name):
 
 def pr_link_formatter(view, context, model, name):
     value = getattr(model, name)
-    return Markup('<a href="{0}">{1}</a>'.format(model.html_url, value))
+    return Markup('<a target=blank href="{0}">{1}</a>'.format(model.html_url, value))
 
 
 def author_link_formatter(view, context, model, name):
     if model.author is None:
         return ''
-    return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
+    return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a target=blank href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
 
 
 def ack_comment_count_formatter(view, context, model, name):
@@ -99,7 +99,7 @@ def ack_comment_count_formatter(view, context, model, name):
             comment_markup = ''
 
         full_text = Markup.escape(comment.body)
-        output += '<a href={comment_url} style="color: #FFFFFF; text-decoration: none;">' \
+        output += '<a target=blank href={comment_url} style="color: #FFFFFF; text-decoration: none;">' \
                   '<div style="{outer_style} overflow: hidden;">' \
                   '<img src="{avatar_url}" style="height:16px; border-radius: 50%;">' \
                   ' <span title="{full_text}" class="label {label}" style="{style}">{author_login}</span>' \
