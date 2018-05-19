@@ -2,6 +2,7 @@ import json
 
 import pytest
 
+from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from tests import pull_request_file_path, pull_requests_file_path
 from tests.data_schemas.pull_request_schema import PullRequestSchema
@@ -26,12 +27,17 @@ class TestPullRequestsData(object):
         'state, newest_first, limit',
         pull_requests_get_all_test_cases
     )
-    def test_get_all(self, repository, state, newest_first, limit):
+    def test_get_all(self, repository, state: PullRequestState, newest_first, limit):
         pr_data = PullRequestsData(repository_name=repository.name,
                                    repository_path=repository.path)
         prs = [p for p in pr_data.get_all(state=state,
                                           newest_first=newest_first,
                                           limit=limit)]
+
+        for pr in prs:
+            if state is not None:
+                assert pr['state'] == state.value
+
         assert len(prs) == limit
         file_path = pull_requests_file_path.format(state=str(state),
                                                    newest_first=str(newest_first),

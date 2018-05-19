@@ -3,11 +3,16 @@ import logging
 import os
 from typing import Tuple
 
+import backoff
 import requests
-import time
-from requests import HTTPError
 
 logging.basicConfig(level=logging.ERROR)
+logging.getLogger('backoff').setLevel(logging.INFO)
+
+
+def fatal_code(e):
+    print('error')
+    return e.response.status_code != 502
 
 
 class GitHubData(object):
@@ -26,16 +31,14 @@ class GitHubData(object):
         with open('graphql_schema.json', 'w') as output_file:
             json.dump(r.json(), output_file, indent=4, sort_keys=True)
 
+    @backoff.on_exception(backoff.expo,
+                          requests.exceptions.RequestException,
+                          giveup=fatal_code)
     def graphql_post(self, json_object: dict):
-        try:
-            r = requests.post(self.api_url + 'graphql',
-                              auth=self.auth,
-                              json=json_object)
-            r.raise_for_status()
-        except HTTPError as e:
-            logging.warning(e)
-            time.sleep(2)
-            r = self.graphql_post(json_object=json_object)
+        r = requests.post(self.api_url + 'graphql',
+                          auth=self.auth,
+                          json=json_object)
+        r.raise_for_status()
         return r
 
 
