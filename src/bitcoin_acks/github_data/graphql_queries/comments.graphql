@@ -1,0 +1,36 @@
+query(
+$repositoryPath: String = "bitcoin",
+$repositoryName: String = "bitcoin",
+$prNumber: Int = 10757,
+$commentsLast: Int = null,
+$commentsCursorBefore: String = null,
+){
+    rateLimit {
+        limit
+        cost
+        remaining
+        resetAt
+    }
+    repository(owner: $repositoryPath, name: $repositoryName) {
+        pullRequest(number: $prNumber) {
+            comments(last: $commentsLast,
+                     before: $commentsCursorBefore) {
+                totalCount
+                edges {
+                    cursor
+                    node {
+                        id
+                        publishedAt
+                        author {
+                            login
+                            avatarUrl
+                        }
+                        body
+                        url
+                    }
+                }
+            }
+        }
+    }
+}
+

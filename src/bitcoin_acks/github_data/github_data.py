@@ -11,7 +11,7 @@ logging.getLogger('backoff').setLevel(logging.INFO)
 
 
 def fatal_code(e):
-    print('error')
+    # We only retry if the error was "Bad Gateway"
     return e.response.status_code != 502
 
 
