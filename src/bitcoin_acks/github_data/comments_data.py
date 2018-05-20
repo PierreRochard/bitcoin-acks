@@ -1,7 +1,6 @@
 from typing import List
 
-from sqlalchemy import and_
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.users_data import UsersData
@@ -9,6 +8,9 @@ from bitcoin_acks.models import Comments
 
 
 class CommentsData(object):
+
+    def get_all(self, pull_request_number: int):
+        pass
 
     @staticmethod
     def identify_ack(text: str):

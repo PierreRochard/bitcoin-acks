@@ -1,5 +1,3 @@
-import os
-
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -7,6 +5,10 @@ from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.comments_data import CommentsData
 from bitcoin_acks.github_data.diffs_data import DiffsData
+from bitcoin_acks.github_data.graphql_queries import (
+    pull_request_graphql_query,
+    pull_requests_graphql_query
+)
 from bitcoin_acks.github_data.labels_data import LabelsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
@@ -19,13 +21,9 @@ class PullRequestsData(RepositoriesData):
                                                repository_name=repository_name)
 
     def get(self, number: int) -> dict:
-        path = os.path.dirname(os.path.abspath(__file__))
-        graphql_file = os.path.join(path, 'graphql_queries', 'pull_request.graphql')
-        with open(graphql_file, 'r') as query_file:
-            query = query_file.read()
 
         json_object = {
-            'query': query,
+            'query': pull_request_graphql_query,
             'variables': {'prNumber': number}
         }
         data = self.graphql_post(json_object=json_object).json()
@@ -36,11 +34,6 @@ class PullRequestsData(RepositoriesData):
                 state: PullRequestState = None,
                 newest_first: bool = False,
                 limit: int = None):
-        path = os.path.dirname(os.path.abspath(__file__))
-        graphql_file = os.path.join(path, 'graphql_queries', 'pull_requests.graphql')
-        with open(graphql_file, 'r') as query_file:
-            query = query_file.read()
-
         first_cursor = None
         last_cursor = None
         variables = {}
@@ -63,7 +56,7 @@ class PullRequestsData(RepositoriesData):
                 variables['prState'] = state.value
 
             json_object = {
-                'query': query,
+                'query': pull_requests_graphql_query,
                 'variables': variables
             }
 

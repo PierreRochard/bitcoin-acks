@@ -1,25 +1,19 @@
-import os
-
 from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.github_data import GitHubData
+from bitcoin_acks.github_data.graphql_queries import user_graphql_query
 from bitcoin_acks.models import Users
 
 
 class UsersData(GitHubData):
 
     def get(self, login: str) -> dict:
-        path = os.path.dirname(os.path.abspath(__file__))
-        graphql_file = os.path.join(path, 'graphql_queries', 'user.graphql')
-        with open(graphql_file, 'r') as query_file:
-            query = query_file.read()
-
         variables = {
             'userLogin': login
         }
         json_object = {
-            'query': query,
+            'query': user_graphql_query,
             'variables': variables
         }
         r = self.graphql_post(json_object=json_object)
