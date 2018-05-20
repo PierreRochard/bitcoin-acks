@@ -2,9 +2,7 @@ query(
 $repositoryPath: String = "bitcoin",
 $repositoryName: String = "bitcoin",
 $prNumber: Int = 10757,
-$commentsFirst: Int = 100,
 $commentsLast: Int = null,
-$commentsCursorAfter: String = null,
 $commentsCursorBefore: String = null,
 ){
     rateLimit {
@@ -15,20 +13,21 @@ $commentsCursorBefore: String = null,
     }
     repository(owner: $repositoryPath, name: $repositoryName) {
         pullRequest(number: $prNumber) {
-            reviews(first: $commentsFirst,
-                last: $commentsLast,
-                after: $commentsCursorAfter,
+            reviews(last: $commentsLast,
                 before: $commentsCursorBefore) {
                 totalCount
-                nodes {
-                    id
-                    publishedAt
-                    author {
-                        login
-                        avatarUrl
+                edges {
+                    cursor
+                    node {
+                        id
+                        publishedAt
+                        author {
+                            login
+                            avatarUrl
+                        }
+                        body
+                        url
                     }
-                    body
-                    url
                 }
             }
         }

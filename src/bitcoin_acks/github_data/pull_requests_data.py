@@ -104,15 +104,21 @@ class PullRequestsData(RepositoriesData):
                 setattr(record, key, value)
 
     def upsert_nested_data(self, pull_request: dict):
-        author_data = pull_request.pop('author')
-        if author_data is not None:
-            pull_request['author_id'] = UsersData().upsert(data=author_data)
+        author = pull_request.pop('author')
+        if author is not None:
+            pull_request['author_id'] = UsersData().upsert(data=author)
 
-        comments_data = pull_request.pop('comments')
-        reviews_data = pull_request.pop('reviews')
-        pull_request['comment_count'] = comments_data['totalCount']
-        comments_and_reviews = comments_data['nodes'] + reviews_data['nodes']
-        pull_request['ack_comment_count'] = CommentsData().bulk_upsert(
+        comments_data = CommentsData(repository_name=self.repo.name,
+                                     repository_path=self.repo.path)
+        comments = pull_request.pop('comments')
+        reviews = pull_request.pop('reviews')
+        if comments['totalCount'] > 100 or reviews['totalCount'] > 100:
+            comments_and_reviews = [c for c in comments_data.get_all(
+                pull_request_number=pull_request['number'])]
+        else:
+            comments_and_reviews = comments['nodes'] + reviews['nodes']
+        pull_request['comment_count'] = comments['totalCount']
+        pull_request['ack_comment_count'] = comments_data.bulk_upsert(
             pull_request_id=pull_request['id'],
             comments=comments_and_reviews)
 
