@@ -1,5 +1,11 @@
 {% extends 'admin/model/list.html' %}
 
+
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+{% endblock %}
+
 {% block model_menu_bar_after_filters %}
 <div class="col-md-4 hidden-xs hidden-sm">
     <div class="well well-sm">
