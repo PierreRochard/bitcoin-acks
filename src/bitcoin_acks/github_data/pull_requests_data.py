@@ -16,6 +16,9 @@ from bitcoin_acks.models import PullRequests
 
 
 class PullRequestsData(RepositoriesData):
+
+    MAX_PRS = 20
+
     def __init__(self, repository_path: str, repository_name: str):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
                                                repository_name=repository_name)
@@ -41,9 +44,9 @@ class PullRequestsData(RepositoriesData):
         while limit is None or received < limit:
 
             if limit is None:
-                quantity = 100
+                quantity = self.MAX_PRS
             else:
-                quantity = min(limit - received, 100)
+                quantity = min(limit - received, self.MAX_PRS)
 
             if last_cursor is not None and not newest_first:
                 variables['prCursorAfter'] = last_cursor
