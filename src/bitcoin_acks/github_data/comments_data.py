@@ -59,7 +59,7 @@ class CommentsData(RepositoriesData):
             return 'Concept ACK'
         elif 'tested ack' in text:
             return 'Tested ACK'
-        elif 'utack' in text:
+        elif 'utack' in text or 'untested ack' in text:
             return 'utACK'
         elif 'nack' in text:
             return 'NACK'
