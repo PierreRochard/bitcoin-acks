@@ -40,6 +40,8 @@ class CommentsData(RepositoriesData):
 
                 results = data['data']['repository']['pullRequest'][nested_name]
                 expected_count = results['totalCount']
+                if not expected_count:
+                    break
                 comments = results['edges']
                 received_count += len(comments)
 
