@@ -25,14 +25,25 @@ class UsersData(GitHubData):
             try:
                 user_record = (
                     session.query(Users)
-                        .filter(Users.id == data['id'])
+                        .filter(Users.login == data['login'])
                         .one()
                 )
             except NoResultFound:
+                # if the login is not in the db, query github to get the ID
                 data = self.get(login=data['login'])
-                user_record = Users()
-                session.add(user_record)
+                try:
+                    user_record = (
+                        session.query(Users)
+                            .filter(Users.id == data['id'])
+                            .one()
+                    )
+                except NoResultFound:
+                    user_record = Users()
+                    user_record.id = data['id']
+                    session.add(user_record)
+
             for key, value in data.items():
                 setattr(user_record, key, value)
             session.commit()
+
             return user_record.id
