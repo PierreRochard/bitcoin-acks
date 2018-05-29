@@ -25,7 +25,7 @@ class UsersData(GitHubData):
             try:
                 user_record = (
                     session.query(Users)
-                        .filter(Users.login == data['login'])
+                        .filter(Users.id == data['id'])
                         .one()
                 )
             except NoResultFound:
