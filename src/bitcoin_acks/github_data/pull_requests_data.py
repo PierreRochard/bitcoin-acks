@@ -2,6 +2,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.constants import PullRequestState
+from bitcoin_acks.data_schemas import pull_request_schema
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.comments_data import CommentsData
 from bitcoin_acks.github_data.diffs_data import DiffsData
@@ -30,38 +31,30 @@ class PullRequestsData(RepositoriesData):
             'variables': {'prNumber': number}
         }
         data = self.graphql_post(json_object=json_object).json()
-
-        return data['data']['repository']['pullRequest']
+        pull_request = data['data']['repository']['pullRequest']
+        deserialized_data, errors = pull_request_schema.load(pull_request)
+        return deserialized_data
 
     def get_all(self,
                 state: PullRequestState = None,
-                newest_first: bool = False,
                 limit: int = None):
-        first_cursor = None
+        """
+        Generator: starting from the most recent to the oldest, yield one PR at a time
+        """
         last_cursor = None
         variables = {}
         received = 0
         while limit is None or received < limit:
 
             if limit is None:
-                quantity = self.MAX_PRS
+                variables['prFirst'] = self.MAX_PRS
             else:
-                quantity = min(limit - received, self.MAX_PRS)
-
-            if last_cursor is not None and not newest_first:
-                variables['prCursorAfter'] = last_cursor
-            elif last_cursor is not None and newest_first:
-                variables['prCursorBefore'] = first_cursor
-
-            if newest_first:
-                variables['prFirst'] = None
-                variables['prLast'] = quantity
-            else:
-                variables['prFirst'] = quantity
-                variables['prLast'] = None
+                variables['prFirst'] = min(limit - received, self.MAX_PRS)
 
             if state is not None:
                 variables['prState'] = state.value
+
+            variables['prCursorAfter'] = last_cursor
 
             json_object = {
                 'query': pull_requests_graphql_query,
@@ -76,13 +69,15 @@ class PullRequestsData(RepositoriesData):
                 break
 
             last_cursor = results[-1]['cursor']
-            first_cursor = results[0]['cursor']
             results = [r['node'] for r in results]
 
             for pull_request in results:
                 if limit is not None and received == limit:
                     break
-                yield pull_request
+
+                deserialized_data, errors = pull_request_schema.load(pull_request)
+
+                yield deserialized_data
                 received += 1
 
     def upsert(self, data: dict):
@@ -154,11 +149,9 @@ class PullRequestsData(RepositoriesData):
 
     def update_all(self,
                    state: PullRequestState = None,
-                   newest_first: bool = False,
                    limit: int = None):
 
         for pull_request in self.get_all(state=state,
-                                         newest_first=newest_first,
                                          limit=limit):
             self.upsert_nested_data(pull_request)
 
@@ -181,10 +174,6 @@ if __name__ == '__main__':
                         type=int,
                         default=None
                         )
-    parser.add_argument('-n',
-                        dest='newest_first',
-                        action='store_true',
-                        default=False)
     parser.add_argument('-p',
                         dest='pr_number',
                         type=int,
@@ -201,5 +190,4 @@ if __name__ == '__main__':
             args.state = PullRequestState[args.state]
 
         pull_requests_data.update_all(state=args.state,
-                                      newest_first=args.newest_first,
                                       limit=args.limit)

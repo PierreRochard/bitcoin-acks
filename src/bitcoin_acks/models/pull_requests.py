@@ -39,10 +39,10 @@ class PullRequests(Base):
     title = Column(String, nullable=False)
     body = Column(String)
 
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
-    merged_at = Column(DateTime)
-    closed_at = Column(DateTime)
+    created_at = Column(DateTime(timezone=True), nullable=False)
+    updated_at = Column(DateTime(timezone=True), nullable=False)
+    merged_at = Column(DateTime(timezone=True))
+    closed_at = Column(DateTime(timezone=True))
 
     comment_count = Column(Integer)
     # NB counts all of (nack, utack, tested ack, concept ack)
