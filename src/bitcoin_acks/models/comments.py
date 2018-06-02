@@ -1,9 +1,11 @@
 from sqlalchemy import (
     Column,
     DateTime,
-    String)
+    String, Enum, func)
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import synonym, relationship
 
+from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.database.base import Base
 from bitcoin_acks.models.users import Users
 
@@ -23,8 +25,16 @@ class Comments(Base):
     pull_request_id = Column(String, nullable=False)
     author_id = Column(String)
 
-    auto_detected_ack = Column(String)
-    corrected_ack = Column(String)
+    auto_detected_ack = Column(Enum(ReviewDecision))
+    corrected_ack = Column(Enum(ReviewDecision))
+
+    @hybrid_property
+    def ack(self):
+        return self.corrected_ack if self.corrected_ack else self.auto_detected_ack
+
+    @ack.expression
+    def ack(cls):
+        return func.coalesce(cls.auto_detected_ack, cls.corrected_ack)
 
     author = relationship(Users,
                           primaryjoin=author_id == Users.id,

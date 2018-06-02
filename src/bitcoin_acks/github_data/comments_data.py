@@ -2,6 +2,7 @@ from typing import List
 
 from sqlalchemy.orm.exc import NoResultFound
 
+from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.graphql_queries import (
     comments_graphql_query,
@@ -55,20 +56,20 @@ class CommentsData(RepositoriesData):
                     break
 
     @staticmethod
-    def identify_ack(text: str):
+    def identify_ack(text: str) -> ReviewDecision:
         text = text.lower()
         if 'concept ack' in text:
-            return 'Concept ACK'
+            return ReviewDecision.CONCEPT_ACK
         elif 'tested ack' in text:
-            return 'Tested ACK'
+            return ReviewDecision.TESTED_ACK
         elif 'utack' in text or 'untested ack' in text:
-            return 'utACK'
+            return ReviewDecision.UNTESTED_ACK
         elif 'nack' in text:
-            return 'NACK'
+            return ReviewDecision.NACK
         elif text.startswith('ack '):
-            return 'Tested ACK'
+            return ReviewDecision.TESTED_ACK
         else:
-            return None
+            return ReviewDecision.NONE
 
     def upsert(self, pull_request_id: str, data: dict) -> bool:
         ack = self.identify_ack(data['body'])

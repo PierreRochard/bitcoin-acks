@@ -4,6 +4,8 @@ import humanize
 
 from markupsafe import Markup
 
+from bitcoin_acks.constants import ReviewDecision
+
 
 def line_count_formatter(view, context, model, name):
     lines = getattr(model, name)
@@ -53,8 +55,7 @@ def author_link_formatter(view, context, model, name):
     return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a target=blank href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
 
 
-def ack_comment_count_formatter(view, context, model, name):
-    comments = getattr(model, 'comments')
+def ack_formatter(comments, last_commit_short_hash, context_name):
     output = ''
     authors = []
     for comment in comments:
@@ -66,27 +67,27 @@ def ack_comment_count_formatter(view, context, model, name):
         else:
             ack = comment.corrected_ack
 
-        if ack == 'Concept ACK':
+        if ack == ReviewDecision.CONCEPT_ACK:
             label = 'label-primary'
-        elif ack == 'Tested ACK':
+        elif ack == ReviewDecision.TESTED_ACK:
             label = 'label-success'
-        elif ack == 'utACK':
+        elif ack == ReviewDecision.UNTESTED_ACK:
             label = 'label-warning'
-        elif ack == 'NACK':
+        elif ack == ReviewDecision.NACK:
             label = 'label-danger'
         else:
-            raise Exception('unrecognized ack')
+            continue
 
-        is_stale = model.last_commit_short_hash and model.last_commit_short_hash not in comment.body
-        if ack == 'Tested ACK' and is_stale:
+        is_stale = last_commit_short_hash and last_commit_short_hash not in comment.body
+        if ack == ReviewDecision.TESTED_ACK and is_stale:
             style = 'background-color: #2d672d;'
-        elif ack == 'utACK' and is_stale:
+        elif ack == ReviewDecision.UNTESTED_ACK and is_stale:
             style = 'background-color: #b06d0f'
         else:
             style = ''
 
         # Show comments in detail view only
-        if 'details' in context.name:
+        if 'details' in context_name:
             outer_style = ''
             comment_markup = '<div style="color: #000000;"> {body}</div>'.format(body=comment.body)
 
@@ -115,6 +116,30 @@ def ack_comment_count_formatter(view, context, model, name):
                                 outer_style=outer_style)
         authors.append(comment.author.login)
     return Markup(output)
+
+
+def concept_ack_formatter(view, context, model, name):
+    return ack_formatter(comments=getattr(model, 'concept_acks'),
+                         last_commit_short_hash=model.last_commit_short_hash,
+                         context_name=context.name)
+
+
+def tested_ack_formatter(view, context, model, name):
+    return ack_formatter(comments=getattr(model, 'tested_acks'),
+                         last_commit_short_hash=model.last_commit_short_hash,
+                         context_name=context.name)
+
+
+def untested_ack_formatter(view, context, model, name):
+    return ack_formatter(comments=getattr(model, 'untested_acks'),
+                         last_commit_short_hash=model.last_commit_short_hash,
+                         context_name=context.name)
+
+
+def nack_formatter(view, context, model, name):
+    return ack_formatter(comments=getattr(model, 'nacks'),
+                         last_commit_short_hash=model.last_commit_short_hash,
+                         context_name=context.name)
 
 
 def mergeable_formatter(view, context, model, name):

@@ -3,11 +3,17 @@ from sqlalchemy import func
 
 from bitcoin_acks.models import PullRequests
 from bitcoin_acks.webapp.formatters import (
-    body_formatter,
-    pr_link_formatter,
     author_link_formatter,
-    humanize_date_formatter, line_count_formatter, ack_comment_count_formatter,
-    mergeable_formatter, last_commit_state_formatter, labels_formatter)
+    body_formatter,
+    concept_ack_formatter,
+    humanize_date_formatter,
+    labels_formatter,
+    last_commit_state_formatter,
+    line_count_formatter,
+    mergeable_formatter,
+    pr_link_formatter,
+    tested_ack_formatter,
+    untested_ack_formatter, nack_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -49,7 +55,11 @@ class PullRequestsModelView(ModelView):
         'body',
         'additions',
         'deletions',
-        'ack_comment_count',
+        'review_decisions_count',
+        'tested_acks_count',
+        'untested_acks_count',
+        'concept_acks_count',
+        'nacks_count',
         'mergeable',
         'last_commit_state',
         'created_at',
@@ -58,8 +68,26 @@ class PullRequestsModelView(ModelView):
         'closed_at'
     ]
     column_details_list = column_list
-    column_filters = column_list
-    column_sortable_list = [c for c in column_list if c != 'labels']
+    column_filters = column_list + ['review_decisions.author.login']
+    column_sortable_list = [
+        'number',
+        'author.login',
+        'title',
+        'body',
+        'additions',
+        'deletions',
+        'review_decisions_count',
+        'concept_acks_count',
+        'tested_acks_count',
+        'untested_acks_count',
+        'nacks_count',
+        'mergeable',
+        'last_commit_state',
+        'created_at',
+        'updated_at',
+        'merged_at',
+        'closed_at'
+    ]
     column_formatters = {
         'body': body_formatter,
         'number': pr_link_formatter,
@@ -70,7 +98,10 @@ class PullRequestsModelView(ModelView):
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
         'deletions': line_count_formatter,
-        'ack_comment_count': ack_comment_count_formatter,
+        'concept_acks_count': concept_ack_formatter,
+        'tested_acks_count': tested_ack_formatter,
+        'untested_acks_count': untested_ack_formatter,
+        'nacks_count': nack_formatter,
         'mergeable': mergeable_formatter,
         'last_commit_state': last_commit_state_formatter,
         'labels': labels_formatter
@@ -84,6 +115,10 @@ class PullRequestsModelView(ModelView):
         'updated_at': 'Updated',
         'merged_at': 'Merged',
         'closed_at': 'Closed',
-        'ack_comment_count': 'Reviews',
+        'review_decisions_count': 'Reviews',
+        'concept_acks_count': 'Concept ACKs',
+        'tested_acks_count': 'Tested ACKs',
+        'untested_acks_count': 'Untested ACKs',
+        'nacks_count': 'NACKs',
         'last_commit_state': 'CI'
     }
