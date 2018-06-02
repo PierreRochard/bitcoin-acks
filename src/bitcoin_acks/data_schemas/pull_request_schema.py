@@ -8,7 +8,7 @@ class AuthorSchema(Schema):
 
 
 class CommentSchema(Schema):
-    author = fields.Nested(AuthorSchema)
+    author = fields.Nested(AuthorSchema, allow_none=True)
     body = fields.Str()
     id = fields.Str()
     publishedAt = fields.DateTime()
@@ -55,8 +55,11 @@ class LabelsSchema(Schema):
 
 
 class PullRequestSchema(Schema):
+    class Meta:
+        strict = True
+
     additions = fields.Int()
-    author = fields.Nested(AuthorSchema)
+    author = fields.Nested(AuthorSchema, allow_none=True)
     bodyHTML = fields.Str()
     closedAt = fields.DateTime(allow_none=True)
     comments = fields.Nested(CommentsSchema)

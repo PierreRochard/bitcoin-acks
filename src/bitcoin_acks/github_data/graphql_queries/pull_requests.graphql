@@ -2,9 +2,7 @@ query(
 $repositoryPath: String = "bitcoin",
 $repositoryName: String = "bitcoin",
 $prFirst: Int = 20,
-$prLast: Int = null,
 $prCursorAfter: String = null,
-$prCursorBefore: String = null,
 $prState: PullRequestState = null
 ){
     rateLimit {
@@ -15,9 +13,7 @@ $prState: PullRequestState = null
     }
     repository(owner: $repositoryPath, name: $repositoryName) {
         pullRequests(first: $prFirst,
-                     last: $prLast,
                      after: $prCursorAfter,
-                     before: $prCursorBefore,
                      states: [$prState],
                      orderBy: {field: UPDATED_AT, direction: DESC}) {
             totalCount

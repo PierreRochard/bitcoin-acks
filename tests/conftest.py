@@ -55,9 +55,8 @@ def pull_requests_data() -> List[dict]:
         pass
 
     for test_case in pull_requests_get_all_test_cases:
-        state, newest_first, limit = test_case
+        state, limit = test_case
         file_path = pull_requests_file_path.format(state=str(state),
-                                                   newest_first=str(newest_first),
                                                    limit=str(limit))
         try:
             with open(file_path, 'r') as outfile:
