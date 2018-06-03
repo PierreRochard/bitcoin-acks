@@ -17,7 +17,7 @@
 # Contributing
 
 
-### Running the App
+### Installing the App
 
 - [Install the Postgres RDBMS](https://www.postgresql.org/download/)
 
@@ -68,7 +68,14 @@ GITHUB_API_TOKEN=<your-github-api-token>
 $ python src/bitcoin-acks/database/createdb.py
 ```
 
-- Query to Github API to populate the database:
+- Populate the database
+```
+$ python src/github_data/pull_request_data.py
+```
+
+### Running the App
+
+- Poll the Github API to keep the databse up to date:
 ```
 $ python src/github_data/pull_request_events.py
 ```
@@ -76,6 +83,13 @@ $ python src/github_data/pull_request_events.py
 - Run the web server:
 ```
 $ python src/bitcoin-acks/webapp/run.py
+```
+
+### Upgrading
+
+- Run migrations:
+```
+$ alembic --config src/bitcoin_acks/migrations/alembic.ini upgrade head
 ```
 
 

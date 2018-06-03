@@ -9,11 +9,7 @@ from sqlalchemy.orm import sessionmaker
 is_test = False
 
 
-@contextmanager
-def session_scope(echo=False,
-                  raise_integrity_error=True,
-                  raise_programming_error=True):
-
+def get_url():
     db_name = (os.environ.get('GH_PGDATABASE', 'github')
                if not is_test else os.environ.get('TEST_GH_PGDATABASE', 'test_github'))
 
@@ -23,6 +19,15 @@ def session_scope(echo=False,
                  host=os.environ['PGHOST'],
                  port=os.environ['PGPORT'],
                  database=db_name)
+    return pg_url
+
+
+@contextmanager
+def session_scope(echo=False,
+                  raise_integrity_error=True,
+                  raise_programming_error=True):
+
+    pg_url = get_url()
     engine = create_engine(pg_url, echo=echo,
                            connect_args={'sslmode': 'prefer'})
     session_maker = sessionmaker(bind=engine)
