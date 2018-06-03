@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from flask_admin import Admin
 
 from bitcoin_acks.database.session import session_scope
@@ -36,6 +36,11 @@ def create_app(config_object: str):
                       template_mode='bootstrap3',
                       url='/',
                       index_view=PullRequestsModelView(PullRequests, session))
+
+    @app.route('/robots.txt')
+    def robots_txt():
+        return Response('User-agent: *\nDisallow: /\n')
+
     return app
 
 
