@@ -92,7 +92,7 @@ class CommentsData(RepositoriesData):
 
             for key, value in data.items():
                 setattr(record, key, value)
-            record.auto_detected_ack = ack
+            record.auto_detected_review_decision = ack
 
         if ack is None:
             return False

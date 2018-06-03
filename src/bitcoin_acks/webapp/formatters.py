@@ -58,36 +58,33 @@ def author_link_formatter(view, context, model, name):
 def ack_formatter(comments, last_commit_short_hash, context_name):
     output = ''
     authors = []
+    is_details = 'details' in context_name
+
     for comment in comments:
         if comment.author.login in authors:
             continue
 
-        if comment.corrected_ack is None:
-            ack = comment.auto_detected_ack
-        else:
-            ack = comment.corrected_ack
-
-        if ack == ReviewDecision.CONCEPT_ACK:
+        if comment.review_decision == ReviewDecision.CONCEPT_ACK:
             label = 'label-primary'
-        elif ack == ReviewDecision.TESTED_ACK:
+        elif comment.review_decision == ReviewDecision.TESTED_ACK:
             label = 'label-success'
-        elif ack == ReviewDecision.UNTESTED_ACK:
+        elif comment.review_decision == ReviewDecision.UNTESTED_ACK:
             label = 'label-warning'
-        elif ack == ReviewDecision.NACK:
+        elif comment.review_decision == ReviewDecision.NACK:
             label = 'label-danger'
         else:
             continue
 
         is_stale = last_commit_short_hash and last_commit_short_hash not in comment.body
-        if ack == ReviewDecision.TESTED_ACK and is_stale:
+        if comment.review_decision == ReviewDecision.TESTED_ACK and is_stale:
             style = 'background-color: #2d672d;'
-        elif ack == ReviewDecision.UNTESTED_ACK and is_stale:
+        elif comment.review_decision == ReviewDecision.UNTESTED_ACK and is_stale:
             style = 'background-color: #b06d0f'
         else:
             style = ''
 
         # Show comments in detail view only
-        if 'details' in context_name:
+        if is_details:
             outer_style = ''
             comment_markup = '<div style="color: #000000;"> {body}</div>'.format(body=comment.body)
 
@@ -115,6 +112,11 @@ def ack_formatter(comments, last_commit_short_hash, context_name):
                                 style=style,
                                 outer_style=outer_style)
         authors.append(comment.author.login)
+
+    if len(authors) >= 3 and not is_details:
+        output += '<div class="text-center">' \
+                  '<small><em>Total: {reviews_count}</em></small>' \
+                  '</div>'.format(reviews_count=len(authors))
     return Markup(output)
 
 

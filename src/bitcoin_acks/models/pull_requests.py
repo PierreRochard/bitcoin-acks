@@ -70,7 +70,7 @@ class PullRequests(Base):
     review_decisions = relationship(Comments,
                                 primaryjoin=and_(
                                     id == Comments.pull_request_id,
-                                    Comments.ack != ReviewDecision.NONE,
+                                    Comments.review_decision != ReviewDecision.NONE,
                                     Comments.author_id != author_id
                                 ),
                                 foreign_keys='[Comments.pull_request_id]',
@@ -83,7 +83,7 @@ class PullRequests(Base):
     @review_decisions_count.expression
     def review_decisions_count(cls):
         return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,                                                   Comments.ack != ReviewDecision.NONE,
+                .where(and_(Comments.pull_request_id == cls.id, Comments.review_decision != ReviewDecision.NONE,
                             Comments.author_id != cls.author_id))
                 .label('concept_acks_count')
                 )
@@ -91,7 +91,7 @@ class PullRequests(Base):
     concept_acks = relationship(Comments,
                                 primaryjoin=and_(
                                     id == Comments.pull_request_id,
-                                    Comments.ack == ReviewDecision.CONCEPT_ACK,
+                                    Comments.review_decision == ReviewDecision.CONCEPT_ACK,
                                     Comments.author_id != author_id
                                 ),
                                 foreign_keys='[Comments.pull_request_id]',
@@ -105,16 +105,16 @@ class PullRequests(Base):
     def concept_acks_count(cls):
         return (select([func.count(Comments.id)])
                 .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.ack == ReviewDecision.CONCEPT_ACK,
+                            Comments.review_decision == ReviewDecision.CONCEPT_ACK,
                             Comments.author_id != cls.author_id))
                 .label('concept_acks_count')
                 )
 
     tested_acks = relationship(Comments,
                                primaryjoin=and_(
-                                    id == Comments.pull_request_id,
-                                    Comments.ack == ReviewDecision.TESTED_ACK,
-                                    Comments.author_id != author_id
+                                   id == Comments.pull_request_id,
+                                   Comments.review_decision == ReviewDecision.TESTED_ACK,
+                                   Comments.author_id != author_id
                                ),
                                foreign_keys='[Comments.pull_request_id]',
                                order_by=Comments.published_at.desc())
@@ -127,7 +127,7 @@ class PullRequests(Base):
     def tested_acks_count(cls):
         return (select([func.count(Comments.id)])
                 .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.ack == ReviewDecision.TESTED_ACK,
+                            Comments.review_decision == ReviewDecision.TESTED_ACK,
                             Comments.author_id != cls.author_id))
                 .label('tested_acks_count')
                 )
@@ -135,7 +135,7 @@ class PullRequests(Base):
     untested_acks = relationship(Comments,
                                primaryjoin=and_(
                                    id == Comments.pull_request_id,
-                                   Comments.ack == ReviewDecision.UNTESTED_ACK,
+                                   Comments.review_decision == ReviewDecision.UNTESTED_ACK,
                                    Comments.author_id != author_id
                                ),
                                foreign_keys='[Comments.pull_request_id]',
@@ -149,7 +149,7 @@ class PullRequests(Base):
     def untested_acks_count(cls):
         return (select([func.count(Comments.id)])
                 .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.ack == ReviewDecision.UNTESTED_ACK,
+                            Comments.review_decision == ReviewDecision.UNTESTED_ACK,
                             Comments.author_id != cls.author_id))
                 .label('untested_acks_count')
                 )
@@ -157,7 +157,7 @@ class PullRequests(Base):
     nacks = relationship(Comments,
                                  primaryjoin=and_(
                                      id == Comments.pull_request_id,
-                                     Comments.ack == ReviewDecision.NACK,
+                                     Comments.review_decision == ReviewDecision.NACK,
                                      Comments.author_id != author_id
                                  ),
                                  foreign_keys='[Comments.pull_request_id]',
@@ -171,7 +171,7 @@ class PullRequests(Base):
     def nacks_count(cls):
         return (select([func.count(Comments.id)])
                 .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.ack == ReviewDecision.NACK,
+                            Comments.review_decision == ReviewDecision.NACK,
                             Comments.author_id != cls.author_id))
                 .label('nacks_count')
                 )

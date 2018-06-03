@@ -25,16 +25,16 @@ class Comments(Base):
     pull_request_id = Column(String, nullable=False)
     author_id = Column(String)
 
-    auto_detected_ack = Column(Enum(ReviewDecision))
-    corrected_ack = Column(Enum(ReviewDecision))
+    auto_detected_review_decision = Column(Enum(ReviewDecision))
+    corrected_review_decision = Column(Enum(ReviewDecision))
 
     @hybrid_property
-    def ack(self):
-        return self.corrected_ack if self.corrected_ack else self.auto_detected_ack
+    def review_decision(self):
+        return self.corrected_review_decision if self.corrected_review_decision else self.auto_detected_review_decision
 
-    @ack.expression
-    def ack(cls):
-        return func.coalesce(cls.auto_detected_ack, cls.corrected_ack)
+    @review_decision.expression
+    def review_decision(cls):
+        return func.coalesce(cls.auto_detected_review_decision, cls.corrected_review_decision)
 
     author = relationship(Users,
                           primaryjoin=author_id == Users.id,
