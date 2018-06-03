@@ -46,9 +46,6 @@ class PullRequests(Base):
     merged_at = Column(DateTime(timezone=True))
     closed_at = Column(DateTime(timezone=True))
 
-    comment_count = Column(Integer)
-    # NB counts all of (nack, utack, tested ack, concept ack)
-    ack_comment_count = Column(Integer)
     commit_count = Column(Integer)
 
     bodyHTML = synonym('body')
@@ -68,13 +65,13 @@ class PullRequests(Base):
                           )
 
     review_decisions = relationship(Comments,
-                                primaryjoin=and_(
-                                    id == Comments.pull_request_id,
-                                    Comments.review_decision != ReviewDecision.NONE,
-                                    Comments.author_id != author_id
-                                ),
-                                foreign_keys='[Comments.pull_request_id]',
-                                order_by=Comments.published_at.desc())
+                                    primaryjoin=and_(
+                                        id == Comments.pull_request_id,
+                                        Comments.review_decision != ReviewDecision.NONE,
+                                        Comments.author_id != author_id
+                                    ),
+                                    foreign_keys='[Comments.pull_request_id]',
+                                    order_by=Comments.published_at.desc())
 
     @hybrid_property
     def review_decisions_count(self):
@@ -83,9 +80,10 @@ class PullRequests(Base):
     @review_decisions_count.expression
     def review_decisions_count(cls):
         return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id, Comments.review_decision != ReviewDecision.NONE,
+                .where(and_(Comments.pull_request_id == cls.id,
+                            Comments.review_decision != ReviewDecision.NONE,
                             Comments.author_id != cls.author_id))
-                .label('concept_acks_count')
+                .label('review_decisions_count')
                 )
 
     concept_acks = relationship(Comments,
@@ -133,13 +131,13 @@ class PullRequests(Base):
                 )
 
     untested_acks = relationship(Comments,
-                               primaryjoin=and_(
+                                 primaryjoin=and_(
                                    id == Comments.pull_request_id,
                                    Comments.review_decision == ReviewDecision.UNTESTED_ACK,
                                    Comments.author_id != author_id
-                               ),
-                               foreign_keys='[Comments.pull_request_id]',
-                               order_by=Comments.published_at.desc())
+                                 ),
+                                 foreign_keys='[Comments.pull_request_id]',
+                                 order_by=Comments.published_at.desc())
 
     @hybrid_property
     def untested_acks_count(self):
@@ -155,13 +153,13 @@ class PullRequests(Base):
                 )
 
     nacks = relationship(Comments,
-                                 primaryjoin=and_(
-                                     id == Comments.pull_request_id,
-                                     Comments.review_decision == ReviewDecision.NACK,
-                                     Comments.author_id != author_id
-                                 ),
-                                 foreign_keys='[Comments.pull_request_id]',
-                                 order_by=Comments.published_at.desc())
+                         primaryjoin=and_(
+                             id == Comments.pull_request_id,
+                             Comments.review_decision == ReviewDecision.NACK,
+                             Comments.author_id != author_id
+                         ),
+                         foreign_keys='[Comments.pull_request_id]',
+                         order_by=Comments.published_at.desc())
 
     @hybrid_property
     def nacks_count(self):

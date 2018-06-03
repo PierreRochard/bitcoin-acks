@@ -115,10 +115,6 @@ class PullRequestsData(RepositoriesData):
                 pull_request_number=pull_request['number'])]
         else:
             comments_and_reviews = comments['nodes'] + reviews['nodes']
-        pull_request['comment_count'] = comments['totalCount']
-        pull_request['ack_comment_count'] = comments_data.bulk_upsert(
-            pull_request_id=pull_request['id'],
-            comments=comments_and_reviews)
 
         # Last commit is used to determine CI status
         last_commit_status = None
@@ -146,6 +142,8 @@ class PullRequestsData(RepositoriesData):
                         pull_request_id=pull_request['id'])
 
         self.upsert(pull_request)
+        comments_data.bulk_upsert(pull_request_id=pull_request['id'],
+                                  comments=comments_and_reviews)
 
     def update_all(self,
                    state: PullRequestState = None,

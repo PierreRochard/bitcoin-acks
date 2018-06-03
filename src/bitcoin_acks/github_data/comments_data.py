@@ -98,7 +98,7 @@ class CommentsData(RepositoriesData):
             return False
         return True
 
-    def bulk_upsert(self, pull_request_id: str, comments: List[dict]) -> int:
+    def bulk_upsert(self, pull_request_id: str, comments: List[dict]):
         ack_comment_authors = []
         comments = sorted(comments,
                           key=lambda k: k['publishedAt'],
@@ -111,7 +111,6 @@ class CommentsData(RepositoriesData):
                                      data=comment)
                 if is_ack:
                     ack_comment_authors.append(comment_author_name)
-        return len(ack_comment_authors)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column,
     DateTime,
-    String, Enum, func)
+    String, Enum, func, ForeignKey)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import synonym, relationship
 
@@ -22,7 +22,9 @@ class Comments(Base):
 
     url = Column(String, nullable=False)
 
-    pull_request_id = Column(String, nullable=False)
+    pull_request_id = Column(String,
+                             ForeignKey('pull_requests.id'),
+                             nullable=False)
     author_id = Column(String)
 
     auto_detected_review_decision = Column(Enum(ReviewDecision))
