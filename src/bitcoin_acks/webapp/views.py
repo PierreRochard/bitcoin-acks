@@ -44,7 +44,8 @@ class PullRequestsModelView(ModelView):
         PullRequests.number,
         'title',
         'body',
-        'author.login'
+        'author.login',
+        'review_decisions.author.login',
     ]
 
     column_list = [
@@ -68,7 +69,23 @@ class PullRequestsModelView(ModelView):
         'closed_at'
     ]
     column_details_list = column_list
-    column_filters = column_list + ['review_decisions.author.login']
+    column_filters = [
+        'number',
+        'author.login',
+        'review_decisions.author.login',
+        'labels',
+        'title',
+        'body',
+        'additions',
+        'deletions',
+        'review_decisions_count',
+        'mergeable',
+        'last_commit_state',
+        'created_at',
+        'updated_at',
+        'merged_at',
+        'closed_at'
+    ]
     column_sortable_list = [
         'number',
         'author.login',
