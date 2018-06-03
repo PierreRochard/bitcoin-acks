@@ -4,7 +4,7 @@ from flask import Flask, request, Response
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin.menu import MenuLink
-from flask_dance.contrib.github import make_github_blueprint, github
+from flask_dance.contrib.github import make_github_blueprint
 
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.models import PullRequests, Logs
@@ -44,7 +44,6 @@ def create_app(config_object: str):
                   template_mode='bootstrap3',
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
-
 
     @app.route('/robots.txt')
     def robots_txt():
