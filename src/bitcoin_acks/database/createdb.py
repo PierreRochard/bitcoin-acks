@@ -1,3 +1,8 @@
+import os
+
+from alembic.config import Config
+from alembic import command
+
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.database.base import Base
 
@@ -7,6 +12,13 @@ import bitcoin_acks.models
 def create_database(echo=True):
     with session_scope(echo=echo) as session:
         Base.metadata.create_all(session.connection())
+
+    file_path = os.path.realpath(__file__)
+    app_path = os.path.dirname(os.path.dirname(file_path))
+    config_path = os.path.join(app_path, 'migrations', 'alembic.ini')
+
+    alembic_config = Config(config_path)
+    command.stamp(alembic_config, 'head')
 
 
 def drop_database(echo=True):
