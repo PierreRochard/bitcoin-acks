@@ -5,10 +5,12 @@ from sqlalchemy import (
     Numeric,
     String,
     UniqueConstraint,
-    and_
-)
+    and_,
+    select, func)
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, synonym
 
+from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.database.base import Base
 from bitcoin_acks.models import Comments, Labels
 from bitcoin_acks.models.pull_requests_labels import PullRequestsLabels
@@ -65,15 +67,114 @@ class PullRequests(Base):
                           backref='pull_requests'
                           )
 
-    comments = relationship(Comments,
-                            primaryjoin=and_(
-                                id == Comments.pull_request_id,
-                                Comments.auto_detected_ack.isnot(None),
-                                Comments.author_id != author_id
-                            ),
-                            foreign_keys='[Comments.pull_request_id]',
-                            backref='pull_request',
-                            order_by=Comments.published_at.desc())
+    review_decisions = relationship(Comments,
+                                primaryjoin=and_(
+                                    id == Comments.pull_request_id,
+                                    Comments.review_decision != ReviewDecision.NONE,
+                                    Comments.author_id != author_id
+                                ),
+                                foreign_keys='[Comments.pull_request_id]',
+                                order_by=Comments.published_at.desc())
+
+    @hybrid_property
+    def review_decisions_count(self):
+        return len(self.review_decisions)
+
+    @review_decisions_count.expression
+    def review_decisions_count(cls):
+        return (select([func.count(Comments.id)])
+                .where(and_(Comments.pull_request_id == cls.id, Comments.review_decision != ReviewDecision.NONE,
+                            Comments.author_id != cls.author_id))
+                .label('concept_acks_count')
+                )
+
+    concept_acks = relationship(Comments,
+                                primaryjoin=and_(
+                                    id == Comments.pull_request_id,
+                                    Comments.review_decision == ReviewDecision.CONCEPT_ACK,
+                                    Comments.author_id != author_id
+                                ),
+                                foreign_keys='[Comments.pull_request_id]',
+                                order_by=Comments.published_at.desc())
+
+    @hybrid_property
+    def concept_acks_count(self):
+        return len(self.concept_acks)
+
+    @concept_acks_count.expression
+    def concept_acks_count(cls):
+        return (select([func.count(Comments.id)])
+                .where(and_(Comments.pull_request_id == cls.id,
+                            Comments.review_decision == ReviewDecision.CONCEPT_ACK,
+                            Comments.author_id != cls.author_id))
+                .label('concept_acks_count')
+                )
+
+    tested_acks = relationship(Comments,
+                               primaryjoin=and_(
+                                   id == Comments.pull_request_id,
+                                   Comments.review_decision == ReviewDecision.TESTED_ACK,
+                                   Comments.author_id != author_id
+                               ),
+                               foreign_keys='[Comments.pull_request_id]',
+                               order_by=Comments.published_at.desc())
+
+    @hybrid_property
+    def tested_acks_count(self):
+        return len(self.tested_acks)
+
+    @tested_acks_count.expression
+    def tested_acks_count(cls):
+        return (select([func.count(Comments.id)])
+                .where(and_(Comments.pull_request_id == cls.id,
+                            Comments.review_decision == ReviewDecision.TESTED_ACK,
+                            Comments.author_id != cls.author_id))
+                .label('tested_acks_count')
+                )
+
+    untested_acks = relationship(Comments,
+                               primaryjoin=and_(
+                                   id == Comments.pull_request_id,
+                                   Comments.review_decision == ReviewDecision.UNTESTED_ACK,
+                                   Comments.author_id != author_id
+                               ),
+                               foreign_keys='[Comments.pull_request_id]',
+                               order_by=Comments.published_at.desc())
+
+    @hybrid_property
+    def untested_acks_count(self):
+        return len(self.untested_acks)
+
+    @untested_acks_count.expression
+    def untested_acks_count(cls):
+        return (select([func.count(Comments.id)])
+                .where(and_(Comments.pull_request_id == cls.id,
+                            Comments.review_decision == ReviewDecision.UNTESTED_ACK,
+                            Comments.author_id != cls.author_id))
+                .label('untested_acks_count')
+                )
+
+    nacks = relationship(Comments,
+                                 primaryjoin=and_(
+                                     id == Comments.pull_request_id,
+                                     Comments.review_decision == ReviewDecision.NACK,
+                                     Comments.author_id != author_id
+                                 ),
+                                 foreign_keys='[Comments.pull_request_id]',
+                                 order_by=Comments.published_at.desc())
+
+    @hybrid_property
+    def nacks_count(self):
+        return len(self.nacks)
+
+    @nacks_count.expression
+    def nacks_count(cls):
+        return (select([func.count(Comments.id)])
+                .where(and_(Comments.pull_request_id == cls.id,
+                            Comments.review_decision == ReviewDecision.NACK,
+                            Comments.author_id != cls.author_id))
+                .label('nacks_count')
+                )
 
     labels = relationship(Labels,
                           secondary=PullRequestsLabels.__table__,
