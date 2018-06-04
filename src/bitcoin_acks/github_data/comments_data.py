@@ -72,7 +72,7 @@ class CommentsData(RepositoriesData):
                     break
 
     @staticmethod
-    def identify_ack(text: str) -> ReviewDecision:
+    def identify_review_decision(text: str) -> ReviewDecision:
         text = text.lower()
         if 'concept ack' in text:
             return ReviewDecision.CONCEPT_ACK
@@ -88,7 +88,7 @@ class CommentsData(RepositoriesData):
             return ReviewDecision.NONE
 
     def upsert(self, pull_request_id: str, data: dict) -> bool:
-        ack = self.identify_ack(data['body'])
+        review_decision = self.identify_review_decision(data['body'])
 
         author = data.pop('author')
         author_id = UsersData().upsert(data=author)
@@ -108,9 +108,9 @@ class CommentsData(RepositoriesData):
 
             for key, value in data.items():
                 setattr(record, key, value)
-            record.auto_detected_review_decision = ack
+            record.auto_detected_review_decision = review_decision
 
-        if ack is None:
+        if review_decision == ReviewDecision.NONE:
             return False
         return True
 
@@ -123,9 +123,9 @@ class CommentsData(RepositoriesData):
         for comment in comments:
             comment_author_name = comment['author']['login']
             if comment_author_name not in ack_comment_authors:
-                is_ack = self.upsert(pull_request_id=pull_request_id,
-                                     data=comment)
-                if is_ack:
+                is_review_decision = self.upsert(pull_request_id=pull_request_id,
+                                                 data=comment)
+                if is_review_decision:
                     ack_comment_authors.append(comment_author_name)
 
 
