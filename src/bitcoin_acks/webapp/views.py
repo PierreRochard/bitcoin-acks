@@ -67,7 +67,7 @@ class PullRequestsModelView(ModelView):
         'number',
         'author.login',
         'review_decisions.author.login',
-        'labels',
+        'labels.name',
         'title',
         'body',
         'additions',
@@ -113,6 +113,8 @@ class PullRequestsModelView(ModelView):
     column_default_sort = ('updated_at', True)
     column_labels = {
         'author.login': 'Author',
+        'review_decisions.author.login': 'Reviewer',
+        'labels.name': 'Label',
         'additions': '+',
         'deletions': '-',
         'created_at': 'Created',
