@@ -5,15 +5,13 @@ from bitcoin_acks.models import PullRequests
 from bitcoin_acks.webapp.formatters import (
     author_link_formatter,
     body_formatter,
-    concept_ack_formatter,
     humanize_date_formatter,
     labels_formatter,
     last_commit_state_formatter,
     line_count_formatter,
     mergeable_formatter,
     pr_link_formatter,
-    tested_ack_formatter,
-    untested_ack_formatter, nack_formatter)
+    review_decisions_formatter)
 
 
 class PullRequestsModelView(ModelView):
@@ -57,10 +55,6 @@ class PullRequestsModelView(ModelView):
         'additions',
         'deletions',
         'review_decisions_count',
-        'tested_acks_count',
-        'untested_acks_count',
-        'concept_acks_count',
-        'nacks_count',
         'mergeable',
         'last_commit_state',
         'created_at',
@@ -94,10 +88,6 @@ class PullRequestsModelView(ModelView):
         'additions',
         'deletions',
         'review_decisions_count',
-        'concept_acks_count',
-        'tested_acks_count',
-        'untested_acks_count',
-        'nacks_count',
         'mergeable',
         'last_commit_state',
         'created_at',
@@ -115,10 +105,7 @@ class PullRequestsModelView(ModelView):
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
         'deletions': line_count_formatter,
-        'concept_acks_count': concept_ack_formatter,
-        'tested_acks_count': tested_ack_formatter,
-        'untested_acks_count': untested_ack_formatter,
-        'nacks_count': nack_formatter,
+        'review_decisions_count': review_decisions_formatter,
         'mergeable': mergeable_formatter,
         'last_commit_state': last_commit_state_formatter,
         'labels': labels_formatter
@@ -133,9 +120,5 @@ class PullRequestsModelView(ModelView):
         'merged_at': 'Merged',
         'closed_at': 'Closed',
         'review_decisions_count': 'Reviews',
-        'concept_acks_count': 'Concept ACKs',
-        'tested_acks_count': 'Tested ACKs',
-        'untested_acks_count': 'Untested ACKs',
-        'nacks_count': 'NACKs',
         'last_commit_state': 'CI'
     }

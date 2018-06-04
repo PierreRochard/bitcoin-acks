@@ -86,58 +86,6 @@ class PullRequests(Base):
                 .label('review_decisions_count')
                 )
 
-    @hybrid_property
-    def concept_acks_count(self):
-        return len(self.concept_acks)
-
-    @concept_acks_count.expression
-    def concept_acks_count(cls):
-        return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.review_decision == ReviewDecision.CONCEPT_ACK,
-                            Comments.author_id != cls.author_id))
-                .label('concept_acks_count')
-                )
-
-    @hybrid_property
-    def tested_acks_count(self):
-        return len(self.tested_acks)
-
-    @tested_acks_count.expression
-    def tested_acks_count(cls):
-        return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.review_decision == ReviewDecision.TESTED_ACK,
-                            Comments.author_id != cls.author_id))
-                .label('tested_acks_count')
-                )
-
-    @hybrid_property
-    def untested_acks_count(self):
-        return len(self.untested_acks)
-
-    @untested_acks_count.expression
-    def untested_acks_count(cls):
-        return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.review_decision == ReviewDecision.UNTESTED_ACK,
-                            Comments.author_id != cls.author_id))
-                .label('untested_acks_count')
-                )
-
-    @hybrid_property
-    def nacks_count(self):
-        return len(self.nacks)
-
-    @nacks_count.expression
-    def nacks_count(cls):
-        return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.review_decision == ReviewDecision.NACK,
-                            Comments.author_id != cls.author_id))
-                .label('nacks_count')
-                )
-
     labels = relationship(Labels,
                           secondary=PullRequestsLabels.__table__,
                           primaryjoin=id == PullRequestsLabels.pull_request_id,
