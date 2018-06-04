@@ -1,5 +1,6 @@
 from typing import List
 
+from sqlalchemy import func, and_
 from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.constants import ReviewDecision
@@ -17,6 +18,21 @@ class CommentsData(RepositoriesData):
     def __init__(self, repository_path: str, repository_name: str):
         super(CommentsData, self).__init__(repository_path=repository_path,
                                            repository_name=repository_name)
+
+    @staticmethod
+    def get_review_count(pull_request_id: str, pull_request_author_id) -> int:
+        with session_scope() as session:
+            review_count = (
+                session.query(func.count(Comments.id))
+                .filter(
+                    and_(
+                        Comments.pull_request_id == pull_request_id,
+                        Comments.review_decision != ReviewDecision.NONE,
+                        Comments.author_id != pull_request_author_id
+                    )
+                ).scalar()
+            )
+            return review_count
 
     def get_all(self, pull_request_number: int):
         for query, nested_name in (

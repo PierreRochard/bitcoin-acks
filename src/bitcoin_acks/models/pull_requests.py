@@ -5,9 +5,8 @@ from sqlalchemy import (
     Numeric,
     String,
     UniqueConstraint,
-    and_,
-    select, func)
-from sqlalchemy.ext.hybrid import hybrid_property
+    and_
+)
 from sqlalchemy.orm import relationship, synonym
 
 from bitcoin_acks.constants import ReviewDecision
@@ -47,6 +46,7 @@ class PullRequests(Base):
     closed_at = Column(DateTime(timezone=True))
 
     commit_count = Column(Integer)
+    review_decisions_count = Column(Integer, default=0)
 
     bodyHTML = synonym('body')
     createdAt = synonym('created_at')
@@ -72,19 +72,6 @@ class PullRequests(Base):
                                     ),
                                     foreign_keys='[Comments.pull_request_id]',
                                     order_by=Comments.published_at.desc())
-
-    @hybrid_property
-    def review_decisions_count(self):
-        return len(self.review_decisions)
-
-    @review_decisions_count.expression
-    def review_decisions_count(cls):
-        return (select([func.count(Comments.id)])
-                .where(and_(Comments.pull_request_id == cls.id,
-                            Comments.review_decision != ReviewDecision.NONE,
-                            Comments.author_id != cls.author_id))
-                .label('review_decisions_count')
-                )
 
     labels = relationship(Labels,
                           secondary=PullRequestsLabels.__table__,
