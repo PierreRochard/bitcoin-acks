@@ -66,10 +66,10 @@ if __name__ == '__main__':
         time.sleep(math.ceil(sleep_time)+5)
 
         now = datetime.utcnow()
-        if pr_events.last_update.hour != now.hour:
+        if pr_events.last_update.day != now.day:
             pr_data.update_all(state=PullRequestState.OPEN)
             polling_data.update(last_open_update=True)
-        elif pr_events.last_update.day != now.day:
+        elif pr_events.last_update.month != now.month:
             pr_data.update_all()
             polling_data.update(last_full_update=True)
         pr_events.last_update = now
