@@ -158,7 +158,7 @@ class PullRequestsData(RepositoriesData):
         comments_data.bulk_upsert(pull_request_id=pull_request['id'],
                                   comments=comments_and_reviews)
         self.update_review_count_cache(pull_request_id=pull_request['id'],
-                                       pull_request_author_id=pull_request['author_id'])
+                                       pull_request_author_id=pull_request.get('author_id'))
 
     def update_all(self,
                    state: PullRequestState = None,
