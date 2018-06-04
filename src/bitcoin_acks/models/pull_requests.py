@@ -86,15 +86,6 @@ class PullRequests(Base):
                 .label('review_decisions_count')
                 )
 
-    concept_acks = relationship(Comments,
-                                primaryjoin=and_(
-                                    id == Comments.pull_request_id,
-                                    Comments.review_decision == ReviewDecision.CONCEPT_ACK,
-                                    Comments.author_id != author_id
-                                ),
-                                foreign_keys='[Comments.pull_request_id]',
-                                order_by=Comments.published_at.desc())
-
     @hybrid_property
     def concept_acks_count(self):
         return len(self.concept_acks)
@@ -107,15 +98,6 @@ class PullRequests(Base):
                             Comments.author_id != cls.author_id))
                 .label('concept_acks_count')
                 )
-
-    tested_acks = relationship(Comments,
-                               primaryjoin=and_(
-                                   id == Comments.pull_request_id,
-                                   Comments.review_decision == ReviewDecision.TESTED_ACK,
-                                   Comments.author_id != author_id
-                               ),
-                               foreign_keys='[Comments.pull_request_id]',
-                               order_by=Comments.published_at.desc())
 
     @hybrid_property
     def tested_acks_count(self):
@@ -130,15 +112,6 @@ class PullRequests(Base):
                 .label('tested_acks_count')
                 )
 
-    untested_acks = relationship(Comments,
-                                 primaryjoin=and_(
-                                   id == Comments.pull_request_id,
-                                   Comments.review_decision == ReviewDecision.UNTESTED_ACK,
-                                   Comments.author_id != author_id
-                                 ),
-                                 foreign_keys='[Comments.pull_request_id]',
-                                 order_by=Comments.published_at.desc())
-
     @hybrid_property
     def untested_acks_count(self):
         return len(self.untested_acks)
@@ -151,15 +124,6 @@ class PullRequests(Base):
                             Comments.author_id != cls.author_id))
                 .label('untested_acks_count')
                 )
-
-    nacks = relationship(Comments,
-                         primaryjoin=and_(
-                             id == Comments.pull_request_id,
-                             Comments.review_decision == ReviewDecision.NACK,
-                             Comments.author_id != author_id
-                         ),
-                         foreign_keys='[Comments.pull_request_id]',
-                         order_by=Comments.published_at.desc())
 
     @hybrid_property
     def nacks_count(self):
