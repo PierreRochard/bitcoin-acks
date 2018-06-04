@@ -101,6 +101,19 @@ class PullRequestsData(RepositoriesData):
             for key, value in data.items():
                 setattr(record, key, value)
 
+    @staticmethod
+    def update_review_count_cache(pull_request_id: str, pull_request_author_id: str):
+        review_count = CommentsData.get_review_count(pull_request_id=pull_request_id,
+                                                     pull_request_author_id=pull_request_author_id)
+        with session_scope() as session:
+            record = (
+                session
+                    .query(PullRequests)
+                    .filter(PullRequests.id == pull_request_id)
+                    .one()
+            )
+            record.review_decisions_count = review_count
+
     def upsert_nested_data(self, pull_request: dict):
         author = pull_request.pop('author')
         if author is not None:
@@ -144,6 +157,8 @@ class PullRequestsData(RepositoriesData):
         self.upsert(pull_request)
         comments_data.bulk_upsert(pull_request_id=pull_request['id'],
                                   comments=comments_and_reviews)
+        self.update_review_count_cache(pull_request_id=pull_request['id'],
+                                       pull_request_author_id=pull_request['author_id'])
 
     def update_all(self,
                    state: PullRequestState = None,
