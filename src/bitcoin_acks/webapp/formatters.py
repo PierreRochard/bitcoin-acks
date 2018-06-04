@@ -58,14 +58,14 @@ def author_link_formatter(view, context, model, name):
     return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a target=blank href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
 
 
-def ack_formatter(comments, last_commit_short_hash, context_name, review_decision):
+def review_decisions_formatter(view, context, model, name):
     output = ''
     authors = []
-    is_details = 'details' in context_name
+    is_details = 'details' in context.name
+    comments = getattr(model, 'review_decisions')
+    last_commit_short_hash = model.last_commit_short_hash
 
     for comment in comments:
-        if comment.review_decision != review_decision:
-            continue
         if comment.author.login in authors:
             continue
 
@@ -118,39 +118,11 @@ def ack_formatter(comments, last_commit_short_hash, context_name, review_decisio
                                 outer_style=outer_style)
         authors.append(comment.author.login)
 
-    if len(authors) >= 3 and not is_details:
+    if len(authors) >= 4 and not is_details:
         output += '<div class="text-center">' \
                   '<small><em>Total: {reviews_count}</em></small>' \
                   '</div>'.format(reviews_count=len(authors))
     return Markup(output)
-
-
-def concept_ack_formatter(view, context, model, name):
-    return ack_formatter(comments=getattr(model, 'review_decisions'),
-                         last_commit_short_hash=model.last_commit_short_hash,
-                         context_name=context.name,
-                         review_decision=ReviewDecision.CONCEPT_ACK)
-
-
-def tested_ack_formatter(view, context, model, name):
-    return ack_formatter(comments=getattr(model, 'review_decisions'),
-                         last_commit_short_hash=model.last_commit_short_hash,
-                         context_name=context.name,
-                         review_decision=ReviewDecision.TESTED_ACK)
-
-
-def untested_ack_formatter(view, context, model, name):
-    return ack_formatter(comments=getattr(model, 'review_decisions'),
-                         last_commit_short_hash=model.last_commit_short_hash,
-                         context_name=context.name,
-                         review_decision=ReviewDecision.UNTESTED_ACK)
-
-
-def nack_formatter(view, context, model, name):
-    return ack_formatter(comments=getattr(model, 'review_decisions'),
-                         last_commit_short_hash=model.last_commit_short_hash,
-                         context_name=context.name,
-                         review_decision=ReviewDecision.NACK)
 
 
 def mergeable_formatter(view, context, model, name):
