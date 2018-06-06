@@ -4,6 +4,7 @@ dateparser
 flask
 flask-admin>=1.5.1
 flask-sqlalchemy
+flask-dance
 graphene
 humanize
 markupsafe
