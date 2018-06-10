@@ -1,8 +1,8 @@
 import datetime
 
 import humanize
-
 from markupsafe import Markup
+import webcolors
 
 from bitcoin_acks.constants import ReviewDecision
 
@@ -176,11 +176,16 @@ def labels_formatter(view, context, model, name):
     labels = getattr(model, name)
     output = ''
     for label in labels:
+        label_color = '#' + label.color
+        rgb = webcolors.hex_to_rgb(label_color)
+        if rgb.blue > 200:
+            rgb = [int(c*0.6) for c in rgb]
+            label_color = webcolors.rgb_to_hex(rgb)
         output += '<a href={label_url} style="color: #FFFFFF; text-decoration: none;">' \
                   '<div style="white-space: nowrap; overflow: hidden;">' \
-                  ' <span class="label" style="background-color: #{label_color};" >{label_name}</span>' \
+                  ' <span class="label" style="background-color: {label_color};" >{label_name}</span>' \
                   '</div>' \
                   '</a>'.format(label_name=label.name,
                                 label_url='#',
-                                label_color=label.color)
+                                label_color=label_color)
     return Markup(output)

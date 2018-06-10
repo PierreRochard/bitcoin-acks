@@ -14,3 +14,4 @@ requests
 sqlalchemy
 twython
 unidiff
+webcolors

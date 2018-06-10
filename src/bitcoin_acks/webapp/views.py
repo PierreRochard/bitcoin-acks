@@ -44,6 +44,7 @@ class PullRequestsModelView(ModelView):
         'body',
         'author.login',
         'review_decisions.author.login',
+        'labels.name'
     ]
 
     column_list = [
