@@ -54,6 +54,30 @@ class LabelsSchema(Schema):
     totalCount = fields.Int()
 
 
+class ProjectSchema(Schema):
+    id = fields.Str()
+    number = fields.Int()
+    state = fields.Str()
+
+
+class ProjectColumnSchema(Schema):
+    id = fields.Str()
+    name = fields.Str()
+
+
+class ProjectCardSchema(Schema):
+    id = fields.Str()
+    column = fields.Nested(ProjectColumnSchema)
+    project = fields.Nested(ProjectSchema)
+    createdAt = fields.DateTime()
+    updatedAt = fields.DateTime()
+
+
+class ProjectCardsSchema(Schema):
+    nodes = fields.Nested(ProjectCardSchema, many=True)
+    totalCount = fields.Int()
+
+
 class PullRequestSchema(Schema):
     class Meta:
         strict = True
@@ -72,6 +96,7 @@ class PullRequestSchema(Schema):
     mergeable = fields.Str()
     mergedAt = fields.DateTime(allow_none=True)
     number = fields.Int()
+    projectCards = fields.Nested(ProjectCardsSchema)
     state = fields.Str()
     title = fields.Str()
     updatedAt = fields.DateTime()
