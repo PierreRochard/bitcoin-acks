@@ -30,6 +30,11 @@
 <tr class="info">
 {{ super() }}
 </tr>
+    {% elif get_value(row, 'closed_at') %}
+    <tr style="background-color: #E5E5E5;">
+        {{ super() }}
+    </tr>
+
 {% else %}
 {{ super() }}
 {% endif %}
