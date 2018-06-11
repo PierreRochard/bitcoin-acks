@@ -6,8 +6,8 @@
 
 ### Bitcoin ACKs v2
 - [ ] As a reviewer I want to see an inter-diff between force-pushed commits so that I can focus on code I have not already reviewed.
-- [ ] As an author I want to receive a notification when my PR becomes conflicted so that I can rebase.
-- [ ] As an author, reviewer, or maintainer I want to see which PRs would become conflicted after a PR is merged so that I can coordinate and prioritize.
+- [ ] ~~As an author I want to receive a notification when my PR becomes conflicted so that I can rebase.~~ [DrahtBot](https://github.com/DrahtBot) solves this!
+- [ ] ~~As an author, reviewer, or maintainer I want to see which PRs would become conflicted after a PR is merged so that I can coordinate and prioritize.~~  [DrahtBot](https://github.com/DrahtBot) solves this!
 
 ### Bitcoin ACKs v3
 - [ ] As an author or reviewer I want to have online C++ Jupyter notebooks so that I can explore, reason about, and communicate problems in an interactive manner.
