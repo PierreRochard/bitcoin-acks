@@ -19,6 +19,23 @@ query($prNumber: Int = 10757){
                     color
                 }
             }
+            projectCards(last: 100) {
+                totalCount
+                nodes {
+                    id
+                    column {
+                        id
+                        name
+                    }
+                    project {
+                        id
+                        number
+                        state
+                    }
+                    createdAt
+                    updatedAt
+                }
+            }
             author {
                 login
                 url

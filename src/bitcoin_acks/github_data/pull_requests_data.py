@@ -129,6 +129,14 @@ class PullRequestsData(RepositoriesData):
         else:
             comments_and_reviews = comments['nodes'] + reviews['nodes']
 
+        project_cards = pull_request.pop('projectCards')
+        blocker_card = [c for c in project_cards['nodes'] if
+                        c['column']['name'] == 'Blockers']
+        if blocker_card:
+            pull_request['is_high_priority'] = blocker_card[0]['createdAt']
+        else:
+            pull_request['is_high_priority'] = None
+
         # Last commit is used to determine CI status
         last_commit_status = None
         last_commit_short_hash = None
