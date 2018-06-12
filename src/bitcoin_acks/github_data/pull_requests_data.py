@@ -134,6 +134,8 @@ class PullRequestsData(RepositoriesData):
                         c['column']['name'] == 'Blockers']
         if blocker_card:
             pull_request['is_high_priority'] = blocker_card[0]['createdAt']
+        else:
+            pull_request['is_high_priority'] = None
 
         # Last commit is used to determine CI status
         last_commit_status = None
