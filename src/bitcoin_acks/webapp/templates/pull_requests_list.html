@@ -22,7 +22,15 @@
 <div>
     <a role="button" class="btn btn-primary" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1)}}">Open PRs</a>
 </div>
-{{ super() }}
+{% endblock %}
+
+{% block access_control %}
+    {{ super() }}
+    <div class="brand hidden-xs">
+        <a  target="_blank" href="https://www.riotblockchain.com/">
+            <img style="height: 48px;" src="{{ url_for('static', filename='riot_blockchain.png') }}">
+        </a>
+    </div>
 {% endblock %}
 
 {% block list_row %}
@@ -52,6 +60,17 @@
 {% block head_css %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/gh.css') }}">
+<style>
+    .navbar {
+        position: relative;
+    }
+    .brand {
+        position: absolute;
+        left: 50%;
+        margin-left: -50px !important;  /* 50% of your logo width */
+        display: block;
+    }
+</style>
 {% endblock %}
 
 
