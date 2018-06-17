@@ -67,14 +67,14 @@ class ProjectColumnSchema(Schema):
 
 class ProjectCardSchema(Schema):
     id = fields.Str()
-    column = fields.Nested(ProjectColumnSchema)
+    column = fields.Nested(ProjectColumnSchema, allow_none=True)
     project = fields.Nested(ProjectSchema)
     createdAt = fields.DateTime()
     updatedAt = fields.DateTime()
 
 
 class ProjectCardsSchema(Schema):
-    nodes = fields.Nested(ProjectCardSchema, many=True)
+    nodes = fields.Nested(ProjectCardSchema, many=True, allow_none=True)
     totalCount = fields.Int()
 
 
