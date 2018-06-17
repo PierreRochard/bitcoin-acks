@@ -131,7 +131,7 @@ class PullRequestsData(RepositoriesData):
 
         project_cards = pull_request.pop('projectCards')
         blocker_card = [c for c in project_cards['nodes'] if
-                        c['column']['name'] == 'Blockers']
+                        c['column'] and c['column']['name'] == 'Blockers']
         if blocker_card:
             pull_request['is_high_priority'] = blocker_card[0]['createdAt']
         else:
