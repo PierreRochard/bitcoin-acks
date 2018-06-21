@@ -3,6 +3,7 @@ backoff
 flask
 flask-admin>=1.5.1
 flask-sqlalchemy
+gitpython
 graphene
 humanize
 markupsafe
