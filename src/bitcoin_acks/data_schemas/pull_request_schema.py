@@ -1,5 +1,7 @@
 from marshmallow import Schema, fields
 
+from bitcoin_acks.data_schemas.project_schema import ProjectCardsSchema
+
 
 class AuthorSchema(Schema):
     avatarUrl = fields.Url()
@@ -51,30 +53,6 @@ class LabelSchema(Schema):
 
 class LabelsSchema(Schema):
     nodes = fields.Nested(LabelSchema, many=True)
-    totalCount = fields.Int()
-
-
-class ProjectSchema(Schema):
-    id = fields.Str()
-    number = fields.Int()
-    state = fields.Str()
-
-
-class ProjectColumnSchema(Schema):
-    id = fields.Str()
-    name = fields.Str()
-
-
-class ProjectCardSchema(Schema):
-    id = fields.Str()
-    column = fields.Nested(ProjectColumnSchema, allow_none=True)
-    project = fields.Nested(ProjectSchema)
-    createdAt = fields.DateTime()
-    updatedAt = fields.DateTime()
-
-
-class ProjectCardsSchema(Schema):
-    nodes = fields.Nested(ProjectCardSchema, many=True, allow_none=True)
     totalCount = fields.Int()
 
 
