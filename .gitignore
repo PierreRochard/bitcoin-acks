@@ -120,3 +120,5 @@ graphql.config.json
 
 src/tests/fixtures_data
 /tests/fixtures_data/*
+/src/bitcoin_acks/git_data/bitcoin/
+/.pytest_cache/
