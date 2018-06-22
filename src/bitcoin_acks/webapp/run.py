@@ -1,7 +1,9 @@
 from flask import Flask, request, Response
 from flask_admin import Admin
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
-from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.database.session import session_scope, get_url
 from bitcoin_acks.models import PullRequests, Logs
 from bitcoin_acks.webapp.views import PullRequestsModelView
 
@@ -30,12 +32,20 @@ def create_app(config_object: str):
             log_session.add(record)
         return response
 
-    with session_scope() as session:
-        admin = Admin(app,
-                      name='Bitcoin ACKs',
-                      template_mode='bootstrap3',
-                      url='/',
-                      index_view=PullRequestsModelView(PullRequests, session))
+    pg_url = get_url()
+    engine = create_engine(pg_url, connect_args={'sslmode': 'prefer'})
+    Session = scoped_session(sessionmaker(bind=engine))
+    session = Session()
+
+    admin = Admin(app,
+                  name='Bitcoin ACKs',
+                  template_mode='bootstrap3',
+                  url='/',
+                  index_view=PullRequestsModelView(PullRequests, session))
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        Session.remove()
 
     @app.route('/robots.txt')
     def robots_txt():
