@@ -153,6 +153,7 @@ class PullRequestsData(RepositoriesData):
             pull_request['last_commit_state_description'] = ', '.join(descriptions)
             pull_request['last_commit_short_hash'] = last_commit_short_hash
 
+        LabelsData.delete(pull_request_id=pull_request['id'])
         labels = pull_request.pop('labels')
         for label in labels['nodes']:
             LabelsData.upsert(pull_request_id=pull_request['id'], data=label)

@@ -9,6 +9,16 @@ from bitcoin_acks.models.pull_requests_labels import PullRequestsLabels
 class LabelsData(object):
 
     @staticmethod
+    def delete(pull_request_id: str):
+        with session_scope() as session:
+            (
+                session
+                    .query(PullRequestsLabels)
+                    .filter(PullRequestsLabels.pull_request_id == pull_request_id)
+                    .delete()
+            )
+
+    @staticmethod
     def upsert(pull_request_id: str, data: dict):
         with session_scope() as session:
             try:
