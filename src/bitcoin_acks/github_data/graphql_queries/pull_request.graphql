@@ -11,6 +11,9 @@ query($prNumber: Int = 10757){
             number
             title
             mergeable
+            headRepository {
+              url
+            }
             labels(last: 100) {
                 totalCount
                 nodes {

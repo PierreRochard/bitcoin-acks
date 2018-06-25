@@ -21,6 +21,9 @@ $prState: PullRequestState = null
                 cursor
                 node {
                     id
+                  	headRepository {
+                      url
+                    }
                     number
                     title
                     mergeable
