@@ -31,6 +31,8 @@ class PullRequests(Base):
     additions = Column(Integer)
     deletions = Column(Integer)
 
+    head_repository_url = Column(String)
+
     mergeable = Column(String)
     last_commit_state = Column(String)
     last_commit_state_description = Column(String)

@@ -119,6 +119,10 @@ class PullRequestsData(RepositoriesData):
         if author is not None:
             pull_request['author_id'] = UsersData().upsert(data=author)
 
+        head_repository = pull_request.pop('headRepository')
+        if head_repository is not None:
+            pull_request['head_repository_url'] = head_repository['url']
+
         comments_data = CommentsData(repository_name=self.repo.name,
                                      repository_path=self.repo.path)
         comments = pull_request.pop('comments')

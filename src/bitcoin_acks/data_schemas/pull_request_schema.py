@@ -56,6 +56,10 @@ class LabelsSchema(Schema):
     totalCount = fields.Int()
 
 
+class RepositorySchema(Schema):
+    url = fields.URL()
+
+
 class PullRequestSchema(Schema):
     class Meta:
         strict = True
@@ -69,6 +73,7 @@ class PullRequestSchema(Schema):
     commits = fields.Nested(PullRequestCommitsSchema)
     createdAt = fields.DateTime()
     deletions = fields.Int()
+    headRepository = fields.Nested(RepositorySchema)
     id = fields.Str()
     labels = fields.Nested(LabelsSchema)
     mergeable = fields.Str()
