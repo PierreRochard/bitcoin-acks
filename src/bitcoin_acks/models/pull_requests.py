@@ -5,8 +5,9 @@ from sqlalchemy import (
     Numeric,
     String,
     UniqueConstraint,
-    and_
-)
+    and_,
+    func)
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, synonym
 
 from bitcoin_acks.constants import ReviewDecision
@@ -87,3 +88,11 @@ class PullRequests(Base):
     def html_url(self):
         url = 'https://github.com/bitcoin/bitcoin/pull/{0}'
         return url.format(self.number)
+
+    @hybrid_property
+    def head_repository_name(self):
+        return self.head_repository_url.split('/')[-2]
+
+    @head_repository_name.expression
+    def head_repository_name(self):
+        return func.split_part(self.head_repository_url, '/', 4)
