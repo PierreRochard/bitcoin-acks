@@ -1,5 +1,6 @@
 import os
-from git import Repo
+
+from git import Repo, CommandError
 
 from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.database import session_scope
@@ -23,26 +24,32 @@ class Repository(object):
         print(self.repo)
 
     def add_remote(self, name: str, url: str):
-        self.repo.create_remote(name=name, url=url)
+        try:
+            self.repo.create_remote(name=name, url=url)
+        except CommandError:
+            return
 
     def fetch_remote(self, name: str):
         remote = self.repo.remote(name=name)
-        remote.fetch()
+        try:
+            remote.fetch()
+        except CommandError:
+            return
 
     def sync_open_pull_requests(self):
         with session_scope() as session:
-            pull_requests = (
+            head_repositories = (
                 session
                 .query(PullRequests.head_repository_name,
                        PullRequests.head_repository_url)
                 .filter(PullRequests.state == PullRequestState.OPEN.value)
-                .group_by(PullRequests.head_repository_url)
+                .group_by(PullRequests.head_repository_name, PullRequests.head_repository_url)
                 .all()
             )
-            for head_repository_url, head_repository_name in pull_requests:
-                self.add_remote(name=pull_request.head_repository_name,
-                                url=pull_request.head_repository_url)
-                self.fetch_remote(name=pull_request.head_repository_name)
+            for head_repository_name, head_repository_url in head_repositories:
+                self.add_remote(name=head_repository_name,
+                                url=head_repository_url)
+                self.fetch_remote(name=head_repository_name)
 
 
 if __name__ == '__main__':
