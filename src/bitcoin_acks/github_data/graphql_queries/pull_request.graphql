@@ -14,6 +14,9 @@ query($prNumber: Int = 10757){
             headRepository {
               url
             }
+            headRef {
+                name
+            }
             labels(last: 100) {
                 totalCount
                 nodes {

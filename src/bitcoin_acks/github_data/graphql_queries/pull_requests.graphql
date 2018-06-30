@@ -24,6 +24,9 @@ $prState: PullRequestState = null
                   	headRepository {
                       url
                     }
+                    headRef {
+                        name
+                    }
                     number
                     title
                     mergeable

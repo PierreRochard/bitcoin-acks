@@ -122,6 +122,9 @@ class PullRequestsData(RepositoriesData):
         head_repository = pull_request.pop('headRepository')
         if head_repository is not None:
             pull_request['head_repository_url'] = head_repository['url']
+        head_ref = pull_request.pop('headRef')
+        if head_ref is not None:
+            pull_request['head_ref_name'] = head_ref['name']
 
         comments_data = CommentsData(repository_name=self.repo.name,
                                      repository_path=self.repo.path)
@@ -150,12 +153,14 @@ class PullRequestsData(RepositoriesData):
             last_commit = commits['nodes'][0]['commit']
             last_commit_status = last_commit.get('status')
             last_commit_short_hash = last_commit['oid'][0:7]
+            last_commit_hash = last_commit['oid']
 
         if last_commit_status is not None:
             pull_request['last_commit_state'] = last_commit_status['state'].capitalize()
             descriptions = [s['description'] for s in last_commit_status['contexts']]
             pull_request['last_commit_state_description'] = ', '.join(descriptions)
             pull_request['last_commit_short_hash'] = last_commit_short_hash
+            pull_request['last_commit_hash'] = last_commit_hash
 
         LabelsData.delete(pull_request_id=pull_request['id'])
         labels = pull_request.pop('labels')

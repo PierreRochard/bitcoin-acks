@@ -6,9 +6,10 @@ from sqlalchemy import (
     String,
     UniqueConstraint,
     and_,
-    func)
+    func, event)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship, synonym
+from sqlalchemy.util import symbol
 
 from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.database.base import Base
@@ -32,12 +33,14 @@ class PullRequests(Base):
     additions = Column(Integer)
     deletions = Column(Integer)
 
+    head_ref_name = Column(String)
     head_repository_url = Column(String)
 
     mergeable = Column(String)
     last_commit_state = Column(String)
     last_commit_state_description = Column(String)
     last_commit_short_hash = Column(String)
+    last_commit_hash = Column(String)
 
     state = Column(String, nullable=False)
     title = Column(String, nullable=False)
@@ -96,3 +99,22 @@ class PullRequests(Base):
     @head_repository_name.expression
     def head_repository_name(self):
         return func.split_part(self.head_repository_url, '/', 4)
+
+
+@event.listens_for(PullRequests.last_commit_hash, 'set')
+def receive_set(target, value, oldvalue, initiator):
+    from bitcoin_acks.git_data.repository import Repository
+    if oldvalue == symbol('NO_VALUE'):
+        oldvalue = None
+    if oldvalue != value:
+        r = Repository('bitcoin', 'bitcoin')
+        r.add_remote(name=target.head_repository_name,
+                        url=target.head_repository_url)
+        r.fetch_remote(name=target.head_repository_name)
+        r.create_remote_branch_head(remote_repo_name=target.head_repository_name,
+                                    remote_ref_name=target.head_ref_name)
+        r.create_diff(remote_repo_name=target.head_repository_name,
+                      ref_name=target.head_ref_name,
+                      ref_old_hash=oldvalue,
+                      ref_new_hash=value)
+    print(value, oldvalue)

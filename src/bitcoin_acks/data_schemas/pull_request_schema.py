@@ -56,6 +56,10 @@ class LabelsSchema(Schema):
     totalCount = fields.Int()
 
 
+class RefSchema(Schema):
+    name = fields.Str()
+
+
 class RepositorySchema(Schema):
     url = fields.URL()
 
@@ -73,6 +77,7 @@ class PullRequestSchema(Schema):
     commits = fields.Nested(PullRequestCommitsSchema)
     createdAt = fields.DateTime()
     deletions = fields.Int()
+    headRef = fields.Nested(RefSchema)
     headRepository = fields.Nested(RepositorySchema)
     id = fields.Str()
     labels = fields.Nested(LabelsSchema)
