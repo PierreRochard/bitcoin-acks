@@ -27,6 +27,7 @@ class Diffs(Base):
     id = Column(Integer, primary_key=True)
     pull_request_id = Column(String)
     diff_hash = Column(String)
+    associated_commit_hash = Column(String)
 
     diff = Column(String)
     added_lines = Column(Integer)

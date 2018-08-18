@@ -15,15 +15,15 @@ class DiffsData(object):
     def get(cls,
             repository_path: str,
             repository_name: str,
-            pull_request_number: int,
-            pull_request_id: str):
+            pull_request_number: int) -> str:
         url = 'https://patch-diff.githubusercontent.com/raw/{0}/{1}/pull/{2}.diff'
         url = url.format(repository_path, repository_name, pull_request_number)
         diff = requests.get(url).text
-        cls.insert(pull_request_id, diff)
+        return diff
 
     @classmethod
-    def insert(cls, pull_request_id: str, diff: str):
+    def insert(cls, pull_request_id: str, associated_commit_hash: str,
+               diff: str):
         bdiff = diff.encode('utf-8')
         diff_hash = hashlib.sha256(bdiff).hexdigest()
         with session_scope() as session:
@@ -49,6 +49,7 @@ class DiffsData(object):
                 record.added_files = len(patch.added_files)
                 record.modified_files = len(patch.modified_files)
                 record.removed_files = len(patch.removed_files)
+                record.associated_commit_hash = associated_commit_hash
                 session.add(record)
 
             (

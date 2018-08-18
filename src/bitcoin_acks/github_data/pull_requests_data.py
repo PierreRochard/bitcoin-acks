@@ -139,18 +139,21 @@ class PullRequestsData(RepositoriesData):
 
         # Last commit is used to determine CI status
         last_commit_status = None
+        last_commit_hash = None
         last_commit_short_hash = None
         commits = pull_request.pop('commits')
         pull_request['commit_count'] = commits['totalCount']
         if commits['nodes']:
             last_commit = commits['nodes'][0]['commit']
             last_commit_status = last_commit.get('status')
-            last_commit_short_hash = last_commit['oid'][0:7]
+            last_commit_hash = last_commit['oid']
+            last_commit_short_hash = last_commit_hash[0:7]
 
         if last_commit_status is not None:
             pull_request['last_commit_state'] = last_commit_status['state'].capitalize()
             descriptions = [s['description'] for s in last_commit_status['contexts']]
             pull_request['last_commit_state_description'] = ', '.join(descriptions)
+            pull_request['last_commit_hash'] = last_commit_hash
             pull_request['last_commit_short_hash'] = last_commit_short_hash
 
         LabelsData.delete(pull_request_id=pull_request['id'])
@@ -158,10 +161,13 @@ class PullRequestsData(RepositoriesData):
         for label in labels['nodes']:
             LabelsData.upsert(pull_request_id=pull_request['id'], data=label)
 
-        DiffsData().get(repository_path=self.repo.path,
-                        repository_name=self.repo.name,
-                        pull_request_number=pull_request['number'],
-                        pull_request_id=pull_request['id'])
+        diff = DiffsData.get(repository_path=self.repo.path,
+                             repository_name=self.repo.name,
+                             pull_request_number=pull_request['number'])
+
+        DiffsData.insert(pull_request_id=pull_request['id'],
+                         associated_commit_hash=last_commit_hash,
+                         diff=diff)
 
         self.upsert(pull_request)
         comments_data.bulk_upsert(pull_request_id=pull_request['id'],
