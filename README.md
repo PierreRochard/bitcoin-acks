@@ -50,11 +50,12 @@ postgres=# \q
 ```
 
 - [Create GitHub API token](https://github.com/settings/tokens/new) 
+  The token must have the `public_repo` permission scope.
 
 - Export the following variables to your environment.
 ```
-GH_PGDATABASE=github
-TEST_GH_PGDATABASE=github_test
+GH_PGDATABASE=bitcoin_acks
+TEST_GH_PGDATABASE=bitcoin_acks_test
 PGUSER=postgres
 PGPASSWORD=<your password>
 PGHOST=127.0.0.1
@@ -65,24 +66,24 @@ GITHUB_API_TOKEN=<your-github-api-token>
 
 - Create database tables:
 ```
-$ python src/bitcoin-acks/database/createdb.py
+$ python src/bitcoin_acks/database/createdb.py
 ```
 
 - Populate the database
 ```
-$ python src/github_data/pull_request_data.py
+$ python src/bitcoin_acks/github_data/pull_requests_data.py
 ```
 
 ### Running the App
 
-- Poll the Github API to keep the databse up to date:
+- Poll the Github API to keep the database up to date:
 ```
-$ python src/github_data/pull_request_events.py
+$ python src/bitcoin_acks/github_data/pull_request_events.py
 ```
 
 - Run the web server:
 ```
-$ python src/bitcoin-acks/webapp/run.py
+$ python src/bitcoin_acks/webapp/run.py
 ```
 
 ### Upgrading
