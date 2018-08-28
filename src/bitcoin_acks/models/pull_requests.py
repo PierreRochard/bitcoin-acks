@@ -57,6 +57,7 @@ class PullRequests(Base):
     repository_id = Column(Integer, nullable=False)
     author_id = Column(String)
     tweet_id = Column(Integer, unique=True)
+    toot_id = Column(Integer, unique=True)
 
     author = relationship(Users,
                           primaryjoin=author_id == Users.id,
