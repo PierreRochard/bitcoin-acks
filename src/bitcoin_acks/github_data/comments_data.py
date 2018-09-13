@@ -74,12 +74,14 @@ class CommentsData(RepositoriesData):
     @staticmethod
     def identify_review_decision(text: str) -> ReviewDecision:
         text = text.lower()
-        if 'concept ack' in text:
+        if 'concept ack' or 're-ack' in text:
             return ReviewDecision.CONCEPT_ACK
         elif 'tested ack' in text:
             return ReviewDecision.TESTED_ACK
         elif 'utack' in text or 'untested ack' in text:
             return ReviewDecision.UNTESTED_ACK
+        elif 'tack ' in text:
+            return ReviewDecision.TESTED_ACK
         elif 'nack' in text:
             return ReviewDecision.NACK
         elif text.startswith('ack '):
