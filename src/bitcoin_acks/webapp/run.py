@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.models import PullRequests, Logs
+from bitcoin_acks.webapp.templates.template_globals import \
+    apply_template_globals
 from bitcoin_acks.webapp.views import PullRequestsModelView
 
 
@@ -12,6 +14,7 @@ def create_app(config_object: str):
 
     app.config.from_object(config_object)
     db = SQLAlchemy(app)
+    apply_template_globals(app)
 
     @app.after_request
     def after_request(response):

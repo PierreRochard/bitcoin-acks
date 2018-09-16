@@ -20,16 +20,33 @@
 </div>
 
 <div class="col-md-4 hidden-xs hidden-sm">
-    <a role="button" class="btn btn-primary" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1)}}">Open PRs</a>
-    <a role="button" class="btn btn-success" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1,
-                                                                                                   flt2_mergeable_contains='mergeable',
-                                                                                                   flt4_ci_contains='success',
-                                                                                                   flt6_title_not_contains='[WIP]')}}">Ready for Review</a>
-    <a role="button" class="btn btn-info" href="{{ url_for(admin_view.endpoint + '.index_view', flt0_merged_empty=1, flt3_closed_empty=1,
-                                                                                                   flt2_mergeable_contains='mergeable',
-                                                                                                   flt4_ci_contains='success',
-                                                                                                   flt6_title_not_contains='[WIP]',
-                                                                                                   flt7_reviews_greater_than=2)}}">Ready for Maintainer</a>
+    <a role="button" class="btn btn-primary" href="{{ modify_query(flt0_merged_empty=1,
+                                                                   flt3_closed_empty=1,
+                                                                   flt2_mergeable_contains=None,
+                                                                   flt4_ci_contains=None,
+                                                                   flt6_title_not_contains=None,
+                                                                   flt7_reviews_greater_than=None)}}">
+        Open PRs
+    </a>
+    <a role="button" class="btn btn-success" href="{{ modify_query(flt0_merged_empty=1,
+                                                                   flt3_closed_empty=1,
+                                                                   flt2_mergeable_contains='mergeable',
+                                                                   flt4_ci_contains='success',
+                                                                   flt6_title_not_contains='[WIP]',
+                                                                   flt7_reviews_greater_than=None)}}">
+        Ready for Review
+    </a>
+    <a role="button" class="btn btn-info" href="{{ modify_query(flt0_merged_empty=1,
+                                                                flt3_closed_empty=1,
+                                                                flt2_mergeable_contains='mergeable',
+                                                                flt4_ci_contains='success',
+                                                                flt6_title_not_contains='[WIP]',
+                                                                flt7_reviews_greater_than=2)}}">
+        Ready for Maintainer
+    </a>
+    <a role="button" class="btn" href="{{ modify_query(flt8_label_in_list=['Wallet']) }}">
+        Wallet Only
+    </a>
 </div>
 {% endblock %}
 

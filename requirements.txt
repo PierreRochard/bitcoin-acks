@@ -9,10 +9,11 @@ markupsafe
 marshmallow
 mock
 psycopg2
-python-dateutil
 pytest>=3.4.2
+python-dateutil
 requests
 sqlalchemy
 twython
 unidiff
 webcolors
+werkzeug
