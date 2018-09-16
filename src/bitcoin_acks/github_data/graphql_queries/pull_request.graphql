@@ -75,7 +75,8 @@ query($prNumber: Int = 10757){
                     url
                 }
             }
-            commits(last: 1) {
+            headRefOid
+            commits(last: 100) {
                 totalCount
                 nodes {
                     commit {
