@@ -142,8 +142,9 @@ class PullRequestsData(RepositoriesData):
         last_commit_short_hash = None
         commits = pull_request.pop('commits')
         pull_request['commit_count'] = commits['totalCount']
+        head_commit_hash = pull_request['headRefOid']
         if commits['nodes']:
-            last_commit = commits['nodes'][0]['commit']
+            last_commit = [c for c in commits['nodes'] if c['commit']['oid'] == head_commit_hash][0]['commit']
             last_commit_status = last_commit.get('status')
             last_commit_short_hash = last_commit['oid'][0:7]
 

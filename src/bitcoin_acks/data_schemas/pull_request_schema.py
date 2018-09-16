@@ -66,6 +66,7 @@ class PullRequestSchema(Schema):
     closedAt = fields.DateTime(allow_none=True)
     comments = fields.Nested(CommentsSchema)
     reviews = fields.Nested(CommentsSchema)
+    headRefOid = fields.Str()
     commits = fields.Nested(PullRequestCommitsSchema)
     createdAt = fields.DateTime()
     deletions = fields.Int()
