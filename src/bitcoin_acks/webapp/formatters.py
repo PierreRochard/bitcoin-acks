@@ -176,6 +176,7 @@ def labels_formatter(view, context, model, name):
     labels = getattr(model, name)
     output = ''
     for label in labels:
+        label_url = context.parent['modify_query'](flt6_label_in_list=label.name)
         label_color = '#' + label.color
         rgb = webcolors.hex_to_rgb(label_color)
         if rgb.blue > 200:
@@ -186,6 +187,6 @@ def labels_formatter(view, context, model, name):
                   ' <span class="label" style="background-color: {label_color};" >{label_name}</span>' \
                   '</div>' \
                   '</a>'.format(label_name=label.name,
-                                label_url='#',
+                                label_url=label_url,
                                 label_color=label_color)
     return Markup(output)

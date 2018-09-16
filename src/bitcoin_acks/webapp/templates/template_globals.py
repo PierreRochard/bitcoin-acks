@@ -8,6 +8,11 @@ def apply_template_globals(app):
         args = request.args.copy()
 
         for key, value in new_values.items():
-            args[key] = value
+            if key.endswith('_in_list'):
+                old_list = args.get(key, '').split(',')
+                new_list = old_list + value.split(',')
+                args[key] = ','.join(set([s for s in new_list if s]))
+            else:
+                args[key] = value
 
         return '{}?{}'.format(request.path, url_encode(args))
