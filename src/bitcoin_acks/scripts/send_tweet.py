@@ -34,7 +34,7 @@ def send_tweet():
         response = requests.get(commits_url, params=params)
         response_json = response.json()
 
-        if len(response_json) > 1:
+        if len(response_json) > 1 and next_pull_request.number != 14802:
             status = 'Merged PR from {0}: {1} {2}' \
                 .format(next_pull_request.author,
                         next_pull_request.title,
