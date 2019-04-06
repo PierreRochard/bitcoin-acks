@@ -23,7 +23,7 @@
 
 - Install Python 3.6
 
-- Create a virtual environment, install the requirements, act activate the virtual environment:
+- Create a virtual environment, install the requirements, and activate the virtual environment:
 ```
 $ python3.6 -m venv env
 $ source env/bin/activate
