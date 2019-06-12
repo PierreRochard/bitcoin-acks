@@ -90,6 +90,7 @@ class CommentsData(RepositoriesData):
             return ReviewDecision.NONE
 
     def upsert(self, pull_request_id: str, data: dict) -> bool:
+        data['body'] = data['body'].replace('\x00', '')
         review_decision = self.identify_review_decision(data['body'])
 
         author = data.pop('author')
