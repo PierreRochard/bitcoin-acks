@@ -20,7 +20,10 @@ SELECT
        coalesce(reviews.nacks, 0) as nacks,
        coalesce(reviews.concept_acks, 0) as concept_acks,
        coalesce(reviews.untested_acks, 0) as untested_acks,
-       coalesce(reviews.tested_acks, 0) as tested_acks
+       coalesce(reviews.tested_acks, 0) as tested_acks,
+       to_char( pr.added_to_high_priority, 'MM/DD/YYYY') AS added_to_high_priority,
+       to_char( pr.removed_from_high_priority, 'MM/DD/YYYY') AS removed_from_high_priority,
+       date_part('day', coalesce(pr.removed_from_high_priority, now()) - pr.added_to_high_priority) AS days_in_high_priority
 FROM pull_requests pr
 LEFT OUTER JOIN users authors ON pr.author_id = authors.id
 LEFT OUTER JOIN
@@ -37,4 +40,5 @@ LEFT OUTER JOIN
          WHERE comments.auto_detected_review_decision != 'NONE'::reviewdecision
          GROUP BY pull_request_id
          ) reviews ON reviews.pull_request_id = pr.id
+-- WHERE added_to_high_priority IS NOT NULL
 ORDER BY pr.number DESC;
