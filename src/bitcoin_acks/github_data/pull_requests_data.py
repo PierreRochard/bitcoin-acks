@@ -137,6 +137,15 @@ class PullRequestsData(RepositoriesData):
         else:
             pull_request['is_high_priority'] = None
 
+        timeline_items = pull_request.pop('timelineItems')
+        blocker_events = [e for e in timeline_items['nodes'] if
+                          e['projectColumnName'] == 'Blockers']
+        for blocker_event in blocker_events:
+            if blocker_event['typename'] == 'AddedToProjectEvent':
+                pull_request['added_to_high_priority'] = blocker_event['createdAt']
+            elif blocker_event['typename'] == 'RemovedFromProjectEvent':
+                pull_request['removed_from_high_priority'] = blocker_event['createdAt']
+
         # Last commit is used to determine CI status
         last_commit_status = None
         last_commit_short_hash = None

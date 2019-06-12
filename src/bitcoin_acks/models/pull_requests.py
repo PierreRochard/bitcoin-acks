@@ -28,6 +28,9 @@ class PullRequests(Base):
 
     is_high_priority = Column(DateTime)
 
+    added_to_high_priority = Column(DateTime)
+    removed_from_high_priority = Column(DateTime)
+
     additions = Column(Integer)
     deletions = Column(Integer)
 

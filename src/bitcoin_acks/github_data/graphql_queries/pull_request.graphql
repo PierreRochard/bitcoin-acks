@@ -1,4 +1,4 @@
-query($prNumber: Int = 10757){
+query($prNumber: Int = 15024){
     rateLimit {
         limit
         cost
@@ -34,6 +34,20 @@ query($prNumber: Int = 10757){
                     }
                     createdAt
                     updatedAt
+                }
+            }
+            timelineItems(itemTypes:[ADDED_TO_PROJECT_EVENT, REMOVED_FROM_PROJECT_EVENT], last:100) {
+                nodes {
+                    ... on AddedToProjectEvent {
+                        __typename
+                        createdAt
+                        projectColumnName
+                    }
+                    ... on RemovedFromProjectEvent {
+                        __typename
+                        createdAt
+                        projectColumnName
+                    }
                 }
             }
             author {

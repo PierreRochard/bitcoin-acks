@@ -56,6 +56,18 @@ class LabelsSchema(Schema):
     totalCount = fields.Int()
 
 
+class TimelineItemSchema(Schema):
+    class Meta:
+        strict = True
+    typename = fields.Str(load_from='__typename')
+    createdAt = fields.Str()
+    projectColumnName = fields.Str()
+
+
+class TimelineItemsSchema(Schema):
+    nodes = fields.Nested(TimelineItemSchema, many=True)
+
+
 class PullRequestSchema(Schema):
     class Meta:
         strict = True
@@ -79,3 +91,4 @@ class PullRequestSchema(Schema):
     state = fields.Str()
     title = fields.Str()
     updatedAt = fields.DateTime()
+    timelineItems = fields.Nested(TimelineItemsSchema)

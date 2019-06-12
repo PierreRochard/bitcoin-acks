@@ -20,15 +20,20 @@ class GitHubData(object):
     user_name = os.environ['GITHUB_USER']
     password = os.environ['GITHUB_API_TOKEN']
 
+    dev_preview_headers = {
+        'Accept': 'application/vnd.github.starfox-preview+json'
+    }
+
     @property
     def auth(self) -> Tuple[str, str]:
         return self.user_name, self.password
 
     def get_graphql_schema(self):
         r = requests.get(self.api_url + 'graphql',
-                         auth=self.auth)
+                         auth=self.auth,
+                         headers=self.dev_preview_headers)
         r.raise_for_status()
-        with open('graphql_schema.json', 'w') as output_file:
+        with open('graphql.schema.json', 'w') as output_file:
             json.dump(r.json(), output_file, indent=4, sort_keys=True)
 
     @backoff.on_exception(backoff.expo,
@@ -37,6 +42,7 @@ class GitHubData(object):
     def graphql_post(self, json_object: dict):
         r = requests.post(self.api_url + 'graphql',
                           auth=self.auth,
+                          headers=self.dev_preview_headers,
                           json=json_object)
         r.raise_for_status()
         return r
