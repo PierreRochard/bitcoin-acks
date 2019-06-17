@@ -95,6 +95,7 @@ query($prNumber: Int = 15024){
                 nodes {
                     commit {
                         oid
+                        pushedDate
                         status {
                             state
                             contexts {

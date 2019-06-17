@@ -33,6 +33,7 @@ class StatusSchema(Schema):
 
 class CommitSchema(Schema):
     oid = fields.Str()
+    pushedDate = fields.Str(allow_none=True)
     status = fields.Nested(StatusSchema, allow_none=True)
 
 
