@@ -12,9 +12,10 @@ from bitcoin_acks.webapp.formatters import (
     mergeable_formatter,
     pr_link_formatter,
     review_decisions_formatter)
+from bitcoin_acks.webapp.mixins import NullOrderMixinView
 
 
-class PullRequestsModelView(ModelView):
+class PullRequestsModelView(NullOrderMixinView, ModelView):
     def __init__(self, model, session, *args, **kwargs):
         super(PullRequestsModelView, self).__init__(model, session, *args,
                                                     **kwargs)
@@ -59,7 +60,7 @@ class PullRequestsModelView(ModelView):
         'mergeable',
         'last_commit_state',
         'created_at',
-        'updated_at',
+        'last_commit_pushed_date',
         'merged_at',
         'closed_at'
     ]
@@ -77,7 +78,7 @@ class PullRequestsModelView(ModelView):
         'mergeable',
         'last_commit_state',
         'created_at',
-        'updated_at',
+        'last_commit_pushed_date',
         'merged_at',
         'closed_at'
     ]
@@ -92,7 +93,7 @@ class PullRequestsModelView(ModelView):
         'mergeable',
         'last_commit_state',
         'created_at',
-        'updated_at',
+        'last_commit_pushed_date',
         'merged_at',
         'closed_at'
     ]
@@ -101,7 +102,7 @@ class PullRequestsModelView(ModelView):
         'number': pr_link_formatter,
         'author.login': author_link_formatter,
         'created_at': humanize_date_formatter,
-        'updated_at': humanize_date_formatter,
+        'last_commit_pushed_date': humanize_date_formatter,
         'merged_at': humanize_date_formatter,
         'closed_at': humanize_date_formatter,
         'additions': line_count_formatter,
@@ -111,7 +112,7 @@ class PullRequestsModelView(ModelView):
         'last_commit_state': last_commit_state_formatter,
         'labels': labels_formatter
     }
-    column_default_sort = ('updated_at', True)
+    column_default_sort = ('last_commit_pushed_date', 'LAST')
     column_labels = {
         'author.login': 'Author',
         'review_decisions.author.login': 'Reviewer',
@@ -119,7 +120,7 @@ class PullRequestsModelView(ModelView):
         'additions': '+',
         'deletions': '-',
         'created_at': 'Created',
-        'updated_at': 'Updated',
+        'last_commit_pushed_date': 'Last Commit Pushed',
         'merged_at': 'Merged',
         'closed_at': 'Closed',
         'review_decisions_count': 'Reviews',
