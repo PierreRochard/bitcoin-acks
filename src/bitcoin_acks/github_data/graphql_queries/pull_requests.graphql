@@ -108,6 +108,7 @@ $prState: PullRequestState = null
                         nodes {
                             commit {
                                 oid
+                                pushedDate
                                 status {
                                     state
                                     contexts {
