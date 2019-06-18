@@ -5,7 +5,7 @@
 - [x] As an author I want to see when my PRs are conflicted or not building on Travis so that I can rebase.
 
 ### Bitcoin ACKs v2
-- [ ] As a reviewer I want to see an inter-diff between force-pushed commits so that I can focus on code I have not already reviewed.
+- [ ] ~As a reviewer I want to see an inter-diff between force-pushed commits so that I can focus on code I have not already reviewed.~ [GitHub implemented this!](https://github.blog/changelog/2018-11-15-force-push-timeline-event/)
 - [ ] ~~As an author I want to receive a notification when my PR becomes conflicted so that I can rebase.~~ [DrahtBot](https://github.com/DrahtBot) solves this!
 - [ ] ~~As an author, reviewer, or maintainer I want to see which PRs would become conflicted after a PR is merged so that I can coordinate and prioritize.~~  [DrahtBot](https://github.com/DrahtBot) solves this!
 
