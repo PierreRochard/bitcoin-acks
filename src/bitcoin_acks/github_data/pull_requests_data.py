@@ -160,8 +160,9 @@ class PullRequestsData(RepositoriesData):
             descriptions = [s['description'] for s in last_commit_status['contexts']]
             pull_request['last_commit_state_description'] = ', '.join(descriptions)
 
-        pull_request['last_commit_short_hash'] = commits['nodes'][-1]['commit']['oid'][0:7]
-        pull_request['last_commit_pushed_date'] = commits['nodes'][-1]['commit']['pushedDate']
+        if len(commits['nodes']):
+            pull_request['last_commit_short_hash'] = commits['nodes'][-1]['commit']['oid'][0:7]
+            pull_request['last_commit_pushed_date'] = commits['nodes'][-1]['commit']['pushedDate']
 
         LabelsData.delete(pull_request_id=pull_request['id'])
         labels = pull_request.pop('labels')
