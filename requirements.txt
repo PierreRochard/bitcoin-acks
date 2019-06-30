@@ -1,5 +1,6 @@
 alembic
 backoff
+dateparser
 flask
 flask-admin>=1.5.1
 flask-sqlalchemy
