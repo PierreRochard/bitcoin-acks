@@ -7,7 +7,7 @@ flask-sqlalchemy
 graphene
 humanize
 markupsafe
-marshmallow
+marshmallow>=3.2.2
 mock
 psycopg2
 pytest>=3.4.2
