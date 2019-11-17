@@ -58,9 +58,7 @@ class LabelsSchema(Schema):
 
 
 class TimelineItemSchema(Schema):
-    class Meta:
-        strict = True
-    typename = fields.Str(load_from='__typename')
+    typename = fields.Str(data_key='__typename')
     createdAt = fields.Str()
     projectColumnName = fields.Str()
 
@@ -70,9 +68,6 @@ class TimelineItemsSchema(Schema):
 
 
 class PullRequestSchema(Schema):
-    class Meta:
-        strict = True
-
     additions = fields.Int()
     author = fields.Nested(AuthorSchema, allow_none=True)
     bodyHTML = fields.Str()
