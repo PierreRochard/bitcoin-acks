@@ -9,3 +9,8 @@ services:
       PYTHONPATH: "/website/src/"
     ports:
       - "5000:5000"
+
+networks:
+  default:
+    external:
+      name: webproxy
