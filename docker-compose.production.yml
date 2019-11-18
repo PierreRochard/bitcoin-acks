@@ -7,3 +7,5 @@ services:
     environment:
       VIRTUAL_HOST: bitcoinacks.com
       PYTHONPATH: "/website/src/"
+    ports:
+      - "5000:5000"

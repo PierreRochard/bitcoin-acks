@@ -28,6 +28,8 @@ services:
       - postgres
     environment:
       PYTHONPATH: "/website/src/"
+    ports:
+      - "5005:5005"
   dataworker:
     image: webapp-flask
     command: [ "python3", "bitcoin_acks/github_data/pull_request_events.py" ]
@@ -44,21 +46,6 @@ services:
       - postgres
     environment:
       PYTHONPATH: "/website/src/"
-  nginx:
-    image: nginx:alpine
-    stdin_open: true
-    container_name: webserver
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - app-network
-    depends_on:
-      - flask
-    volumes:
-      - "./src/bitcoin_acks/webapp/nginx-dev.conf:/etc/nginx/conf.d/default.conf"
 
 networks:
   app-network:
