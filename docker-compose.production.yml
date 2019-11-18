@@ -7,6 +7,7 @@ services:
     environment:
       VIRTUAL_HOST: bitcoinacks.com
       LETSENCRYPT_HOST: bitcoinacks.com
+      VIRTUAL_PORT: 5000
       PYTHONPATH: "/website/src/"
     ports:
       - "5000:5000"
