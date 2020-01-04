@@ -5,6 +5,7 @@ import requests
 import time
 
 from bitcoin_acks.constants import PullRequestState
+from bitcoin_acks.database import create_or_update_database
 from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
@@ -53,6 +54,7 @@ class PullRequestEvents(RepositoriesData):
 if __name__ == '__main__':
     repository_path = 'bitcoin'
     repository_name = 'bitcoin'
+    create_or_update_database()
     pr_events = PullRequestEvents(repository_path=repository_path,
                                   repository_name=repository_name)
     pr_data = PullRequestsData(repository_path=repository_path,

@@ -17,6 +17,21 @@
 # Contributing
 
 
+### Using docker-compose for development
+
+- [Install docker-compose](https://docs.docker.com/compose/install/)
+
+- Run `docker-compose up -d`
+
+- Go to `localhost:5005`
+
+
+### docker-compose in production
+
+- Set up [docker-compose-letsencrypt-nginx-proxy-companion](https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion)
+
+- Run `docker-compose -f docker-compose.yml -f docker-compose.production.yml up -d`
+
 ### Installing the App
 
 - [Install the Postgres RDBMS](https://www.postgresql.org/download/)

@@ -1,10 +1,13 @@
 from contextlib import contextmanager
 import os
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import IntegrityError, ProgrammingError
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
+
+load_dotenv()
 
 is_test = False
 
@@ -25,7 +28,7 @@ def get_url():
 @contextmanager
 def session_scope(echo=False,
                   raise_integrity_error=True,
-                  raise_programming_error=True):
+                  raise_programming_error=True) -> Session:
 
     pg_url = get_url()
     engine = create_engine(pg_url, echo=echo,

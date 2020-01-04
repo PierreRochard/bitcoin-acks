@@ -1,3 +1,4 @@
+from marshmallow import INCLUDE, EXCLUDE, ValidationError
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -32,7 +33,7 @@ class PullRequestsData(RepositoriesData):
         }
         data = self.graphql_post(json_object=json_object).json()
         pull_request = data['data']['repository']['pullRequest']
-        deserialized_data, errors = pull_request_schema.load(pull_request)
+        deserialized_data = pull_request_schema.load(pull_request)
         return deserialized_data
 
     def get_all(self,
@@ -75,7 +76,7 @@ class PullRequestsData(RepositoriesData):
                 if limit is not None and received == limit:
                     break
 
-                deserialized_data, errors = pull_request_schema.load(pull_request)
+                deserialized_data = pull_request_schema.load(pull_request)
 
                 yield deserialized_data
                 received += 1

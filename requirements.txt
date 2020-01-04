@@ -7,11 +7,12 @@ flask-sqlalchemy
 graphene
 humanize
 markupsafe
-marshmallow
+marshmallow>=3.2.2
 mock
 psycopg2
 pytest>=3.4.2
 python-dateutil
+python-dotenv
 requests
 sqlalchemy>=1.3.4
 twython
