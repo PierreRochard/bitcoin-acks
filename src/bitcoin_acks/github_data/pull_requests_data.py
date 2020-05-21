@@ -133,7 +133,7 @@ class PullRequestsData(RepositoriesData):
         project_cards = pull_request.pop('projectCards')
         blocker_card = [c for c in project_cards['nodes'] if
                         c['column'] and c['column']['name'] == 'Blockers']
-        if blocker_card:
+        if blocker_card and not pull_request['closedAt']:
             pull_request['is_high_priority'] = blocker_card[0]['createdAt']
         else:
             pull_request['is_high_priority'] = None
@@ -212,11 +212,29 @@ if __name__ == '__main__':
                         dest='pr_number',
                         type=int,
                         default=None)
+
+    parser.add_argument('-hp',
+                        dest='high_priority',
+                        type=bool,
+                        default=False)
     args = parser.parse_args()
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
 
     if args.pr_number is not None:
         pull_requests_data.update(number=args.pr_number)
+
+    elif args.high_priority:
+        with session_scope() as session:
+            record = (
+                session
+                    .query(PullRequests.number)
+                    .filter(
+                    and_(PullRequests.is_high_priority.isnot(None))
+                )
+                    .all()
+            )
+            for r in record:
+                pull_requests_data.update(number=int(r.number))
 
     else:
         # Transform state into enum element
