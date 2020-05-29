@@ -79,8 +79,8 @@ class PullRequestsData(RepositoriesData):
                     break
 
                 deserialized_data = pull_request_schema.load(pull_request)
-
-                yield deserialized_data
+                if deserialized_data:
+                    yield deserialized_data
                 received += 1
 
     def upsert(self, data: dict):
