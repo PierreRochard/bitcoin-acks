@@ -1,9 +1,7 @@
 query(
-$repositoryPath: String = "bitcoin",
-$repositoryName: String = "bitcoin",
 $prFirst: Int = 20,
 $prCursorAfter: String = null,
-$prState: PullRequestState = null
+$searchQuery: String = null
 ){
     rateLimit {
         limit
@@ -11,15 +9,16 @@ $prState: PullRequestState = null
         remaining
         resetAt
     }
-    repository(owner: $repositoryPath, name: $repositoryName) {
-        pullRequests(first: $prFirst,
-                     after: $prCursorAfter,
-                     states: [$prState],
-                     orderBy: {field: UPDATED_AT, direction: DESC}) {
-            totalCount
-            edges {
-                cursor
-                node {
+    search(
+        type: ISSUE,
+        first: $prFirst,
+        after: $prCursorAfter,
+        query: $searchQuery) {
+        edges {
+            cursor
+            node {
+                ... on PullRequest {
+
                     id
                     number
                     title
