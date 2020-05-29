@@ -1,4 +1,5 @@
-from marshmallow import INCLUDE, EXCLUDE, ValidationError
+from datetime import date, timedelta
+
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -38,7 +39,8 @@ class PullRequestsData(RepositoriesData):
 
     def get_all(self,
                 state: PullRequestState = None,
-                limit: int = None):
+                limit: int = None,
+                newer_than: date = None):
         """
         Generator: starting from the most recent to the oldest, yield one PR at a time
         """
@@ -56,6 +58,7 @@ class PullRequestsData(RepositoriesData):
                 variables['prState'] = state.value
 
             variables['prCursorAfter'] = last_cursor
+            variables['searchQuery'] = f'updated:>{newer_than} repo:bitcoin/bitcoin'
 
             json_object = {
                 'query': pull_requests_graphql_query,
@@ -64,14 +67,13 @@ class PullRequestsData(RepositoriesData):
 
             data = self.graphql_post(json_object=json_object).json()
 
-            results = data['data']['repository']['pullRequests']['edges']
+            results = data['data']['search']['edges']
 
             if not len(results):
                 break
 
             last_cursor = results[-1]['cursor']
             results = [r['node'] for r in results]
-
             for pull_request in results:
                 if limit is not None and received == limit:
                     break
@@ -183,10 +185,12 @@ class PullRequestsData(RepositoriesData):
 
     def update_all(self,
                    state: PullRequestState = None,
-                   limit: int = None):
+                   limit: int = None,
+                   newer_than: date = None):
 
         for pull_request in self.get_all(state=state,
-                                         limit=limit):
+                                         limit=limit,
+                                         newer_than=newer_than):
             self.upsert_nested_data(pull_request)
 
     def update(self, number: int):
@@ -197,6 +201,10 @@ class PullRequestsData(RepositoriesData):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Update pull request')
+    parser.add_argument('-p',
+                        dest='pr_number',
+                        type=int,
+                        default=None)
     parser.add_argument('-s',
                         dest='state',
                         type=str,
@@ -208,21 +216,23 @@ if __name__ == '__main__':
                         type=int,
                         default=None
                         )
-    parser.add_argument('-p',
-                        dest='pr_number',
-                        type=int,
-                        default=None)
-
     parser.add_argument('-hp',
                         dest='high_priority',
                         type=bool,
                         default=False)
+    parser.add_argument('-o',
+                        dest='old',
+                        type=bool,
+                        default=True)
     args = parser.parse_args()
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
 
     if args.pr_number is not None:
         pull_requests_data.update(number=args.pr_number)
-
+    elif args.state is not None:
+        args.state = PullRequestState[args.state]
+        pull_requests_data.update_all(state=args.state,
+                                      limit=args.limit)
     elif args.high_priority:
         with session_scope() as session:
             record = (
@@ -235,11 +245,17 @@ if __name__ == '__main__':
             )
             for r in record:
                 pull_requests_data.update(number=int(r.number))
-
+    elif args.old:
+        with session_scope() as session:
+            record = (
+                session
+                .query(PullRequests.updated_at)
+                .order_by(PullRequests.updated_at.desc())
+                .limit(1)
+                .one()
+            )
+            from_date = record.updated_at.date() - timedelta(days=1)
+            pull_requests_data.update_all(newer_than=from_date)
     else:
-        # Transform state into enum element
-        if args.state is not None:
-            args.state = PullRequestState[args.state]
-
-        pull_requests_data.update_all(state=args.state,
-                                      limit=args.limit)
+        # All
+        pull_requests_data.update_all(limit=args.limit)
