@@ -46,7 +46,7 @@ def send_tweet(pull_request_number=None):
             status = 'Merged PR from {0}: {1} {2}' \
                 .format(next_pull_request.author,
                         next_pull_request.title,
-                        next_pull_request.url)
+                        next_pull_request.html_url)
         else:
             status = '''
             {0}'s first merged PR: {1}
