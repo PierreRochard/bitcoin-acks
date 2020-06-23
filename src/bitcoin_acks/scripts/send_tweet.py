@@ -38,20 +38,20 @@ def send_tweet(pull_request_number=None):
         if next_pull_request is None:
             return
         commits_url = 'https://api.github.com/repos/bitcoin/bitcoin/commits'
-        params = {'author': next_pull_request.author.name}
+        params = {'author': next_pull_request.author.login}
         response = requests.get(commits_url, params=params)
         response_json = response.json()
-
+        author_name = next_pull_request.author.name or next_pull_request.author.login
         if len(response_json) > 1 and next_pull_request.number != 14802:
             status = 'Merged PR from {0}: {1} {2}' \
-                .format(next_pull_request.author.name,
+                .format(author_name,
                         next_pull_request.title,
                         next_pull_request.html_url)
         else:
             status = '''
             {0}'s first merged PR: {1}
             Congratulations!  🎉🍾🎆
-            '''.format(next_pull_request.author.name,
+            '''.format(author_name,
                        next_pull_request.html_url)
         tweet = twitter.update_status(status=status)
         new_tweet = Tweets()
@@ -62,4 +62,11 @@ def send_tweet(pull_request_number=None):
 
 
 if __name__ == '__main__':
-    send_tweet()
+    import argparse
+    parser = argparse.ArgumentParser(description='Tweet merged pull request')
+    parser.add_argument('-p',
+                        dest='pr_number',
+                        type=int,
+                        default=None)
+    args = parser.parse_args()
+    send_tweet(pull_request_number=args.pr_number)
