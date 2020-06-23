@@ -38,13 +38,13 @@ def send_tweet(pull_request_number=None):
         if next_pull_request is None:
             return
         commits_url = 'https://api.github.com/repos/bitcoin/bitcoin/commits'
-        params = {'author': next_pull_request.author}
+        params = {'author': next_pull_request.author.name}
         response = requests.get(commits_url, params=params)
         response_json = response.json()
 
         if len(response_json) > 1 and next_pull_request.number != 14802:
             status = 'Merged PR from {0}: {1} {2}' \
-                .format(next_pull_request.author,
+                .format(next_pull_request.author.name,
                         next_pull_request.title,
                         next_pull_request.html_url)
         else:
