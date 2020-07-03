@@ -1,2 +1,2 @@
-*/1 * * * * echo "Data worker here!" >> /var/log/cron.log 2>&1
-*/5 * * * * cd /app && python3 src/bitcoin_acks/github_data/pull_requests_data.py >> /var/log/cron.log 2>&1
+* * * * * root echo "Data worker here!" >> /var/log/cron.log 2>&1
+*/5 * * * * root cd /app && python3 src/bitcoin_acks/github_data/pull_requests_data.py >> /var/log/cron.log 2>&1
