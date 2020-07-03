@@ -5,15 +5,15 @@ services:
     restart: always
     volumes:
       - "./db_data:/var/lib/postgresql/data"
-    ports:
-      - 5436:5432
+    expose:
+      - 5432
     networks:
-      - app-network
+      - bitcoin-acks-network
     environment:
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDB}
-  flask:
+  webapp:
     image: webapp-flask
     stdin_open: true
     tty: true
@@ -21,32 +21,19 @@ services:
       context: .
       dockerfile: src/bitcoin_acks/webapp/Dockerfile
     volumes:
-      - "./:/website"
+      - "./:/app"
     networks:
-      - app-network
+      - bitcoin-acks-network
     depends_on:
       - postgres
     environment:
-      PYTHONPATH: "/website/src/"
+      PYTHONPATH: "/app/src/"
+      PORT: "5005"
+      APP_MODULE: "bitcoin_acks.webapp.wsgi:app"
+      LOG_LEVEL: "debug"
     ports:
       - "5005:5005"
-  dataworker:
-    image: webapp-flask
-    command: [ "python3", "bitcoin_acks/github_data/pull_request_events.py" ]
-    stdin_open: true
-    tty: true
-    build:
-      context: .
-      dockerfile: src/bitcoin_acks/webapp/Dockerfile
-    volumes:
-      - "./:/website"
-    networks:
-      - app-network
-    depends_on:
-      - postgres
-    environment:
-      PYTHONPATH: "/website/src/"
 
 networks:
-  app-network:
+  bitcoin-acks-network:
     driver: bridge
