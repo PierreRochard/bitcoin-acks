@@ -30,7 +30,13 @@ services:
       PORT: "5005"
       APP_MODULE: "bitcoin_acks.webapp.wsgi:app"
       LOG_LEVEL: "debug"
+# Delete these for production
+      FLASK_ENV: "development"
+      FLASK_APP: "bitcoin_acks.webapp.wsgi:app"
+    command: /usr/bin/zsh -c "flask run --host=0.0.0.0"
     ports:
+      - "5000:5000"
+#
       - "5005:5005"
 
 networks:
