@@ -59,19 +59,19 @@ if __name__ == '__main__':
                                   repository_name=repository_name)
     pr_data = PullRequestsData(repository_path=repository_path,
                                repository_name=repository_name)
-    polling_data = PollingData(repository_path=repository_path,
-                               repository_name=repository_name)
+    # polling_data = PollingData(repository_path=repository_path,
+    #                            repository_name=repository_name)
     while True:
         pr_events.get()
-        polling_data.update(last_event=True)
+        # polling_data.update(last_event=True)
         sleep_time = (datetime.utcnow() - pr_events.rate_limit_reset).seconds/pr_events.rate_limit_remaining
         time.sleep(math.ceil(sleep_time)+5)
 
         now = datetime.utcnow()
         if pr_events.last_update.day != now.day:
             pr_data.update_all(state=PullRequestState.OPEN)
-            polling_data.update(last_open_update=True)
+            # polling_data.update(last_open_update=True)
         elif pr_events.last_update.month != now.month:
             pr_data.update_all()
-            polling_data.update(last_full_update=True)
+            # polling_data.update(last_full_update=True)
         pr_events.last_update = now

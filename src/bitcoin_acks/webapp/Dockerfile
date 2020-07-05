@@ -28,4 +28,4 @@ ENV YOUR_ENV=${YOUR_ENV} \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100
 
-RUN sudo -H pip install --upgrade --no-cache-dir pip -r requirements.txt
+RUN sudo -H pip3.8 install --upgrade --no-cache-dir pip -r requirements.txt

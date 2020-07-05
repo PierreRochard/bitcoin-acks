@@ -1,3 +1,4 @@
+import sys
 from datetime import date, timedelta
 
 from sqlalchemy import and_
@@ -13,6 +14,7 @@ from bitcoin_acks.github_data.graphql_queries import (
     pull_requests_graphql_query
 )
 from bitcoin_acks.github_data.labels_data import LabelsData
+from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
 from bitcoin_acks.models import PullRequests
@@ -225,7 +227,15 @@ if __name__ == '__main__':
                         type=bool,
                         default=True)
     args = parser.parse_args()
+
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
+    polling_data = PollingData('github')
+
+    if polling_data.is_polling():
+        print('GitHub is already being polled')
+        sys.exit(0)
+
+    polling_data.start()
 
     if args.pr_number is not None:
         pull_requests_data.update(number=args.pr_number)
@@ -259,3 +269,5 @@ if __name__ == '__main__':
     else:
         # All
         pull_requests_data.update_all(limit=args.limit)
+
+    polling_data.stop()

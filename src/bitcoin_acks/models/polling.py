@@ -1,17 +1,16 @@
 from sqlalchemy import (
     Column,
     DateTime,
-    Integer,
+    Integer, String,
 )
 
 from bitcoin_acks.database.base import Base
 
 
-class Polling(Base):
-    __tablename__ = 'polling'
+class ServicePolling(Base):
+    __tablename__ = 'service_polling'
 
     id = Column(Integer, primary_key=True)
-    repository_id = Column(Integer)
-    last_event = Column(DateTime)
-    last_open_update = Column(DateTime)
-    last_full_update = Column(DateTime)
+    service = Column(String)
+    started_at = Column(DateTime)
+    stopped_at = Column(DateTime)
