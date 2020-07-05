@@ -30,9 +30,17 @@ class PollingData(object):
 
     def stop(self):
         with session_scope() as session:
-            record = (
-                session.query(ServicePolling)
-                    .filter(ServicePolling.service == self.service)
-                    .one()
-            )
-            record.stopped_at = datetime.utcnow()
+            try:
+                record = (
+                    session.query(ServicePolling)
+                        .filter(ServicePolling.service == self.service)
+                        .filter(ServicePolling.stopped_at.is_(None))
+                        .one()
+                )
+                record.stopped_at = datetime.utcnow()
+            except NoResultFound:
+                pass
+
+
+if __name__ == '__main__':
+    PollingData('github').stop()

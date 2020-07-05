@@ -1,5 +1,7 @@
 version: '3'
+
 services:
+
   postgres:
     image: postgres:alpine
     restart: always
@@ -9,10 +11,7 @@ services:
       - 5432
     networks:
       - bitcoin-acks-network
-    environment:
-      POSTGRES_USER: ${PGUSER}
-      POSTGRES_PASSWORD: ${PGPASSWORD}
-      POSTGRES_DB: ${PGDB}
+
   webapp:
     image: webapp-flask
     stdin_open: true

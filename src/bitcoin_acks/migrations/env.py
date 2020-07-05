@@ -1,4 +1,5 @@
 from __future__ import with_statement
+
 from logging.config import fileConfig
 import os
 import sys
@@ -15,11 +16,9 @@ print(src_path)
 from bitcoin_acks.database.base import Base
 from bitcoin_acks.database.session import get_url
 
-
 config = context.config
 
 fileConfig(config.config_file_name)
-
 
 target_metadata = Base.metadata
 

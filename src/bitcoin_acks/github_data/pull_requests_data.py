@@ -1,5 +1,5 @@
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import and_
 from sqlalchemy.orm.exc import NoResultFound
@@ -257,15 +257,19 @@ if __name__ == '__main__':
                 pull_requests_data.update(number=int(r.number))
     elif args.old:
         with session_scope() as session:
-            record = (
-                session
-                .query(PullRequests.updated_at)
-                .order_by(PullRequests.updated_at.desc())
-                .limit(1)
-                .one()
-            )
-            from_date = record.updated_at.date() - timedelta(days=1)
-            pull_requests_data.update_all(newer_than=from_date)
+            try:
+                record = (
+                    session
+                    .query(PullRequests.updated_at)
+                    .order_by(PullRequests.updated_at.desc())
+                    .limit(1)
+                    .one()
+                )
+                from_date = record.updated_at.date() - timedelta(days=1)
+            except NoResultFound:
+                from_date = date(2000, 1, 1)
+            pull_requests_data.update_all(newer_than=from_date,
+                                          limit=args.limit)
     else:
         # All
         pull_requests_data.update_all(limit=args.limit)

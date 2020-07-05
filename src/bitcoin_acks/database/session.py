@@ -13,15 +13,12 @@ is_test = False
 
 
 def get_url():
-    db_name = (os.environ.get('GH_PGDATABASE', 'github')
-               if not is_test else os.environ.get('TEST_GH_PGDATABASE', 'test_github'))
-
     pg_url = URL(drivername='postgresql+psycopg2',
-                 username=os.environ['PGUSER'],
-                 password=os.environ['PGPASSWORD'],
+                 username=os.environ['POSTGRES_USER'],
+                 password=os.environ['POSTGRES_PASSWORD'],
                  host=os.environ['PGHOST'],
                  port=os.environ['PGPORT'],
-                 database=db_name)
+                 database=os.environ['POSTGRES_DB'])
     return pg_url
 
 

@@ -1,9 +1,11 @@
 import os
+import time
 
 from alembic import command, script
 from alembic.config import Config
 from alembic.runtime import migration
 from sqlalchemy import engine
+from sqlalchemy.exc import OperationalError
 
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.database.base import Base
@@ -25,17 +27,23 @@ def create_or_update_database(echo=True):
 
     alembic_config = Config(config_path)
 
-    with session_scope(echo=echo) as session:
-        directory = script.ScriptDirectory.from_config(alembic_config)
-        get_head = set(directory.get_heads())
-        current_head = get_current_head(connectable=session.bind.engine)
-        if current_head == get_head:
-            return
-        elif not current_head:
-            Base.metadata.create_all(session.connection())
-            command.stamp(alembic_config, 'head')
-        else:
-            command.upgrade(alembic_config, 'head')
+    try:
+        with session_scope(echo=echo) as session:
+            directory = script.ScriptDirectory.from_config(alembic_config)
+            get_head = set(directory.get_heads())
+            current_head = get_current_head(connectable=session.bind.engine)
+            if current_head == get_head:
+                return
+            elif not current_head:
+                Base.metadata.create_all(session.connection())
+                command.stamp(alembic_config, 'head')
+            else:
+                command.upgrade(alembic_config, 'head')
+
+    except OperationalError as e:
+        print(e)
+        time.sleep(10)
+        create_or_update_database(echo=echo)
 
 
 def drop_database(echo=True):
