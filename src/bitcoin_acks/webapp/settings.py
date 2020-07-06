@@ -16,3 +16,4 @@ class Config(object):
     FLASK_ADMIN_FLUID_LAYOUT = True
     SECRET_KEY = os.environ.get('SECRET_KEY', default=generate_secret())
     SQLALCHEMY_DATABASE_URI = get_url()
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
