@@ -25,4 +25,4 @@
 
 - Run `docker-compose up -d`
 
-- Go to `localhost:5005`
+- Go to `localhost:5000`
