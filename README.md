@@ -1,5 +1,5 @@
 # User Stories
-### Bitcoin ACKs v1 
+### Bitcoin ACKs v1
 - [x] As a reviewer I want to see which PRs have “momentum” (concept acks from contributors) so that I can prioritize and best use my review time.
 - [x] As a maintainer I want to see which PRs are merge candidates so that I don’t have to wait for authors to ping me or spend time individually analysing PRs.
 - [x] As an author I want to see when my PRs are conflicted or not building on Travis so that I can rebase.
@@ -21,7 +21,7 @@
 
 - [Install docker-compose](https://docs.docker.com/compose/install/)
 
-- Copy `dotenv` to `.env` and populate the secrets there
+- Copy `.env.sample` to `.env` and populate the secrets there
 
 - Run `docker-compose up -d`
 
