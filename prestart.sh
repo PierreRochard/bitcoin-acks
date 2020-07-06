@@ -1,13 +1,15 @@
 #! /usr/bin/env zsh
-
+echo "prestart.sh script beginning"
+echo "Starting cron service"
 service cron start
 
-# Let the DB start
+echo "Sleeping for 10 seconds to let the DB start"
+
 sleep 10;
-# Run migrations
+echo "Creating database or running migrations"
 cd /app && /usr/local/bin/python3.8 src/bitcoin_acks/database/createdb.py
 
-# Clear out any polling locks
+echo "Clearing out any polling locks"
 cd /app && /usr/local/bin/python3.8 src/bitcoin_acks/github_data/polling_data.py
-# Do a first update of the database
+echo "Doing a first update of the database"
 cd /app && /usr/local/bin/python3.8 src/bitcoin_acks/github_data/pull_requests_data.py -l 5
