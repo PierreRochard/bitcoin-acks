@@ -118,6 +118,8 @@ pip-selfcheck.json
 creds.env
 graphql.config.json
 
+db_data/
+
 src/tests/fixtures_data
 /tests/fixtures_data/*
 
