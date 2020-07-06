@@ -33,7 +33,7 @@ services:
 # Delete these for production
       FLASK_ENV: "development"
       FLASK_APP: "bitcoin_acks.webapp.wsgi:app"
-    command: /usr/bin/zsh -c "flask run --host=0.0.0.0"
+    command: /usr/bin/zsh /app/prestart.sh && /usr/bin/zsh -c "flask run --host=0.0.0.0"
     ports:
       - "5000:5000"
 #
