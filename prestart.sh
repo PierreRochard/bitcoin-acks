@@ -13,3 +13,5 @@ echo "Clearing out any polling locks"
 cd /app && /usr/local/bin/python3.8 src/bitcoin_acks/github_data/polling_data.py
 echo "Doing a first update of the database"
 cd /app && /usr/local/bin/python3.8 src/bitcoin_acks/github_data/pull_requests_data.py -l 5
+
+flask run --host=0.0.0.0
