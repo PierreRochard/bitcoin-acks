@@ -26,8 +26,8 @@
 
 - [Create a GitHub OAuth Application](https://github.com/settings/applications/new)
 
-   For local development set the homepage URL to `http://0.0.0.0:7371/` and 
-   set the authorization callback URL to `http://0.0.0.0:7371/login/github/authorized`
+   For local development set the homepage URL to `http://0.0.0.0:5000/` and 
+   set the authorization callback URL to `http://0.0.0.0:5000/login/github/authorized`
  
 - Copy `.env.sample` to `.env` and populate the secrets there
 
