@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('bounties',
     sa.Column('id', sa.String(), nullable=False),
     sa.Column('amount', sa.Integer(), nullable=True),
-    sa.Column('published_at', sa.DateTime(), nullable=False),
+    sa.Column('published_at', sa.DateTime(timezone=True), nullable=False),
     sa.Column('pull_request_id', sa.String(), nullable=False),
     sa.Column('creator_id', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['pull_request_id'], ['pull_requests.id'], ),

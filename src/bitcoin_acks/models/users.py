@@ -18,6 +18,7 @@ class Roles(Base, RoleMixin):
     name = Column(String(80), unique=True)
     description = Column(String(255))
 
+
 # FIXME Change db.Model to Base for auto-gen migrations
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'

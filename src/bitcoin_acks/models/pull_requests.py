@@ -90,3 +90,6 @@ class PullRequests(Base):
     def html_url(self):
         url = 'https://github.com/bitcoin/bitcoin/pull/{0}'
         return url.format(self.number)
+
+    def __repr__(self):
+        return f'{self.number} {self.title}'
