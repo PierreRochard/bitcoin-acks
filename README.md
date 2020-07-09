@@ -21,6 +21,14 @@
 
 - [Install docker-compose](https://docs.docker.com/compose/install/)
 
+- [Create GitHub API token](https://github.com/settings/tokens/new) 
+  The token must have the `public_repo` permission scope.
+
+- [Create a GitHub OAuth Application](https://github.com/settings/applications/new)
+
+   For local development set the homepage URL to `http://0.0.0.0:5000/` and 
+   set the authorization callback URL to `http://0.0.0.0:5000/login/github/authorized`
+ 
 - Copy `.env.sample` to `.env` and populate the secrets there
 
 - Run `docker-compose up -d`
