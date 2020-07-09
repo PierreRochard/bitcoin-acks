@@ -5,6 +5,7 @@ from flask import abort, redirect, request, url_for
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import SecureForm
 from flask_login import current_user
+from sqlalchemy import func
 
 from bitcoin_acks.models import Bounties
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
@@ -38,6 +39,20 @@ class BountiesModelView(ModelView):
                 return redirect(url_for('github.login', next=request.url))
 
     form_columns = ['amount', 'pull_request']
+
+    def get_query(self):
+        return (
+            self.session
+                .query(self.model)
+                .filter(self.model.creator_id == current_user.id)
+        )
+
+    def get_count_query(self):
+        return (
+            self.session
+                .query(func.count('*'))
+                .filter(self.model.creator_id == current_user.id)
+        )
 
     def on_model_change(self, form, model: Bounties, is_created):
         model.id = uuid4().hex
