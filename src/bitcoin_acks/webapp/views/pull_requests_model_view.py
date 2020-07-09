@@ -15,7 +15,7 @@ from bitcoin_acks.webapp.formatters import (
 from bitcoin_acks.webapp.mixins import NullOrderMixinView
 
 
-class PullRequestsModelView(NullOrderMixinView, ModelView):
+class PullRequestsModelView(ModelView, NullOrderMixinView):
     def __init__(self, model, session, *args, **kwargs):
         super(PullRequestsModelView, self).__init__(model, session, *args,
                                                     **kwargs)

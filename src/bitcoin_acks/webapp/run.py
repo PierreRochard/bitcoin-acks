@@ -12,11 +12,14 @@ from sqlalchemy.orm.exc import NoResultFound
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import PullRequests, Logs
+from bitcoin_acks.models.bounties import Bounties
 from bitcoin_acks.models.users import OAuth, Roles, Users
 from bitcoin_acks.webapp.database import db
 from bitcoin_acks.webapp.templates.template_globals import \
     apply_template_globals
-from bitcoin_acks.webapp.views import PullRequestsModelView
+from bitcoin_acks.webapp.views.bounties_model_view import BountiesModelView
+from bitcoin_acks.webapp.views.pull_requests_model_view import \
+    PullRequestsModelView
 
 
 def create_app(config_object: str):
@@ -56,6 +59,7 @@ def create_app(config_object: str):
                   template_mode='bootstrap3',
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
+    admin.add_view(BountiesModelView(Bounties, db.session))
 
     @app.route('/robots.txt')
     def robots_txt():
