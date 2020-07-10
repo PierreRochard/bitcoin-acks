@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from flask_security import RoleMixin
 from sqlalchemy import (
     Boolean, Column,
-    ForeignKey, Integer, String, Table
+    ForeignKey, Integer, PickleType, String, Table
 )
 from sqlalchemy.orm import relationship, synonym
 
@@ -37,6 +37,11 @@ class Users(db.Model, UserMixin):
     avatarUrl = synonym('avatar_url')
 
     twitter_handle = Column(String)
+
+    btcpay_host = Column(String)
+    btcpay_pairing_code = Column(Integer)
+    btcpay_client = Column(PickleType)
+
 
 
 class OAuth(OAuthConsumerMixin, Base):

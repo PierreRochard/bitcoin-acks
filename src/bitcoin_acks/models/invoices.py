@@ -1,25 +1,23 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, String
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from bitcoin_acks.database.base import Base
-from bitcoin_acks.models import PullRequests
-from bitcoin_acks.models.users import Users
+from bitcoin_acks.models import Bounties, Users
 
 
-class Bounties(Base):
-    __tablename__ = 'bounties'
+class Invoices(Base):
+    __tablename__ = 'invoices'
 
     id = Column(String, primary_key=True)
+    status = Column(String)
+    data = Column(JSONB)
 
-    amount = Column(Integer)
+    bounty_id = Column(String,
+                       ForeignKey('bounties.id'),
+                       nullable=False)
 
-    published_at = Column(DateTime(timezone=True), nullable=False)
-
-    pull_request_id = Column(String,
-                             ForeignKey('pull_requests.id'),
-                             nullable=False)
-
-    pull_request = relationship(PullRequests, backref='bounties')
+    bounty = relationship(Bounties, backref='invoices')
 
     recipient_user_id = Column(String)
     recipient = relationship(Users,

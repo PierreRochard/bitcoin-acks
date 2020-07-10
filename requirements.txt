@@ -1,5 +1,6 @@
 alembic
 backoff
+btcpay-python
 colorama
 dateparser
 email_validator

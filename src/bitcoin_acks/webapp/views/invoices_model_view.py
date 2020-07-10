@@ -2,55 +2,56 @@ from datetime import datetime
 from uuid import uuid4
 
 from flask_login import current_user
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Bounties
+from bitcoin_acks.models.invoices import Invoices
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
     pr_link_formatter, satoshi_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
 
-class BountiesModelView(AuthenticatedModelView):
+class InvoicesModelView(AuthenticatedModelView):
     def __init__(self, model, session, *args, **kwargs):
-        super(BountiesModelView, self).__init__(model, session, *args,
-                                                    **kwargs)
+        super(InvoicesModelView, self).__init__(model, session, *args,
+                                                **kwargs)
         self.static_folder = 'static'
-        self.endpoint = 'bounties'
-        self.name = 'Bounties'
+        self.endpoint = 'invoices'
+        self.name = 'Invoices'
 
-    form_columns = ['amount', 'pull_request']
+    form_columns = ['bounty']
 
     def get_query(self):
         return (
             self.session
                 .query(self.model)
-                .filter(self.model.creator_id == current_user.id)
+                .filter(or_(self.model.recipient_user_id == current_user.id,
+                            self.model.payer_user_id == current_user.id))
         )
 
     def get_count_query(self):
         return (
             self.session
                 .query(func.count('*'))
-                .filter(self.model.creator_id == current_user.id)
+                .filter(or_(self.model.recipient_user_id == current_user.id,
+                            self.model.payer_user_id == current_user.id))
         )
 
-    def on_model_change(self, form, model: Bounties, is_created):
-        model.id = uuid4().hex
+    def on_model_change(self, form, model: Invoices, is_created: bool):
+        if not is_created:
+            raise Exception('Can not edit invoices.')
+        model.data = model.recipient.btcpay_client.create_invoice(
+            {"price": model.bounty.amount, "currency": "BTC"}
+        )
+        model.id = model.data['id']
         model.published_at = datetime.utcnow()
-        model.creator_id = current_user.id
+        model.payer_user_id = model.bounty.payer_user_id
+        assert model.payer_user_id == current_user.id
+        model.recipient_user_id = model.bounty.recipient_user_id
 
-        with session_scope() as session:
-            total_bounty_amount = (
-                session
-                    .query(func.sum(Bounties.amount))
-                    .filter(Bounties.pull_request_id == model.pull_request.id)
-                    .one()
-            )[0]
-            log.debug('total_satoshis', total_bounty_amount=total_bounty_amount)
-            model.pull_request.total_bounty_amount = total_bounty_amount + model.amount
 
     can_create = True
 
