@@ -8,6 +8,25 @@ from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.models import Bounties
 
 
+def format_integer(amount):
+    amount = int(amount)
+    if amount:
+        currency_string = "{0:,d}".format(amount)
+        if currency_string.startswith('-'):
+            currency_string = currency_string.replace('-', '(')
+            currency_string += ')'
+        return Markup(f'<div style="text-align: right;">{currency_string}</div>')
+    else:
+        return Markup(f'<div style="text-align: center;">-</div>')
+
+
+def satoshi_formatter(view, context, model, name):
+    amount = getattr(model, name)
+    if amount is not None:
+        return format_integer(amount)
+    return None
+
+
 def line_count_formatter(view, context, model, name):
     lines = getattr(model, name)
     if name == 'additions':
@@ -42,8 +61,6 @@ def humanize_date_formatter(view, context, model, name):
         try:
             humanized_date = humanize.naturaltime(now - old_date)
         except TypeError:
-            raise
-
             return ''
         return Markup('<div title="{0}" style="white-space: nowrap; overflow: hidden;">{1}</div>'.format(old_date, humanized_date))
     else:
