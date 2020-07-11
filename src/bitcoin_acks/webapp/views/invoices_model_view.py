@@ -1,15 +1,14 @@
 from datetime import datetime
-from uuid import uuid4
 
+from bitcoin.core import COIN
+from flask import flash
 from flask_login import current_user
+from requests import HTTPError, Response
 from sqlalchemy import func, or_
 
 from bitcoin_acks.database import session_scope
-from bitcoin_acks.logging import log
-from bitcoin_acks.models import Bounties
+from bitcoin_acks.models import Users
 from bitcoin_acks.models.invoices import Invoices
-from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, satoshi_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
@@ -43,40 +42,49 @@ class InvoicesModelView(AuthenticatedModelView):
     def on_model_change(self, form, model: Invoices, is_created: bool):
         if not is_created:
             raise Exception('Can not edit invoices.')
-        model.data = model.recipient.btcpay_client.create_invoice(
-            {"price": model.bounty.amount, "currency": "BTC"}
-        )
-        model.id = model.data['id']
         model.published_at = datetime.utcnow()
         model.payer_user_id = model.bounty.payer_user_id
         assert model.payer_user_id == current_user.id
         model.recipient_user_id = model.bounty.recipient_user_id
-
+        with session_scope() as session:
+            recipient = session.query(Users).filter(Users.id == model.recipient_user_id).one()
+            try:
+                model.data = recipient.btcpay_client.create_invoice(
+                    {
+                        'price': model.bounty.amount/COIN,
+                        'currency': 'BTC'
+                    }
+                )
+                model.id = model.data['id']
+                model.status = model.data['status']
+                model.url = model.data['url']
+            except HTTPError as e:
+                r: Response = e.response
+                flash(f'{r.status_code} - {r.text}', category="error")
 
     can_create = True
 
-    named_filter_urls = True
-
     column_list = [
-        'pull_request.number',
-        'amount',
-        'published_at'
+        'id',
+        'status',
+        'url'
     ]
     column_labels = {
-        'pull_request.number': 'Pull Request',
-        'amount': 'satoshis'
+        # 'pull_request.number': 'Pull Request',
+        # 'amount': 'satoshis'
     }
     column_formatters = {
-        'pull_request.number': pr_link_formatter,
-        'published_at': humanize_date_formatter,
-        'amount': satoshi_formatter
+        # 'pull_request.number': pr_link_formatter,
+        # 'published_at': humanize_date_formatter,
+        # 'amount': satoshi_formatter
     }
 
     form_ajax_refs = {
-        'pull_request': {
-            'fields': ['number', 'title'],
+        'bounty': {
+            'fields': ['id', 'amount'],
             'page_size': 10,
-            'minimum_input_length': 0,  # show suggestions, even before any user input
+            'minimum_input_length': 0,
+            # show suggestions, even before any user input
             'placeholder': 'Please select',
         }
     }

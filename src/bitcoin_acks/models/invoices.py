@@ -11,6 +11,7 @@ class Invoices(Base):
 
     id = Column(String, primary_key=True)
     status = Column(String)
+    url = Column(String)
     data = Column(JSONB)
 
     bounty_id = Column(String,

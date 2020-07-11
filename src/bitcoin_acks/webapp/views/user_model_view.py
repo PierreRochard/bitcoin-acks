@@ -1,15 +1,8 @@
-from datetime import datetime
-from uuid import uuid4
-
 from btcpay import BTCPayClient
 from flask_login import current_user
 from sqlalchemy import func
 
-from bitcoin_acks.database import session_scope
-from bitcoin_acks.logging import log
-from bitcoin_acks.models import Bounties, Users
-from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, satoshi_formatter
+from bitcoin_acks.models import Users
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
@@ -21,8 +14,6 @@ class UsersModelView(AuthenticatedModelView):
         self.static_folder = 'static'
         self.endpoint = 'users'
         self.name = 'User Settings'
-
-    form_columns = ['amount', 'pull_request']
 
     def get_query(self):
         return (

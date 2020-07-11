@@ -1,8 +1,10 @@
 from datetime import datetime
+from operator import or_
 from uuid import uuid4
 
 from flask_login import current_user
 from sqlalchemy import func
+from sqlalchemy.sql.functions import coalesce
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
@@ -27,25 +29,28 @@ class BountiesModelView(AuthenticatedModelView):
         return (
             self.session
                 .query(self.model)
-                .filter(self.model.creator_id == current_user.id)
+                .filter(or_(self.model.payer_user_id == current_user.id,
+                            self.model.recipient_user_id == current_user.id))
         )
 
     def get_count_query(self):
         return (
             self.session
                 .query(func.count('*'))
-                .filter(self.model.creator_id == current_user.id)
+                .filter(or_(self.model.payer_user_id == current_user.id,
+                            self.model.recipient_user_id == current_user.id))
         )
 
-    def on_model_change(self, form, model: Bounties, is_created):
+    def on_model_change(self, form, model: Bounties, is_created: bool):
         model.id = uuid4().hex
         model.published_at = datetime.utcnow()
-        model.creator_id = current_user.id
+        model.payer_user_id = current_user.id
+        model.recipient_user_id = model.pull_request.author_id
 
         with session_scope() as session:
             total_bounty_amount = (
                 session
-                    .query(func.sum(Bounties.amount))
+                    .query(coalesce(func.sum(Bounties.amount), 0))
                     .filter(Bounties.pull_request_id == model.pull_request.id)
                     .one()
             )[0]

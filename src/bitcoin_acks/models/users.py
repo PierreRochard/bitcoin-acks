@@ -20,7 +20,7 @@ class Roles(Base, RoleMixin):
 
 
 # FIXME Change db.Model to Base for auto-gen migrations
-class Users(db.Model, UserMixin):
+class Users(Base, db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = Column(String, primary_key=True)
@@ -39,7 +39,7 @@ class Users(db.Model, UserMixin):
     twitter_handle = Column(String)
 
     btcpay_host = Column(String)
-    btcpay_pairing_code = Column(Integer)
+    btcpay_pairing_code = Column(String)
     btcpay_client = Column(PickleType)
 
 

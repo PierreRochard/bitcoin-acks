@@ -10,3 +10,4 @@ from .tweets import Tweets
 from .toots import Toots
 from .users import Users, Roles
 from .bounties import Bounties
+from .invoices import Invoices
