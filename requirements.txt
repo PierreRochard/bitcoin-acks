@@ -1,5 +1,6 @@
 alembic
 backoff
+btcpay-python
 colorama
 dateparser
 email_validator
@@ -15,6 +16,7 @@ marshmallow>=3.2.2
 mock
 psycopg2
 pytest>=3.4.2
+python-bitcoinlib
 python-dateutil
 python-dotenv
 requests

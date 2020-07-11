@@ -11,11 +11,11 @@ from bitcoin_acks.webapp.formatters import (
     line_count_formatter,
     mergeable_formatter,
     pr_link_formatter,
-    review_decisions_formatter)
+    review_decisions_formatter, satoshi_formatter)
 from bitcoin_acks.webapp.mixins import NullOrderMixinView
 
 
-class PullRequestsModelView(NullOrderMixinView, ModelView):
+class PullRequestsModelView(ModelView, NullOrderMixinView):
     def __init__(self, model, session, *args, **kwargs):
         super(PullRequestsModelView, self).__init__(model, session, *args,
                                                     **kwargs)
@@ -51,6 +51,7 @@ class PullRequestsModelView(NullOrderMixinView, ModelView):
     column_list = [
         'number',
         'author.login',
+        'total_bounty_amount',
         'labels',
         'title',
         'body',
@@ -68,6 +69,7 @@ class PullRequestsModelView(NullOrderMixinView, ModelView):
     column_filters = [
         'number',
         'author.login',
+        'total_bounty_amount',
         'review_decisions.author.login',
         'labels.name',
         'title',
@@ -85,6 +87,7 @@ class PullRequestsModelView(NullOrderMixinView, ModelView):
     column_sortable_list = [
         'number',
         'author.login',
+        'total_bounty_amount',
         'title',
         'body',
         'additions',
@@ -110,13 +113,15 @@ class PullRequestsModelView(NullOrderMixinView, ModelView):
         'review_decisions_count': review_decisions_formatter,
         'mergeable': mergeable_formatter,
         'last_commit_state': last_commit_state_formatter,
-        'labels': labels_formatter
+        'labels': labels_formatter,
+        'total_bounty_amount': satoshi_formatter
     }
     column_default_sort = ('last_commit_pushed_date', 'LAST')
     column_labels = {
         'author.login': 'Author',
         'review_decisions.author.login': 'Reviewer',
         'labels.name': 'Label',
+        'total_bounty_amount': 'Bounty',
         'additions': '+',
         'deletions': '-',
         'created_at': 'Created',

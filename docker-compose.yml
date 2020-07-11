@@ -23,6 +23,8 @@ services:
       - "./:/app"
     networks:
       - bitcoin-acks-network
+    extra_hosts:
+      btcpay.local: 192.168.65.2 # from ping host.docker.internal
     depends_on:
       - postgres
     environment:

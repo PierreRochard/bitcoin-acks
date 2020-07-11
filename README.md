@@ -29,6 +29,11 @@
    For local development set the homepage URL to `http://0.0.0.0:5000/` and 
    set the authorization callback URL to `http://0.0.0.0:5000/login/github/authorized`
  
+- Add `127.0.0.1 btcpay.local` to [your `/etc/hosts` file](https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/)
+ 
+- Use the parameters in this repository's `btcpay_dev_env` to [setup a local BTCPay Server](https://github.com/btcpayserver/btcpayserver-docker) 
+   
+ 
 - Copy `.env.sample` to `.env` and populate the secrets there
 
 - Run `docker-compose up -d`

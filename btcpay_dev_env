@@ -1,0 +1,9 @@
+export BTCPAY_HOST=btcpay.local
+export REVERSEPROXY_HTTP_PORT=9080
+export NBITCOIN_NETWORK=regtest
+export BTCPAYGEN_CRYPTO1=btc
+export BTCPAYGEN_ADDITIONAL_FRAGMENTS="opt-save-storage-xxs;opt-more-memory;opt-add-tor;"
+export BTCPAYGEN_REVERSEPROXY=nginx
+export BTCPAYGEN_LIGHTNING=none
+export BTCPAY_ENABLE_SSH=false
+export BTCPAYGEN_SUBNAME=generated

@@ -4,7 +4,7 @@ FROM tiangolo/meinheld-gunicorn:python3.8
 
 #RUN apk add --no-cache --update python3 zsh linux-headers postgresql-dev
 
-RUN apt-get update && apt-get install -y cron zsh nano sudo
+RUN apt-get update && apt-get install -y cron zsh nano sudo libssl-dev
 
 WORKDIR app
 

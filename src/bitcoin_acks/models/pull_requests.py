@@ -52,6 +52,8 @@ class PullRequests(Base):
     commit_count = Column(Integer)
     review_decisions_count = Column(Integer, default=0)
 
+    total_bounty_amount = Column(Integer)
+
     bodyHTML = synonym('body')
     createdAt = synonym('created_at')
     updatedAt = synonym('updated_at')
@@ -90,3 +92,6 @@ class PullRequests(Base):
     def html_url(self):
         url = 'https://github.com/bitcoin/bitcoin/pull/{0}'
         return url.format(self.number)
+
+    def __repr__(self):
+        return f'{self.number} {self.title}'

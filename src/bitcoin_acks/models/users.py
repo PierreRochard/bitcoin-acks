@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from flask_security import RoleMixin
 from sqlalchemy import (
     Boolean, Column,
-    ForeignKey, Integer, String, Table
+    ForeignKey, Integer, PickleType, String, Table
 )
 from sqlalchemy.orm import relationship, synonym
 
@@ -19,7 +19,8 @@ class Roles(Base, RoleMixin):
     description = Column(String(255))
 
 
-class Users(db.Model, UserMixin):
+# FIXME Change db.Model to Base for auto-gen migrations
+class Users(Base, db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = Column(String, primary_key=True)
@@ -37,6 +38,11 @@ class Users(db.Model, UserMixin):
 
     twitter_handle = Column(String)
 
+    btcpay_host = Column(String)
+    btcpay_pairing_code = Column(String)
+    btcpay_client = Column(PickleType)
+
+
 
 class OAuth(OAuthConsumerMixin, Base):
     __tablename__ = 'oauth'
@@ -47,8 +53,8 @@ class OAuth(OAuthConsumerMixin, Base):
 
 
 roles_users = Table(
-    "roles_users",
+    'roles_users',
     Base.metadata,
-    Column("user_id", String(), ForeignKey("users.id")),
-    Column("role_id", Integer(), ForeignKey("roles.id")),
+    Column('user_id', String, ForeignKey('users.id')),
+    Column('role_id', Integer, ForeignKey('roles.id')),
 )
