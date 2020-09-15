@@ -1,6 +1,9 @@
 import datetime
 
 import humanize
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.helpers import get_url
+from jinja2.runtime import Context
 from markupsafe import Markup
 import webcolors
 
@@ -8,14 +11,19 @@ from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.models import Bounties
 
 
+def get_currency_string(amount: int):
+    currency_string = "{0:,d}".format(amount)
+    if currency_string.startswith('-'):
+        currency_string = currency_string.replace('-', '(')
+        currency_string += ')'
+    return currency_string
+
+
 def format_integer(amount):
     amount = int(amount)
     if amount:
-        currency_string = "{0:,d}".format(amount)
-        if currency_string.startswith('-'):
-            currency_string = currency_string.replace('-', '(')
-            currency_string += ')'
-        return Markup(f'<div style="text-align: right;">{currency_string}</div>')
+        return Markup(
+            f'<div style="text-align: right;">{get_currency_string(amount)}</div>')
     else:
         return Markup(f'<div style="text-align: center;">-</div>')
 
@@ -25,6 +33,21 @@ def satoshi_formatter(view, context, model, name):
     if amount is not None:
         return format_integer(amount)
     return None
+
+
+def bounty_formatter(view: ModelView, context: Context, model, name):
+    amount = getattr(model, name)
+    if amount:
+        amount_html = f'<div style="text-align: left;">{get_currency_string(int(amount))} sats</div>'
+    else:
+        amount_html = ''
+    bounty_html = amount_html + f'''
+        <a role="button" class="btn btn-warning" href="{view.get_url('bounties.create_view', pull_request_number=model.number, url=view.get_url('admin.index_view'))}">
+Pledge ฿
+    </a>
+    '''
+
+    return Markup(bounty_html)
 
 
 def line_count_formatter(view, context, model, name):
@@ -37,7 +60,8 @@ def line_count_formatter(view, context, model, name):
         prefix = '-'
     else:
         raise Exception('line_count_formatter mismatch')
-    return Markup('<div style="color: {0}">{1}{2:,}</div>'.format(color, prefix, lines))
+    return Markup(
+        '<div style="color: {0}">{1}{2:,}</div>'.format(color, prefix, lines))
 
 
 def body_formatter(view, context, model, name):
@@ -49,7 +73,8 @@ def body_formatter(view, context, model, name):
         display_text = full_text[0:max_length]
         display_text += '...'
     if full_text:
-        return Markup('<div title="{0}">{1}</div>'.format(full_text, display_text))
+        return Markup(
+            '<div title="{0}">{1}</div>'.format(full_text, display_text))
     else:
         return ''
 
@@ -62,7 +87,9 @@ def humanize_date_formatter(view, context, model, name):
             humanized_date = humanize.naturaltime(now - old_date)
         except TypeError:
             return ''
-        return Markup('<div title="{0}" style="white-space: nowrap; overflow: hidden;">{1}</div>'.format(old_date, humanized_date))
+        return Markup(
+            '<div title="{0}" style="white-space: nowrap; overflow: hidden;">{1}</div>'.format(
+                old_date, humanized_date))
     else:
         return ''
 
@@ -88,7 +115,9 @@ def pr_link_formatter(view, context, model, name):
 def author_link_formatter(view, context, model, name):
     if model.author is None:
         return ''
-    return Markup('<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a target=blank href="{1}" >{2}</a></div>'.format(model.author.avatar_url, model.author.url, model.author.login))
+    return Markup(
+        '<div style="white-space: nowrap; overflow: hidden;"><img src="{0}" style="height:16px; border-radius: 50%;"> <a target=blank href="{1}" >{2}</a></div>'.format(
+            model.author.avatar_url, model.author.url, model.author.login))
 
 
 def review_decisions_formatter(view, context, model, name):
@@ -124,7 +153,8 @@ def review_decisions_formatter(view, context, model, name):
         # Show comments in detail view only
         if is_details:
             outer_style = ''
-            comment_markup = '<div style="color: #000000;"> {body}</div>'.format(body=comment.body)
+            comment_markup = '<div style="color: #000000;"> {body}</div>'.format(
+                body=comment.body)
 
             # Don't add <hr/> after the last comment
             if comments.index(comment) < len(comments) - 1:
@@ -199,11 +229,12 @@ def labels_formatter(view, context, model, name):
     labels = getattr(model, name)
     output = ''
     for label in labels:
-        label_url = context.parent['modify_query'](flt6_label_in_list=label.name)
+        label_url = context.parent['modify_query'](
+            flt6_label_in_list=label.name)
         label_color = '#' + label.color
         rgb = webcolors.hex_to_rgb(label_color)
         if rgb.blue > 200:
-            rgb = [int(c*0.6) for c in rgb]
+            rgb = [int(c * 0.6) for c in rgb]
             label_color = webcolors.rgb_to_hex(rgb)
         output += '<a href={label_url} style="color: #FFFFFF; text-decoration: none;">' \
                   '<div style="white-space: nowrap; overflow: hidden;">' \

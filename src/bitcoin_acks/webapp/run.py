@@ -18,7 +18,7 @@ from bitcoin_acks.webapp.database import db
 from bitcoin_acks.webapp.templates.template_globals import \
     apply_template_globals
 from bitcoin_acks.webapp.views.bounties_model_view import BountiesModelView
-from bitcoin_acks.webapp.views.invoices_model_view import InvoicesModelView
+from bitcoin_acks.webapp.views.payables_model_view import PayablesModelView
 from bitcoin_acks.webapp.views.pull_requests_model_view import \
     PullRequestsModelView
 from bitcoin_acks.webapp.views.user_model_view import UsersModelView
@@ -62,7 +62,7 @@ def create_app(config_object: str):
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
     admin.add_view(BountiesModelView(Bounties, db.session))
-    admin.add_view(InvoicesModelView(Invoices, db.session))
+    admin.add_view(PayablesModelView(Invoices, db.session))
     admin.add_view(UsersModelView(Users, db.session))
 
     @app.route('/robots.txt')

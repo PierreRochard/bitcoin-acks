@@ -2,13 +2,14 @@ from datetime import datetime
 from operator import or_
 from uuid import uuid4
 
+from flask import request
 from flask_login import current_user
 from sqlalchemy import func
 from sqlalchemy.sql.functions import coalesce
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
-from bitcoin_acks.models import Bounties
+from bitcoin_acks.models import Bounties, PullRequests
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
     pr_link_formatter, satoshi_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
@@ -40,6 +41,16 @@ class BountiesModelView(AuthenticatedModelView):
                 .filter(or_(self.model.payer_user_id == current_user.id,
                             self.model.recipient_user_id == current_user.id))
         )
+
+    def create_form(self, **kwargs):
+        print(kwargs)
+        form = super().create_form()
+        if 'pull_request_number' in request.args.keys():
+            pull_request = self.session.query(PullRequests).filter(PullRequests.number == request.args['pull_request_number']).one()
+            form.pull_request.data = pull_request
+        form.amount.data = 1000
+        print(request.values.get('url'))
+        return form
 
     def on_model_change(self, form, model: Bounties, is_created: bool):
         model.id = uuid4().hex
