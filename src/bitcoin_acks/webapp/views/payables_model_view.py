@@ -13,13 +13,13 @@ from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
 
-class PayablesModelView(AuthenticatedModelView):
+class InvoicesModelView(AuthenticatedModelView):
     def __init__(self, model, session, *args, **kwargs):
-        super(PayablesModelView, self).__init__(model, session, *args,
+        super(InvoicesModelView, self).__init__(model, session, *args,
                                                 **kwargs)
         self.static_folder = 'static'
-        self.endpoint = 'payables'
-        self.name = 'Payables'
+        self.endpoint = 'invoices'
+        self.name = 'invoices'
 
     form_columns = ['bounty']
 
