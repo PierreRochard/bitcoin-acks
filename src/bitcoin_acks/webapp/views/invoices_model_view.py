@@ -19,7 +19,7 @@ class InvoicesModelView(AuthenticatedModelView):
                                                 **kwargs)
         self.static_folder = 'static'
         self.endpoint = 'invoices'
-        self.name = 'invoices'
+        self.name = 'Invoices'
 
     form_columns = ['bounty']
 

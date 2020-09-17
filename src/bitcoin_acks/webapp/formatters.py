@@ -22,17 +22,29 @@ def get_currency_string(amount: int):
 def format_integer(amount):
     amount = int(amount)
     if amount:
-        return Markup(
-            f'<div style="text-align: right;">{get_currency_string(amount)}</div>')
+        return f'<div style="text-align: right;">{get_currency_string(amount)}</div>'
     else:
-        return Markup(f'<div style="text-align: center;">-</div>')
+        return f'<div style="text-align: center;">-</div>'
 
 
 def satoshi_formatter(view, context, model, name):
     amount = getattr(model, name)
     if amount is not None:
-        return format_integer(amount)
+        amount_html = format_integer(amount)
+        return Markup(amount_html)
     return None
+
+
+def payable_satoshi_formatter(view, context, model, name):
+    amount = getattr(model, name)
+    amount_html = format_integer(amount)
+
+    payable_html = amount_html + f'''
+            <a role="button" class="btn btn-success" href="{view.get_url('invoices.create_view', pull_request_number=model.number, url=view.get_url('admin.index_view'))}">
+    Pledge ฿
+        </a>
+        '''
+    return Markup(amount_html)
 
 
 def bounty_formatter(view: ModelView, context: Context, model, name):
@@ -42,7 +54,7 @@ def bounty_formatter(view: ModelView, context: Context, model, name):
     else:
         amount_html = ''
     bounty_html = amount_html + f'''
-        <a role="button" class="btn btn-warning" href="{view.get_url('bounties.create_view', pull_request_number=model.number, url=view.get_url('admin.index_view'))}">
+        <a role="button" class="btn btn-warning" href="{view.get_url('bounties-payable.create_view', pull_request_number=model.number, url=view.get_url('admin.index_view'))}">
 Pledge ฿
     </a>
     '''

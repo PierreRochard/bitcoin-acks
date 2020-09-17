@@ -11,18 +11,18 @@ from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Bounties, PullRequests
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, satoshi_formatter
+    pr_link_formatter, satoshi_formatter, payable_satoshi_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
 
-class BountiesModelView(AuthenticatedModelView):
+class BountiesPayableModelView(AuthenticatedModelView):
     def __init__(self, model, session, *args, **kwargs):
-        super(BountiesModelView, self).__init__(model, session, *args,
+        super(BountiesPayableModelView, self).__init__(model, session, *args,
                                                     **kwargs)
         self.static_folder = 'static'
-        self.endpoint = 'bounties'
-        self.name = 'Bounties'
+        self.endpoint = 'bounties-payable'
+        self.name = 'Bounties Payable'
 
     form_columns = ['amount', 'pull_request']
 
@@ -30,16 +30,14 @@ class BountiesModelView(AuthenticatedModelView):
         return (
             self.session
                 .query(self.model)
-                .filter(or_(self.model.payer_user_id == current_user.id,
-                            self.model.recipient_user_id == current_user.id))
+                .filter(self.model.payer_user_id == current_user.id)
         )
 
     def get_count_query(self):
         return (
             self.session
                 .query(func.count('*'))
-                .filter(or_(self.model.payer_user_id == current_user.id,
-                            self.model.recipient_user_id == current_user.id))
+                .filter(self.model.payer_user_id == current_user.id)
         )
 
     def create_form(self, **kwargs):
@@ -84,7 +82,7 @@ class BountiesModelView(AuthenticatedModelView):
     column_formatters = {
         'pull_request.number': pr_link_formatter,
         'published_at': humanize_date_formatter,
-        'amount': satoshi_formatter
+        'amount': payable_satoshi_formatter
     }
 
     form_ajax_refs = {

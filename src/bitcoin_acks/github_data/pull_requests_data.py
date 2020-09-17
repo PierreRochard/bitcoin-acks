@@ -59,9 +59,15 @@ class PullRequestsData(RepositoriesData):
             if state is not None:
                 variables['prState'] = state.value
 
-            variables['prCursorAfter'] = last_cursor
-            variables['searchQuery'] = f'updated:>{newer_than} repo:bitcoin/bitcoin'
+            if last_cursor is not None:
+                variables['prCursorAfter'] = last_cursor
 
+            if newer_than:
+                variables['searchQuery'] = f'updated:>{newer_than} repo:bitcoin/bitcoin'
+            else:
+                variables['searchQuery'] = 'repo:bitcoin/bitcoin'
+
+            print(variables)
             json_object = {
                 'query': pull_requests_graphql_query,
                 'variables': variables
@@ -225,7 +231,7 @@ if __name__ == '__main__':
     parser.add_argument('-o',
                         dest='old',
                         type=bool,
-                        default=True)
+                        default=False)
     args = parser.parse_args()
 
     pull_requests_data = PullRequestsData('bitcoin', 'bitcoin')
@@ -272,6 +278,7 @@ if __name__ == '__main__':
                                           limit=args.limit)
     else:
         # All
+        print('All')
         pull_requests_data.update_all(limit=args.limit)
 
     polling_data.stop()
