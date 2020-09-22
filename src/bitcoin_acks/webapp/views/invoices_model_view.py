@@ -1,13 +1,15 @@
 from datetime import datetime
 
 from bitcoin.core import COIN
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, request, session
+from flask_admin import expose
 from flask_login import current_user
 from requests import Response, RequestException
 from sqlalchemy import func, or_
 
 from bitcoin_acks.database import session_scope
-from bitcoin_acks.models import Users
+from bitcoin_acks.logging import log
+from bitcoin_acks.models import Users, Bounties
 from bitcoin_acks.models.invoices import Invoices
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
@@ -37,36 +39,50 @@ class InvoicesModelView(AuthenticatedModelView):
                 .filter(self.model.payer_user_id == current_user.id)
         )
 
-    def on_model_change(self, form, model: Invoices, is_created: bool):
-        if not is_created:
-            raise Exception('Can not edit invoices.')
-        model.published_at = datetime.utcnow()
-        model.payer_user_id = model.bounty.payer_user_id
-        assert model.payer_user_id == current_user.id
-        model.recipient_user_id = model.bounty.recipient_user_id
-        with session_scope() as session:
-            recipient = session.query(Users).filter(Users.id == model.recipient_user_id).one()
-            if recipient.btcpay_client is None:
+    @expose('/generate-invoice/<bounty_id>/')
+    def generate_invoice(self, bounty_id: str):
+        with session_scope() as db_session:
+            bounty = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
+            if bounty.recipient.btcpay_client is None:
+                flash('Recipient does not have BTCPay Server configured, please contact them.')
                 return
             try:
-                model.data = recipient.btcpay_client.create_invoice(
-                    {
-                        'price': model.bounty.amount/COIN,
-                        'currency': 'BTC'
+                payload = {
+                        'price': bounty.amount / COIN,
+                        'currency': 'BTC',
+                        'orderId': bounty_id,
+                        'itemDesc': f'Payment for pull request {bounty.pull_request.number}',
+                        'redirectURL': url_for('invoices.invoice_notification', bounty_id=bounty_id, _external=True),
+                        'notificationURL':
                     }
-                )
-                model.id = model.data['id']
-                model.status = model.data['status']
-                model.url = model.data['url']
+                log.debug('generate_invoice', payload=payload)
+                invoice_data = bounty.recipient.btcpay_client.create_invoice(payload=payload)
+                log.debug('invoice_data', invoice_data=invoice_data)
+                invoice_model = Invoices()
+                invoice_model.bounty_id = bounty.id
+                invoice_model.id = invoice_data['id']
+                invoice_model.status = invoice_data['status']
+                invoice_model.url = invoice_data['url']
+                db_session.add(invoice_model)
+                return redirect(invoice_model.url)
             except RequestException as e:
                 try:
                     r: Response = e.response
-                    flash(f'{r.status_code} - {r.text}', category="error")
+                    flash(f'{r.status_code} - {r.text}', category='error')
                 except AttributeError:
                     flash('Request error')
                 return redirect(url_for('users.index_view'))
 
-    can_create = True
+    @expose('/invoice-notification/<bounty_id>')
+    def invoice_notification(self, bounty_id: str):
+        log.debug('invoice_notification', request=request, session=session, bounty_id=bounty_id)
+        with session_scope() as db_session:
+            bounty = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
+            invoice_data = bounty.recipient.btcpay_client.get_invoice(invoice_id=bounty)
+
+        return redirect(url_for('bounties-payable.index_view', _external=True))
+
+    can_create = False
 
     column_list = [
         'id',

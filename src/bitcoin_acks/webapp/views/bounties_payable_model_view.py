@@ -11,7 +11,7 @@ from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Bounties, PullRequests
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, satoshi_formatter, payable_satoshi_formatter
+    pr_link_formatter, payable_satoshi_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 

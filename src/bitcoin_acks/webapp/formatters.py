@@ -37,14 +37,14 @@ def satoshi_formatter(view, context, model, name):
 
 def payable_satoshi_formatter(view, context, model, name):
     amount = getattr(model, name)
-    amount_html = format_integer(amount)
 
-    payable_html = amount_html + f'''
-            <a role="button" class="btn btn-success" href="{view.get_url('invoices.create_view', pull_request_number=model.number, url=view.get_url('admin.index_view'))}">
-    Pledge ฿
+    payable_html = f'''
+            <a role="button" class="btn btn-success" 
+                href="{view.get_url('invoices.generate_invoice', bounty_id=model.id)}">
+    Pay {get_currency_string(int(amount))}
         </a>
         '''
-    return Markup(amount_html)
+    return Markup(payable_html)
 
 
 def bounty_formatter(view: ModelView, context: Context, model, name):

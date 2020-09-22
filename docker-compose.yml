@@ -25,6 +25,7 @@ services:
       - "./:/app"
     networks:
       - bitcoin-acks-network
+      - generated_default
     extra_hosts:
       btcpay.local: 192.168.65.2 # from ping host.docker.internal
     depends_on:
@@ -46,3 +47,6 @@ services:
 networks:
   bitcoin-acks-network:
     driver: bridge
+
+  generated_default:
+    external: true
