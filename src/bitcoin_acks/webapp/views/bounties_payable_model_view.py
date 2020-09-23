@@ -2,26 +2,27 @@ from datetime import datetime
 from operator import or_
 from uuid import uuid4
 
+from flask import request
 from flask_login import current_user
 from sqlalchemy import func
 from sqlalchemy.sql.functions import coalesce
 
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
-from bitcoin_acks.models import Bounties
+from bitcoin_acks.models import Bounties, PullRequests
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, satoshi_formatter
+    pr_link_formatter, payable_satoshi_formatter, invoices_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
 
-class BountiesModelView(AuthenticatedModelView):
+class BountiesPayableModelView(AuthenticatedModelView):
     def __init__(self, model, session, *args, **kwargs):
-        super(BountiesModelView, self).__init__(model, session, *args,
+        super(BountiesPayableModelView, self).__init__(model, session, *args,
                                                     **kwargs)
         self.static_folder = 'static'
-        self.endpoint = 'bounties'
-        self.name = 'Bounties'
+        self.endpoint = 'bounties-payable'
+        self.name = 'Bounties Payable'
 
     form_columns = ['amount', 'pull_request']
 
@@ -29,17 +30,23 @@ class BountiesModelView(AuthenticatedModelView):
         return (
             self.session
                 .query(self.model)
-                .filter(or_(self.model.payer_user_id == current_user.id,
-                            self.model.recipient_user_id == current_user.id))
+                .filter(self.model.payer_user_id == current_user.id)
         )
 
     def get_count_query(self):
         return (
             self.session
                 .query(func.count('*'))
-                .filter(or_(self.model.payer_user_id == current_user.id,
-                            self.model.recipient_user_id == current_user.id))
+                .filter(self.model.payer_user_id == current_user.id)
         )
+
+    def create_form(self, **kwargs):
+        form = super().create_form()
+        if 'pull_request_number' in request.args.keys():
+            pull_request = self.session.query(PullRequests).filter(PullRequests.number == request.args['pull_request_number']).one()
+            form.pull_request.data = pull_request
+        # form.amount.data = 1000
+        return form
 
     def on_model_change(self, form, model: Bounties, is_created: bool):
         model.id = uuid4().hex
@@ -64,7 +71,8 @@ class BountiesModelView(AuthenticatedModelView):
     column_list = [
         'pull_request.number',
         'amount',
-        'published_at'
+        'published_at',
+        'invoices'
     ]
     column_labels = {
         'pull_request.number': 'Pull Request',
@@ -73,7 +81,8 @@ class BountiesModelView(AuthenticatedModelView):
     column_formatters = {
         'pull_request.number': pr_link_formatter,
         'published_at': humanize_date_formatter,
-        'amount': satoshi_formatter
+        'amount': payable_satoshi_formatter,
+        'invoices': invoices_formatter
     }
 
     form_ajax_refs = {

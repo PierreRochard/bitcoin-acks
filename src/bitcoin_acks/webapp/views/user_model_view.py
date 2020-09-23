@@ -15,6 +15,9 @@ class UsersModelView(AuthenticatedModelView):
         self.endpoint = 'users'
         self.name = 'User Settings'
 
+    column_list = ['url', 'btcpay_client']
+    form_columns = ['btcpay_host', 'btcpay_pairing_code']
+
     def get_query(self):
         return (
             self.session
@@ -34,14 +37,14 @@ class UsersModelView(AuthenticatedModelView):
             raise Exception('Can not create users')
 
         if model.btcpay_host is None:
-            return
+            model.btcpay_client = None
 
         if model.btcpay_pairing_code is not None:
             model.btcpay_client = BTCPayClient.create_client(
                 host=model.btcpay_host,
                 code=model.btcpay_pairing_code
             )
-            model.btcpay_pairing_code = None
+        model.btcpay_pairing_code = None
 
     can_edit = True
     column_display_actions = True

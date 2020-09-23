@@ -5,7 +5,7 @@ from bitcoin_acks.models import PullRequests
 from bitcoin_acks.webapp.formatters import (
     author_link_formatter,
     body_formatter,
-    humanize_date_formatter,
+    bounty_formatter, humanize_date_formatter,
     labels_formatter,
     last_commit_state_formatter,
     line_count_formatter,
@@ -114,14 +114,14 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'mergeable': mergeable_formatter,
         'last_commit_state': last_commit_state_formatter,
         'labels': labels_formatter,
-        'total_bounty_amount': satoshi_formatter
+        'total_bounty_amount': bounty_formatter
     }
     column_default_sort = ('last_commit_pushed_date', 'LAST')
     column_labels = {
         'author.login': 'Author',
         'review_decisions.author.login': 'Reviewer',
         'labels.name': 'Label',
-        'total_bounty_amount': 'Bounty',
+        'total_bounty_amount': 'Bounty Pledged',
         'additions': '+',
         'deletions': '-',
         'created_at': 'Created',

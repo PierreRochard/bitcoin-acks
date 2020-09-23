@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, flash, redirect, request, Response, url_for
+from flask import Flask, flash, redirect, request, Response, url_for, session
 from flask_admin import Admin
 from flask_dance.consumer import oauth_authorized, oauth_error
 from flask_login import current_user, login_required, logout_user
@@ -14,10 +14,12 @@ from bitcoin_acks.logging import log
 from bitcoin_acks.models import Invoices, PullRequests, Logs
 from bitcoin_acks.models.bounties import Bounties
 from bitcoin_acks.models.users import OAuth, Roles, Users
+from bitcoin_acks.payments.payment_processor import PaymentProcessor
 from bitcoin_acks.webapp.database import db
 from bitcoin_acks.webapp.templates.template_globals import \
     apply_template_globals
-from bitcoin_acks.webapp.views.bounties_model_view import BountiesModelView
+from bitcoin_acks.webapp.views.bounties_payable_model_view import BountiesPayableModelView
+from bitcoin_acks.webapp.views.bounties_receivable_model_view import BountiesReceivableModelView
 from bitcoin_acks.webapp.views.invoices_model_view import InvoicesModelView
 from bitcoin_acks.webapp.views.pull_requests_model_view import \
     PullRequestsModelView
@@ -61,7 +63,8 @@ def create_app(config_object: str):
                   template_mode='bootstrap3',
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
-    admin.add_view(BountiesModelView(Bounties, db.session))
+    admin.add_view(BountiesPayableModelView(Bounties, db.session))
+    admin.add_view(BountiesReceivableModelView(Bounties, db.session))
     admin.add_view(InvoicesModelView(Invoices, db.session))
     admin.add_view(UsersModelView(Users, db.session))
 
@@ -75,6 +78,17 @@ def create_app(config_object: str):
         logout_user()
         flash("You have logged out")
         return redirect(url_for("index"))
+
+    app.payment_processor = PaymentProcessor()
+
+    @app.route('/payment-notification/', methods=['POST'])
+    def payment_notification():
+        r = request.get_json()
+        log.debug('invoice_notification', request=r, session=session)
+        if 'data' in r:
+            r = r['data']
+        app.payment_processor.process_invoice_data(r)
+        return {}
 
     blueprint = make_github_blueprint(
         client_id=os.environ['GITHUB_OAUTH_CLIENT_ID'],

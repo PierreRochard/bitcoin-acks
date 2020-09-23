@@ -43,7 +43,6 @@ class Users(Base, db.Model, UserMixin):
     btcpay_client = Column(PickleType)
 
 
-
 class OAuth(OAuthConsumerMixin, Base):
     __tablename__ = 'oauth'
 
