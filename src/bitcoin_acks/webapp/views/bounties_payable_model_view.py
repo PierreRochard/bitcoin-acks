@@ -11,7 +11,7 @@ from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Bounties, PullRequests
 from bitcoin_acks.webapp.formatters import humanize_date_formatter, \
-    pr_link_formatter, payable_satoshi_formatter
+    pr_link_formatter, payable_satoshi_formatter, invoices_formatter
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
@@ -41,13 +41,11 @@ class BountiesPayableModelView(AuthenticatedModelView):
         )
 
     def create_form(self, **kwargs):
-        print(kwargs)
         form = super().create_form()
         if 'pull_request_number' in request.args.keys():
             pull_request = self.session.query(PullRequests).filter(PullRequests.number == request.args['pull_request_number']).one()
             form.pull_request.data = pull_request
-        form.amount.data = 1000
-        print(request.values.get('url'))
+        # form.amount.data = 1000
         return form
 
     def on_model_change(self, form, model: Bounties, is_created: bool):
@@ -83,7 +81,8 @@ class BountiesPayableModelView(AuthenticatedModelView):
     column_formatters = {
         'pull_request.number': pr_link_formatter,
         'published_at': humanize_date_formatter,
-        'amount': payable_satoshi_formatter
+        'amount': payable_satoshi_formatter,
+        'invoices': invoices_formatter
     }
 
     form_ajax_refs = {

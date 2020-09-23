@@ -33,3 +33,6 @@ class Invoices(Base):
                          foreign_keys='[Invoices.payer_user_id]',
                          backref='invoices_payable'
                          )
+
+    def __repr__(self):
+        return f'( {self.id} {self.status} )'

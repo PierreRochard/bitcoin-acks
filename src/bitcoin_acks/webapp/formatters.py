@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 import humanize
 from flask_admin.contrib.sqla import ModelView
@@ -8,7 +9,8 @@ from markupsafe import Markup
 import webcolors
 
 from bitcoin_acks.constants import ReviewDecision
-from bitcoin_acks.models import Bounties
+from bitcoin_acks.logging import log
+from bitcoin_acks.models import Bounties, Invoices
 
 
 def get_currency_string(amount: int):
@@ -255,4 +257,20 @@ def labels_formatter(view, context, model, name):
                   '</a>'.format(label_name=label.name,
                                 label_url=label_url,
                                 label_color=label_color)
+    return Markup(output)
+
+
+def invoices_formatter(view, context, model, name):
+    invoices: List[Invoices] = getattr(model, name)
+    paid_invoices = [i for i in invoices if i.status == 'paid']
+    unpaid_invoices = [i for i in invoices if i.status != 'paid']
+    output = ''
+    for paid_invoice in paid_invoices:
+        output += '<div style="white-space: nowrap; overflow: hidden;">' \
+                  '<span class="label label-success">{invoice_description}</span>'.format(
+                   invoice_description=f'{paid_invoice.id} {paid_invoice.status}')
+    if unpaid_invoices:
+        output += f'<div  style="white-space: nowrap; overflow: hidden;">{len(unpaid_invoices)} unpaid invoices</div>'
+
+    log.debug('invoices_formatter', invoices=invoices, output=output)
     return Markup(output)
