@@ -9,6 +9,7 @@ from bitcoin_acks.database import create_or_update_database
 from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.pull_requests_data import PullRequestsData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
+from bitcoin_acks.logging import log
 
 
 class PullRequestEvents(RepositoriesData):
@@ -52,8 +53,15 @@ class PullRequestEvents(RepositoriesData):
 
 
 if __name__ == '__main__':
+    import os
+
     repository_path = 'bitcoin'
     repository_name = 'bitcoin'
+    log.debug('Running pull request events update script',
+              path=os.path.realpath(__file__),
+              repository_name=repository_name,
+              repository_path=repository_path
+              )
     create_or_update_database()
     pr_events = PullRequestEvents(repository_path=repository_path,
                                   repository_name=repository_name)
@@ -68,6 +76,7 @@ if __name__ == '__main__':
         time.sleep(math.ceil(sleep_time)+5)
 
         now = datetime.utcnow()
+        log.debug('In while True loop', sleep_time=sleep_time, now=now, last_update=pr_events.last_update)
         if pr_events.last_update.day != now.day:
             pr_data.update_all(state=PullRequestState.OPEN)
             # polling_data.update(last_open_update=True)
