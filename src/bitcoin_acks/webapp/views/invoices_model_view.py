@@ -11,6 +11,7 @@ from bitcoin_acks.database import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Users, Bounties
 from bitcoin_acks.models.invoices import Invoices
+from bitcoin_acks.payments.recipient_btcpay import RecipientBTCPay
 from bitcoin_acks.webapp.views.authenticated_model_view import \
     AuthenticatedModelView
 
@@ -42,27 +43,24 @@ class InvoicesModelView(AuthenticatedModelView):
     @expose('/generate-invoice/<bounty_id>/')
     def generate_invoice(self, bounty_id: str):
         with session_scope() as db_session:
-            bounty = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
+            bounty: Bounties = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
             if bounty.recipient.btcpay_client is None:
                 flash('Recipient does not have BTCPay Server configured, please contact them.')
                 return
             try:
-                payload = {
-                        'price': bounty.amount / COIN,
-                        'currency': 'BTC',
-                        'orderId': bounty_id,
-                        'itemDesc': f'Payment for pull request {bounty.pull_request.number}',
-                        'redirectURL': url_for('invoices.invoice_notification', bounty_id=bounty_id, _external=True),
-                        'notificationURL':
-                    }
-                log.debug('generate_invoice', payload=payload)
-                invoice_data = bounty.recipient.btcpay_client.create_invoice(payload=payload)
-                log.debug('invoice_data', invoice_data=invoice_data)
+                recipient_btcpay = RecipientBTCPay(client=bounty.recipient.btcpay_client)
+                invoice_data = recipient_btcpay.get_pull_request_invoice(
+                    amount=bounty.amount,
+                    bounty_id=bounty_id,
+                    pull_request_number=bounty.pull_request.number
+                )
                 invoice_model = Invoices()
                 invoice_model.bounty_id = bounty.id
                 invoice_model.id = invoice_data['id']
                 invoice_model.status = invoice_data['status']
                 invoice_model.url = invoice_data['url']
+                invoice_model.recipient_user_id = bounty.recipient_user_id
+                invoice_model.payer_user_id = bounty.payer_user_id
                 db_session.add(invoice_model)
                 return redirect(invoice_model.url)
             except RequestException as e:
@@ -73,21 +71,13 @@ class InvoicesModelView(AuthenticatedModelView):
                     flash('Request error')
                 return redirect(url_for('users.index_view'))
 
-    @expose('/invoice-notification/<bounty_id>')
-    def invoice_notification(self, bounty_id: str):
-        log.debug('invoice_notification', request=request, session=session, bounty_id=bounty_id)
-        with session_scope() as db_session:
-            bounty = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
-            invoice_data = bounty.recipient.btcpay_client.get_invoice(invoice_id=bounty)
-
-        return redirect(url_for('bounties-payable.index_view', _external=True))
-
     can_create = False
 
     column_list = [
         'id',
         'status',
-        'url'
+        'url',
+        'recipient_user_id'
     ]
     column_labels = {
         # 'pull_request.number': 'Pull Request',

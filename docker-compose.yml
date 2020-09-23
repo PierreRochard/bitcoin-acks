@@ -39,6 +39,8 @@ services:
       FLASK_ENV: "development"
       FLASK_APP: "bitcoin_acks.webapp.wsgi:app"
     command: "/usr/bin/zsh /app/prestart.sh"
+    expose:
+      - 5005
     ports:
       - "5000:5000"
 #

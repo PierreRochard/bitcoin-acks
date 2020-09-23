@@ -73,7 +73,8 @@ class BountiesPayableModelView(AuthenticatedModelView):
     column_list = [
         'pull_request.number',
         'amount',
-        'published_at'
+        'published_at',
+        'invoices'
     ]
     column_labels = {
         'pull_request.number': 'Pull Request',
