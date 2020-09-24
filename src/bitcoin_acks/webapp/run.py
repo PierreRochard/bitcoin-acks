@@ -145,13 +145,16 @@ def create_app(config_object: str):
                     user = session.query(Users).filter(Users.id == user_id).one()
                 except NoResultFound:
                     # Create a new local user account for this user
-                    user = Users(id=user_id, email=email, is_active=True)
+                    user = Users(id=user_id)
+                user.is_active = True
+                user.email = email
                 # Save and commit our database models
                 session.add_all([user, oauth])
                 session.commit()
                 # Log in the new local user account
                 login_user(user)
                 flash("Successfully signed in.")
+
 
         # Disable Flask-Dance's default behavior for saving the OAuth token
         return False
