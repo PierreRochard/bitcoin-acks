@@ -262,8 +262,8 @@ def labels_formatter(view, context, model, name):
 
 def invoices_formatter(view, context, model, name):
     invoices: List[Invoices] = getattr(model, name)
-    paid_invoices = [i for i in invoices if i.status == 'paid']
-    unpaid_invoices = [i for i in invoices if i.status != 'paid']
+    paid_invoices = [i for i in invoices if i.status in ('paid', 'complete')]
+    unpaid_invoices = [i for i in invoices if i.status not in ('paid', 'complete')]
     output = ''
     for paid_invoice in paid_invoices:
         output += '<div style="white-space: nowrap; overflow: hidden;">' \
