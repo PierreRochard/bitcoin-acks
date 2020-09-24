@@ -50,15 +50,6 @@
 </div>
 {% endblock %}
 
-{% block access_control %}
-    {{ super() }}
-    <div class="brand hidden-xs">
-        <a  target="_blank" href="https://www.riotblockchain.com/">
-            <img style="height: 48px;" src="{{ url_for('static', filename='riot_blockchain.png') }}">
-        </a>
-    </div>
-{% endblock %}
-
 {% block list_row %}
 {% if get_value(row, 'is_high_priority') %}
 <tr class="info">
