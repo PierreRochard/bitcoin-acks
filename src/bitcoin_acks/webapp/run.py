@@ -119,44 +119,21 @@ def create_app(config_object: str):
         user_id = info["node_id"]
         email = [e for e in emails_resp.json() if e['primary']][0]['email']
 
-        # Find this OAuth token in the database, or create it
-        with session_scope() as session:
-            query = (
-                session
-                    .query(OAuth)
-                    .filter_by(provider=blueprint.name,
-                               provider_user_id=user_id)
-            )
+        with session_scope() as db_session:
             try:
-                oauth = query.one()
+                user = db_session.query(Users).filter(Users.id == user_id).one()
             except NoResultFound:
-                oauth = OAuth(provider=blueprint.name,
-                              provider_user_id=user_id,
-                              token=token)
-                session.add(oauth)
-
-            if oauth.user:
-                oauth.user.email = email
-                login_user(oauth.user)
-                flash("Successfully signed in.")
-            else:
-                oauth.user_id = user_id
-                try:
-                    user = session.query(Users).filter(Users.id == user_id).one()
-                except NoResultFound:
-                    # Create a new local user account for this user
-                    user = Users(id=user_id)
-                user.is_active = True
-                user.email = email
-                # Save and commit our database models
-                session.add_all([user, oauth])
-                session.commit()
-                # Log in the new local user account
-                login_user(user)
-                flash("Successfully signed in.")
-
-
-        # Disable Flask-Dance's default behavior for saving the OAuth token
+                user = Users(id=user_id)
+                db_session.add(user)
+            user.is_active = True
+            user.email = email
+            try:
+                db_session.query(OAuth).filter_by(provider=blueprint.name, provider_user_id=user_id).one()
+            except NoResultFound:
+                oauth = OAuth(provider=blueprint.name, provider_user_id=user_id, token=token)
+                db_session.add(oauth)
+            login_user(user)
+            flash("Successfully signed in.")
         return False
 
     # notify on OAuth provider error
