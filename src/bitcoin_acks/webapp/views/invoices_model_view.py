@@ -46,7 +46,7 @@ class InvoicesModelView(AuthenticatedModelView):
             bounty: Bounties = db_session.query(Bounties).filter(Bounties.id == bounty_id).one()
             if bounty.recipient.btcpay_client is None:
                 flash('Recipient does not have BTCPay Server configured, please contact them.')
-                return
+                return redirect(url_for('bounties-payable.index_view'))
             try:
                 recipient_btcpay = RecipientBTCPay(client=bounty.recipient.btcpay_client)
                 invoice_data = recipient_btcpay.get_pull_request_invoice(
