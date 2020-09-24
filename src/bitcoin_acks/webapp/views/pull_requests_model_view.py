@@ -24,7 +24,13 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         self.name = 'Pull Requests'
 
     def get_query(self):
-        return self.session.query(self.model).order_by(self.model.is_high_priority.asc().nullslast())
+        query = (
+            self.session.query(self.model)
+                .order_by(self.model.is_high_priority.asc().nullslast())
+        )
+        if self._get_list_extra_args().sort is None:
+            query = query.order_by(self.model.last_commit_pushed_date.desc().nullslast())
+        return query
 
     def get_count_query(self):
         return self.session.query(func.count(self.model.id))
@@ -116,7 +122,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'labels': labels_formatter,
         'total_bounty_amount': bounty_formatter
     }
-    column_default_sort = ('last_commit_pushed_date', 'LAST')
+    # column_default_sort = ('last_commit_pushed_date', 'LAST')
     column_labels = {
         'author.login': 'Author',
         'review_decisions.author.login': 'Reviewer',
