@@ -130,7 +130,7 @@ def create_app(config_object: str):
             try:
                 db_session.query(OAuth).filter_by(provider=blueprint.name, provider_user_id=user_id).one()
             except NoResultFound:
-                oauth = OAuth(provider=blueprint.name, provider_user_id=user_id, token=token)
+                oauth = OAuth(provider=blueprint.name, provider_user_id=user_id, user_id=user_id, token=token)
                 db_session.add(oauth)
             login_user(user)
             flash("Successfully signed in.")
