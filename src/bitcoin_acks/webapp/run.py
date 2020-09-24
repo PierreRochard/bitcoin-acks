@@ -140,8 +140,11 @@ def create_app(config_object: str):
                 login_user(oauth.user)
                 flash("Successfully signed in.")
             else:
-                # Create a new local user account for this user
-                user = Users(id=user_id, email=email, is_active=True)
+                try:
+                    user = session.query(Users).filter(Users.id == user_id).one()
+                except NoResultFound:
+                    # Create a new local user account for this user
+                    user = Users(id=user_id, email=email, is_active=True)
                 # Associate the new local user account with the OAuth token
                 oauth.user = user
                 # Save and commit our database models
