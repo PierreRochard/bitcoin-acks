@@ -1,4 +1,5 @@
 import datetime
+import operator
 from typing import List
 
 import humanize
@@ -10,7 +11,7 @@ import webcolors
 
 from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.logging import log
-from bitcoin_acks.models import Bounties, Invoices
+from bitcoin_acks.models import Bounties, Invoices, Users
 
 
 def get_currency_string(amount: int):
@@ -37,13 +38,46 @@ def satoshi_formatter(view, context, model, name):
     return None
 
 
-def payable_satoshi_formatter(view, context, model, name):
-    amount = getattr(model, name)
+def payable_satoshi_formatter(view, context, model: Bounties, name):
+    author: Users = model.pull_request.author
+    reviewers = [r.author for r in model.pull_request.review_decisions if r.author.btcpay_client]
+    if author.btcpay_client:
+        author_style = 'success'
+    else:
+        author_style = 'default'
+    if reviewers:
+        payable_html = f'''
+    <div class="btn-group">
+                <a role="button" 
+                    class="btn btn-{author_style}" 
+                    href="{view.get_url('invoices.generate_invoice', bounty_id=model.id, recipient_user_id=author.id)}">
+        Pay {author.best_name}
+            </a>
+      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Reviewers
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu">
+    '''
+        for reviewer in reviewers:
+            payable_html += f'''
+            <li>
+                <a "{view.get_url('invoices.generate_invoice', bounty_id=model.id, recipient_user_id=reviewer.id)}">
+                Pay {reviewer.best_name}
+                </a>
+            </li>
+        '''
 
-    payable_html = f'''
-            <a role="button" class="btn btn-success" 
-                href="{view.get_url('invoices.generate_invoice', bounty_id=model.id)}">
-    Pay {get_currency_string(int(amount))}
+        payable_html += '''
+      </ul>
+    </div>
+            '''
+    else:
+        payable_html = f'''
+            <a role="button" class="btn btn-{author_style}" 
+                href="{view.get_url('invoices.generate_invoice', bounty_id=model.id, recipient_user_id=author.id)}">
+    Pay {author.best_name}
         </a>
         '''
     return Markup(payable_html)
