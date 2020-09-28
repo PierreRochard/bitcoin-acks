@@ -19,7 +19,6 @@ from bitcoin_acks.webapp.database import db
 from bitcoin_acks.webapp.templates.template_globals import \
     apply_template_globals
 from bitcoin_acks.webapp.views.bounties_payable_model_view import BountiesPayableModelView
-from bitcoin_acks.webapp.views.bounties_receivable_model_view import BountiesReceivableModelView
 from bitcoin_acks.webapp.views.invoices_model_view import InvoicesModelView
 from bitcoin_acks.webapp.views.pull_requests_model_view import \
     PullRequestsModelView
@@ -64,7 +63,6 @@ def create_app(config_object: str):
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
     admin.add_view(BountiesPayableModelView(Bounties, db.session))
-    admin.add_view(BountiesReceivableModelView(Bounties, db.session))
     admin.add_view(InvoicesModelView(Invoices, db.session))
     admin.add_view(UsersModelView(Users, db.session))
 

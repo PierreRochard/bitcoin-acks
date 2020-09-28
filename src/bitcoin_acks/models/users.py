@@ -42,6 +42,10 @@ class Users(Base, db.Model, UserMixin):
     btcpay_pairing_code = Column(String)
     btcpay_client = Column(PickleType)
 
+    @property
+    def best_name(self):
+        return self.name or self.login
+
 
 class OAuth(OAuthConsumerMixin, Base):
     __tablename__ = 'oauth'

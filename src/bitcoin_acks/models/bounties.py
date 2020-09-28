@@ -20,13 +20,6 @@ class Bounties(Base):
 
     pull_request = relationship(PullRequests, backref='bounties')
 
-    recipient_user_id = Column(String,
-                               ForeignKey('users.id'))
-    recipient = relationship(Users,
-                             primaryjoin=recipient_user_id == Users.id,
-                             backref='bounties_receivable'
-                             )
-
     payer_user_id = Column(String,
                            ForeignKey('users.id'))
     payer = relationship(Users,
@@ -35,4 +28,4 @@ class Bounties(Base):
                          )
 
     def __repr__(self):
-        return f'{self.amount} sats for {self.pull_request.title} by {self.recipient.login}'
+        return f'{self.amount} sats for {self.pull_request.title} #{self.pull_request.number}'
