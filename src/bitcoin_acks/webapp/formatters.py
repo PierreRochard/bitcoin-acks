@@ -63,7 +63,8 @@ def payable_satoshi_formatter(view, context, model: Bounties, name):
         for reviewer in reviewers:
             payable_html += f'''
             <li>
-                <a "{view.get_url('invoices.generate_invoice', bounty_id=model.id, recipient_user_id=reviewer.id)}">
+                <a href="{view.get_url('invoices.generate_invoice', 
+                                       bounty_id=model.id, recipient_user_id=reviewer.id)}">
                 Pay {reviewer.best_name}
                 </a>
             </li>
