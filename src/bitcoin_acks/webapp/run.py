@@ -88,23 +88,23 @@ def create_app(config_object: str):
         app.payment_processor.process_invoice_data(r)
         return {}
 
-    blueprint = make_github_blueprint(
+    github_blueprint = make_github_blueprint(
         client_id=os.environ['GITHUB_OAUTH_CLIENT_ID'],
         client_secret=os.environ['GITHUB_OAUTH_CLIENT_SECRET'],
         scope='user:email'
     )
-    app.register_blueprint(blueprint, url_prefix='/login')
+    app.register_blueprint(github_blueprint, url_prefix='/login')
 
     # create/login local user on successful OAuth login
-    @oauth_authorized.connect_via(blueprint)
-    def github_logged_in(blueprint, token):
+    @oauth_authorized.connect_via(github_blueprint)
+    def github_logged_in(github_blueprint, token):
         if not token:
             flash("Failed to log in.", category="error")
             return False
 
-        user_resp = blueprint.session.get("/user")
+        user_resp = github_blueprint.session.get("/user")
         log.debug('user response', resp=user_resp.json())
-        emails_resp = blueprint.session.get("/user/emails")
+        emails_resp = github_blueprint.session.get("/user/emails")
         log.debug('user emails response', resp=emails_resp.json())
         if not emails_resp.ok:
             log.error('github_logged_in error', resp=emails_resp.json(),
@@ -126,19 +126,19 @@ def create_app(config_object: str):
             user.is_active = True
             user.email = email
             try:
-                db_session.query(OAuth).filter_by(provider=blueprint.name, provider_user_id=user_id).one()
+                db_session.query(OAuth).filter_by(provider=github_blueprint.name, provider_user_id=user_id).one()
             except NoResultFound:
-                oauth = OAuth(provider=blueprint.name, provider_user_id=user_id, user_id=user_id, token=token)
+                oauth = OAuth(provider=github_blueprint.name, provider_user_id=user_id, user_id=user_id, token=token)
                 db_session.add(oauth)
             login_user(user)
             flash("Successfully signed in.")
         return False
 
     # notify on OAuth provider error
-    @oauth_error.connect_via(blueprint)
-    def github_error(blueprint, message, response, error):
+    @oauth_error.connect_via(github_blueprint)
+    def github_error(github_blueprint, message, response, error):
         msg = "OAuth error from {name}! message={message} response={response}".format(
-            name=blueprint.name, message=message, response=response
+            name=github_blueprint.name, message=message, response=response
         )
         flash(msg, category="error")
 
