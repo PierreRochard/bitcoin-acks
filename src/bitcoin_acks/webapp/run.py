@@ -3,6 +3,7 @@ import os
 from flask import Flask, flash, redirect, request, Response, url_for, session
 from flask_admin import Admin
 from flask_dance.consumer import oauth_authorized, oauth_error
+from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from flask_login import current_user, login_required, logout_user
 from flask_security import SQLAlchemyUserDatastore, Security, login_user
 from flask_admin.menu import MenuLink
@@ -93,14 +94,28 @@ def create_app(config_object: str):
         client_secret=os.environ['GITHUB_OAUTH_CLIENT_SECRET'],
         scope='user:email'
     )
-    app.register_blueprint(github_blueprint, url_prefix='/login')
+    app.register_blueprint(github_blueprint, url_prefix='/login-github')
 
-    # create/login local user on successful OAuth login
+    twitter_blueprint = make_twitter_blueprint(
+        api_key=os.environ['TWITTER_OAUTH_CLIENT_KEY'],
+        api_secret=os.environ['TWITTER_OAUTH_CLIENT_SECRET'],
+    )
+    app.register_blueprint(twitter_blueprint, url_prefix='/login-twitter')
+
+    @app.route("/login-twitter")
+    def twitter_logged_in():
+        if not twitter.authorized:
+            return redirect(url_for("twitter.login"))
+        user_resp = twitter.get("account/settings.json")
+        log.debug('user response', resp=user_resp.json())
+        assert user_resp.ok
+        return "You are @{screen_name} on Twitter".format(screen_name=user_resp.json()["screen_name"])
+
     @oauth_authorized.connect_via(github_blueprint)
     def github_logged_in(github_blueprint, token):
         if not token:
             flash("Failed to log in.", category="error")
-            return False
+            return redirect(url_for("github.login"))
 
         user_resp = github_blueprint.session.get("/user")
         log.debug('user response', resp=user_resp.json())
