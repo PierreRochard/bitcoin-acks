@@ -4,6 +4,8 @@ import math
 import requests
 import time
 
+from alembic.util import CommandError
+
 from bitcoin_acks.constants import PullRequestState
 from bitcoin_acks.database import create_or_update_database
 from bitcoin_acks.github_data.polling_data import PollingData
@@ -62,7 +64,12 @@ if __name__ == '__main__':
               repository_name=repository_name,
               repository_path=repository_path
               )
-    create_or_update_database()
+
+    try:
+        create_or_update_database()
+    except CommandError as e:
+        log.debug('create_or_update_database failed', stack_info=True)
+
     pr_events = PullRequestEvents(repository_path=repository_path,
                                   repository_name=repository_name)
     pr_data = PullRequestsData(repository_path=repository_path,
