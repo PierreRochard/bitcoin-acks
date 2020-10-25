@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from datetime import date
+from datetime import date, timedelta
 
 import postgres_copy
 
@@ -16,6 +16,7 @@ from bitcoin_acks.github_data.graphql_queries import (
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
 from bitcoin_acks.logging import log
+from bitcoin_acks.models import PullRequests
 from bitcoin_acks.models.etl.etl_data import ETLData
 
 
@@ -69,6 +70,8 @@ class PullRequestsData(RepositoriesData):
 
             if last_cursor is not None:
                 variables['prCursorAfter'] = last_cursor
+            elif last_cursor is None and variables.get('prCursorAfter'):
+                del variables['prCursorAfter']
 
             variables['searchQuery'] = f'type:pr updated:>{newer_than} repo:bitcoin/bitcoin sort:updated-asc'
 
@@ -90,9 +93,28 @@ class PullRequestsData(RepositoriesData):
             )
 
             if not len(pull_requests_graphql_data):
-                break
+                with session_scope() as session:
+                    record = (
+                        session
+                            .query(PullRequests.updated_at)
+                            .order_by(PullRequests.updated_at.desc())
+                            .limit(1)
+                            .one()
+                    )
+                    newer_than = record.updated_at.date() - timedelta(days=1)
+                    last_cursor = None
+                    continue
 
             last_cursor = pull_requests_graphql_data[-1]['cursor']
+            starts_at = pull_requests_graphql_data[0]['node']['updatedAt']
+            ends_at = pull_requests_graphql_data[-1]['node']['updatedAt']
+
+            log.debug(
+                'Pull requests fetched',
+                starts_at=starts_at,
+                ends_at=ends_at
+            )
+
             pull_requests_graphql_data = [r['node'] for r in pull_requests_graphql_data if r['node']]
 
             for pull_request_graphql in pull_requests_graphql_data:
@@ -219,7 +241,8 @@ WHERE users.id IS NULL;
                 """
             ).fetchall()
 
-        log.debug('missing_authors', missing_authors=missing_authors, count=len(missing_authors))
+        if missing_authors:
+            log.debug('missing_authors', missing_authors=missing_authors, count=len(missing_authors))
 
         for author in missing_authors:
             login = author[0]
@@ -310,7 +333,8 @@ WHERE authors.id IS NULL;
                 """
             ).fetchall()
 
-        log.debug('missing_authors', missing_authors=missing_authors, count=len(missing_authors))
+        if missing_authors:
+            log.debug('missing_authors', missing_authors=missing_authors, count=len(missing_authors))
 
         for author in missing_authors:
             login = author[0]
