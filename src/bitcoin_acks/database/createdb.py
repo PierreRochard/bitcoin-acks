@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from alembic import command, script
@@ -7,10 +8,11 @@ from alembic.runtime import migration
 from sqlalchemy import engine
 from sqlalchemy.exc import OperationalError
 
-from bitcoin_acks.database.session import session_scope
+from bitcoin_acks.database.session import session_scope, get_url
 from bitcoin_acks.database.base import Base
 
 import bitcoin_acks.models
+from bitcoin_acks.logging import log
 
 
 def get_current_head(connectable: engine.Engine) -> set:
@@ -57,10 +59,16 @@ if __name__ == '__main__':
 
     parser.add_argument('-d',
                         dest='drop',
-                        type=bool,
-                        default=False
+                        default=False,
+                        action='store_true'
+
                         )
     args = parser.parse_args()
-    if args.drop:
-        drop_database()
-    create_or_update_database()
+    confirm = input(f'Dropping tables on {get_url()}, are you sure? y/n')
+    if confirm != 'y':
+        log.debug('User did not input y why?')
+        sys.exit(1)
+    else:
+        if args.drop:
+            drop_database()
+        create_or_update_database()
