@@ -51,6 +51,7 @@ def create_or_update_database(echo=True):
 def drop_database(echo=True):
     with session_scope(echo=echo) as session:
         Base.metadata.drop_all(session.connection())
+        session.execute('DROP TABLE github.public.alembic_version;')
 
 
 if __name__ == '__main__':

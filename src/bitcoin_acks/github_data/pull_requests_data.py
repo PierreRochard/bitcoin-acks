@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from datetime import date, timedelta
+from datetime import date
 
 import postgres_copy
 
@@ -16,12 +16,11 @@ from bitcoin_acks.github_data.graphql_queries import (
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
 from bitcoin_acks.logging import log
-from bitcoin_acks.models import PullRequests
 from bitcoin_acks.models.etl.etl_data import ETLData
 
 
 class PullRequestsData(RepositoriesData):
-    MAX_PRS = 20
+    MAX_PRS = 40
 
     def __init__(self, repository_path: str, repository_name: str, json_data_directory: str):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
@@ -56,7 +55,6 @@ class PullRequestsData(RepositoriesData):
                 newer_than: date,
                 state: PullRequestState = None,
                 limit: int = None):
-        last_cursor = None
         variables = {}
         received = 0
         ends_at = newer_than
@@ -69,10 +67,7 @@ class PullRequestsData(RepositoriesData):
             if state is not None:
                 variables['prState'] = state.value
 
-            # if last_cursor is not None:
-            #     variables['prCursorAfter'] = last_cursor
-
-            variables['searchQuery'] = f'type:pr created:>{ends_at} repo:bitcoin/bitcoin sort:created-asc'
+            variables['searchQuery'] = f'type:pr updated:>={ends_at} repo:bitcoin/bitcoin sort:updated-asc'
 
             log.debug('Variables for graphql pull requests query', variables=variables)
             json_object = {
@@ -94,9 +89,8 @@ class PullRequestsData(RepositoriesData):
             if not len(pull_requests_graphql_data):
                 break
 
-            last_cursor = pull_requests_graphql_data[-1]['cursor']
-            starts_at = pull_requests_graphql_data[0]['node']['createdAt']
-            ends_at = pull_requests_graphql_data[-1]['node']['createdAt']
+            starts_at = pull_requests_graphql_data[0]['node']['updatedAt']
+            ends_at = pull_requests_graphql_data[-1]['node']['updatedAt']
 
             log.debug(
                 'Pull requests fetched',
