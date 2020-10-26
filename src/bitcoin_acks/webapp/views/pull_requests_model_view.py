@@ -27,6 +27,8 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
 
     def get_query(self):
         log.debug('get_query', request=request.args)
+        if request.args.get('sort'):
+            return super().get_query()
         query = (
             self.session.query(self.model)
                 .order_by(self.model.is_high_priority.asc().nullslast())
