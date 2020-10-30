@@ -1,9 +1,11 @@
 import json
 import os
 import re
-from datetime import date
+from datetime import datetime
 
+import dateutil
 import postgres_copy
+import pytz
 
 from bitcoin_acks.constants import PullRequestState, ReviewDecision
 from bitcoin_acks.data_schemas import pull_request_schema
@@ -45,14 +47,14 @@ class PullRequestsData(RepositoriesData):
         self.parse_into_queue(validated_pull_request_data)
 
     def update_all(self,
-                   newer_than: date,
+                   newer_than: datetime,
                    state: PullRequestState = None,
                    limit: int = None):
         log.debug('update_all', state=state, limit=limit, newer_than=newer_than)
         self.get_all(state=state, limit=limit, newer_than=newer_than)
 
     def get_all(self,
-                newer_than: date,
+                newer_than: datetime,
                 state: PullRequestState = None,
                 limit: int = None):
         variables = {}
@@ -67,7 +69,8 @@ class PullRequestsData(RepositoriesData):
             if state is not None:
                 variables['prState'] = state.value
 
-            variables['searchQuery'] = f'type:pr updated:>={ends_at} repo:bitcoin/bitcoin sort:updated-asc'
+            formatted_ends_at = ends_at.replace(microsecond=0).astimezone(pytz.utc).isoformat()
+            variables['searchQuery'] = f'type:pr updated:>={formatted_ends_at} repo:bitcoin/bitcoin sort:updated-asc'
 
             log.debug('Variables for graphql pull requests query', variables=variables)
             json_object = {
@@ -80,18 +83,20 @@ class PullRequestsData(RepositoriesData):
             search_data = data['data']['search']
 
             pull_requests_graphql_data = search_data['edges']
+            results_count = len(search_data['edges'])
 
             log.debug(
                 'response from github graphql',
-                results_count=len(search_data['edges'])
+                results_count=results_count
             )
-
-            if not len(pull_requests_graphql_data):
+            if not results_count:
                 break
 
             starts_at = pull_requests_graphql_data[0]['node']['updatedAt']
-            ends_at = pull_requests_graphql_data[-1]['node']['updatedAt']
-
+            previous_ends_at = ends_at
+            ends_at = dateutil.parser.parse(pull_requests_graphql_data[-1]['node']['updatedAt'])
+            if previous_ends_at == ends_at:
+                break
             log.debug(
                 'Pull requests fetched',
                 starts_at=starts_at,
@@ -240,7 +245,7 @@ WHERE users.id IS NULL;
 WITH etl_data AS (
     SELECT DISTINCT etl_data.data ->> 'id'                                                  AS id,
                     etl_data.data ->> 'bodyText'                                            AS body,
-                    (etl_data.data ->> 'publishedAt')::timestamp                            AS published_at,
+                    (etl_data.data ->> 'publishedAt')::timestamp with time zone                            AS published_at,
                     etl_data.data ->> 'url'                                                 AS url,
                     etl_data.data ->> 'pull_request_id'                                     AS pull_request_id,
                     users.id                                                                AS author_id,
@@ -267,6 +272,24 @@ ON CONFLICT (id) DO UPDATE SET id = excluded.id,
                                author_id                     = excluded.author_id,
                                auto_detected_review_decision = excluded.auto_detected_review_decision
 ;
+                """
+            )
+        with session_scope() as db_session:
+            db_session.execute(
+                """
+WITH etl_data AS (
+    SELECT DISTINCT etl_data.data ->> 'pull_request_id' AS pull_request_id FROM etl_data
+)
+UPDATE pull_requests
+SET review_decisions_count = s.review_decisions_count
+from (SELECT count(comments.id) as review_decisions_count,
+             etl_data.pull_request_id
+      FROM etl_data
+               LEFT JOIN comments on etl_data.pull_request_id = comments.pull_request_id AND
+                                     comments.auto_detected_review_decision is not null and
+                                     comments.auto_detected_review_decision != 'NONE'::reviewdecision
+      GROUP BY etl_data.pull_request_id) s
+WHERE s.pull_request_id = pull_requests.id;
                 """
             )
 
@@ -335,21 +358,21 @@ WITH etl_data AS (
                     (epr.data ->> 'number')::int                           AS "number",
                     epr.data ->> 'state'                                   AS "state",
                     epr.data ->> 'title'                                   AS title,
-                    (epr.data ->> 'createdAt')::timestamp                  AS created_at,
-                    (epr.data ->> 'updatedAt')::timestamp                  AS updated_at,
-                    (epr.data ->> 'is_high_priority')::timestamp           AS is_high_priority,
-                    (epr.data ->> 'added_to_high_priority')::timestamp     AS added_to_high_priority,
-                    (epr.data ->> 'removed_from_high_priority')::timestamp AS removed_from_high_priority,
+                    (epr.data ->> 'createdAt')::timestamp with time zone                  AS created_at,
+                    (epr.data ->> 'updatedAt')::timestamp with time zone                  AS updated_at,
+                    (epr.data ->> 'is_high_priority')::timestamp with time zone           AS is_high_priority,
+                    (epr.data ->> 'added_to_high_priority')::timestamp with time zone     AS added_to_high_priority,
+                    (epr.data ->> 'removed_from_high_priority')::timestamp with time zone AS removed_from_high_priority,
                     (epr.data ->> 'additions')::int                        AS additions,
                     (epr.data ->> 'deletions')::int                        AS deletions,
                     epr.data ->> 'mergeable'                               AS mergeable,
                     epr.data ->> 'last_commit_state'                       AS last_commit_state,
                     epr.data ->> 'last_commit_state_description'           AS last_commit_state_description,
                     epr.data ->> 'last_commit_short_hash'                  AS last_commit_short_hash,
-                    (epr.data ->> 'last_commit_pushed_date')::timestamp    AS last_commit_pushed_date,
+                    (epr.data ->> 'last_commit_pushed_date')::timestamp with time zone    AS last_commit_pushed_date,
                     epr.data ->> 'bodyText'                                AS body,
-                    (epr.data ->> 'mergedAt')::timestamp                   AS merged_at,
-                    (epr.data ->> 'closedAt')::timestamp                   AS closed_at,
+                    (epr.data ->> 'mergedAt')::timestamp with time zone                   AS merged_at,
+                    (epr.data ->> 'closedAt')::timestamp with time zone                   AS closed_at,
                     (epr.data ->> 'commit_count')::int                     AS commit_count
     FROM etl_data epr
              LEFT OUTER JOIN users author
