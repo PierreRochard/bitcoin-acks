@@ -6,6 +6,7 @@ from datetime import datetime
 import dateutil
 import postgres_copy
 import pytz
+from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.constants import PullRequestState, ReviewDecision
 from bitcoin_acks.data_schemas import pull_request_schema
@@ -15,9 +16,11 @@ from bitcoin_acks.github_data.graphql_queries import (
     pull_request_graphql_query,
     pull_requests_graphql_query
 )
+from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
 from bitcoin_acks.logging import log
+from bitcoin_acks.models import PullRequests
 from bitcoin_acks.models.etl.etl_data import ETLData
 
 
@@ -35,6 +38,26 @@ class PullRequestsData(RepositoriesData):
         self.pull_request_data = []
         self.review_decisions_data = []
         self.labels_data = []
+
+    def update(self):
+        polling_data = PollingData('github')
+        if polling_data.is_polling():
+            raise Exception('GitHub is already being polled')
+        polling_data.start()
+        with session_scope() as session:
+            try:
+                record = (
+                    session
+                        .query(PullRequests.updated_at)
+                        .order_by(PullRequests.updated_at.desc())
+                        .limit(1)
+                        .one()
+                )
+                from_date = record.updated_at
+            except NoResultFound:
+                from_date = datetime(2009, 1, 1)
+        log.debug('Updating PRs starting from', from_date=from_date)
+        self.update_all(newer_than=from_date)
 
     def get_one(self, number: int):
         json_object = {
