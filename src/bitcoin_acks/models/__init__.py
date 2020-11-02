@@ -1,5 +1,6 @@
 from .comments import Comments
 from .diffs import Diffs
+from .etl.etl_data import ETLData
 from .labels import Labels
 from .logs import Logs
 from .polling import ServicePolling
@@ -11,4 +12,3 @@ from .toots import Toots
 from .users import Users, Roles
 from .bounties import Bounties
 from .invoices import Invoices
-from .etl.etl_data import ETLData
