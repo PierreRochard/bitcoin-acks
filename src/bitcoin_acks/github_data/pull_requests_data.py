@@ -16,7 +16,6 @@ from bitcoin_acks.github_data.graphql_queries import (
     pull_request_graphql_query,
     pull_requests_graphql_query
 )
-from bitcoin_acks.github_data.polling_data import PollingData
 from bitcoin_acks.github_data.repositories_data import RepositoriesData
 from bitcoin_acks.github_data.users_data import UsersData
 from bitcoin_acks.logging import log
@@ -40,10 +39,6 @@ class PullRequestsData(RepositoriesData):
         self.labels_data = []
 
     def update(self):
-        polling_data = PollingData('github')
-        if polling_data.is_polling():
-            raise Exception('GitHub is already being polled')
-        polling_data.start()
         with session_scope() as session:
             try:
                 record = (
@@ -220,7 +215,7 @@ class PullRequestsData(RepositoriesData):
                 for item in data_list:
                     item = flatten_json(item)
                     for key in item.keys():
-                        if isinstance(item[key], str) and key not in ('author_login', 'id', 'pull_request_id'):
+                        if isinstance(item[key], str) and key not in ('author_login', 'id', 'pull_request_id', 'name'):
                             if key == 'id':
                                 print(item[key])
                             input_string = item[key]

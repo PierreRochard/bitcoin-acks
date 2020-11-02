@@ -66,7 +66,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'total_bounty_amount',
         'labels',
         'title',
-        'body',
+        # 'body',
         'additions',
         'deletions',
         'review_decisions_count',
@@ -74,7 +74,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'last_commit_state',
         'created_at',
         'last_commit_pushed_date',
-        'merged_at',
+        # 'merged_at',
         'closed_at'
     ]
     column_details_list = column_list
