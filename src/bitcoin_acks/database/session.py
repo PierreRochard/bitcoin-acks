@@ -7,6 +7,8 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import IntegrityError, ProgrammingError
 from sqlalchemy.orm import sessionmaker, Session
 
+from bitcoin_acks.logging import log
+
 load_dotenv()
 
 is_test = False
@@ -19,15 +21,17 @@ def get_url():
                  host=os.environ['PGHOST'],
                  port=os.environ['PGPORT'],
                  database=os.environ['POSTGRES_DB'])
+    log.debug('get PG url', pg_url=pg_url)
     return pg_url
+
+
+pg_url = get_url()
 
 
 @contextmanager
 def session_scope(echo=False,
                   raise_integrity_error=True,
                   raise_programming_error=True) -> Session:
-
-    pg_url = get_url()
     engine = create_engine(pg_url, echo=echo,
                            connect_args={'sslmode': 'prefer'})
     session_maker = sessionmaker(bind=engine)

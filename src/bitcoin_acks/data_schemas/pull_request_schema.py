@@ -11,7 +11,7 @@ class AuthorSchema(Schema):
 
 class CommentSchema(Schema):
     author = fields.Nested(AuthorSchema, allow_none=True)
-    body = fields.Str()
+    bodyText = fields.Str()
     id = fields.Str()
     publishedAt = fields.DateTime()
     url = fields.Url()
@@ -70,7 +70,7 @@ class TimelineItemsSchema(Schema):
 class PullRequestSchema(Schema):
     additions = fields.Int()
     author = fields.Nested(AuthorSchema, allow_none=True)
-    bodyHTML = fields.Str()
+    bodyText = fields.Str()
     closedAt = fields.DateTime(allow_none=True)
     comments = fields.Nested(CommentsSchema)
     reviews = fields.Nested(CommentsSchema)

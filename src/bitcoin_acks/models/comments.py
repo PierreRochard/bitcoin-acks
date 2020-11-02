@@ -20,7 +20,7 @@ class Comments(Base):
     published_at = Column(DateTime, nullable=False)
     publishedAt = synonym('published_at')
 
-    url = Column(String, nullable=False)
+    url = Column(String, nullable=False, unique=True)
 
     pull_request_id = Column(String,
                              ForeignKey('pull_requests.id'),

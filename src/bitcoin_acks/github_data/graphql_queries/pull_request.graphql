@@ -72,7 +72,7 @@ query($prNumber: Int = 15024){
                         login
                         avatarUrl
                     }
-                    body
+                    bodyText
                     url
                 }
             }
@@ -85,7 +85,7 @@ query($prNumber: Int = 15024){
                         login
                         avatarUrl
                     }
-                    body
+                    bodyText
                     url
                 }
             }

@@ -67,7 +67,7 @@ $searchQuery: String = null
                         url
                         avatarUrl
                     }
-                    bodyHTML
+                    bodyText
                     additions
                     deletions
                     createdAt
@@ -84,7 +84,7 @@ $searchQuery: String = null
                                 login
                                 avatarUrl
                             }
-                            body
+                            bodyText
                             url
                         }
                     }
@@ -97,7 +97,7 @@ $searchQuery: String = null
                                 login
                                 avatarUrl
                             }
-                            body
+                            bodyText
                             url
                         }
                     }

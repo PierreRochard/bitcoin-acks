@@ -6,12 +6,15 @@ from typing import Tuple
 import backoff
 import requests
 
+from bitcoin_acks.logging import log
+
 logging.basicConfig(level=logging.ERROR)
 logging.getLogger('backoff').setLevel(logging.INFO)
 
 
 def fatal_code(e):
     # We only retry if the error was "Bad Gateway"
+    log.error('GitHub error', fatal_code=e)
     return e.response.status_code != 502
 
 
@@ -40,6 +43,7 @@ class GitHubData(object):
                           requests.exceptions.RequestException,
                           giveup=fatal_code)
     def graphql_post(self, json_object: dict):
+        log.debug('graphql post', api_url=self.api_url, json=json_object)
         r = requests.post(self.api_url + 'graphql',
                           auth=self.auth,
                           headers=self.dev_preview_headers,

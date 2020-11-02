@@ -17,8 +17,8 @@ class DiffsData(object):
             repository_name: str,
             pull_request_number: int,
             pull_request_id: str):
-        url = 'https://patch-diff.githubusercontent.com/raw/{0}/{1}/pull/{2}.diff'
-        url = url.format(repository_path, repository_name, pull_request_number)
+        url = f'https://patch-diff.githubusercontent.com/raw/{repository_path}/{repository_name}' \
+              f'/pull/{pull_request_number}.diff'
         diff = requests.get(url).text
         cls.insert(pull_request_id, diff)
 

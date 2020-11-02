@@ -3,6 +3,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from bitcoin_acks.database import session_scope
 from bitcoin_acks.github_data.github_data import GitHubData
 from bitcoin_acks.github_data.graphql_queries import user_graphql_query
+from bitcoin_acks.logging import log
 from bitcoin_acks.models import Users
 
 
@@ -16,6 +17,7 @@ class UsersData(GitHubData):
             'query': user_graphql_query,
             'variables': variables
         }
+        log.debug('getting user', json_object=json_object)
         r = self.graphql_post(json_object=json_object)
         user = r.json()['data']['user']
         return user

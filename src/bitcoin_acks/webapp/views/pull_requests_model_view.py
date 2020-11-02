@@ -1,6 +1,8 @@
+from flask import request
 from flask_admin.contrib.sqla import ModelView
 from sqlalchemy import func
 
+from bitcoin_acks.logging import log
 from bitcoin_acks.models import PullRequests
 from bitcoin_acks.webapp.formatters import (
     author_link_formatter,
@@ -24,6 +26,9 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         self.name = 'Pull Requests'
 
     def get_query(self):
+        log.debug('get_query', request=request.args)
+        if request.args.get('sort'):
+            return super().get_query()
         query = (
             self.session.query(self.model)
                 .order_by(self.model.is_high_priority.asc().nullslast())
@@ -36,6 +41,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         return self.session.query(func.count(self.model.id))
 
     list_template = 'pull_requests_list.html'
+    page_size = 50
     can_delete = False
     can_create = False
     can_edit = False
@@ -60,7 +66,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'total_bounty_amount',
         'labels',
         'title',
-        'body',
+        # 'body',
         'additions',
         'deletions',
         'review_decisions_count',
@@ -68,7 +74,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'last_commit_state',
         'created_at',
         'last_commit_pushed_date',
-        'merged_at',
+        # 'merged_at',
         'closed_at'
     ]
     column_details_list = column_list

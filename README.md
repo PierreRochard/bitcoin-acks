@@ -27,7 +27,10 @@
 - [Create a GitHub OAuth Application](https://github.com/settings/applications/new)
 
    For local development set the homepage URL to `http://0.0.0.0:5000/` and 
-   set the authorization callback URL to `http://0.0.0.0:5000/login/github/authorized`
+   set the authorization callback URL to `http://0.0.0.0:5000/login-github/github/authorized`
+ 
+ - [Create Twitter API token](https://developer.twitter.com/en/apps)
+ 
  
 - Add `127.0.0.1 btcpay.local` to [your `/etc/hosts` file](https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/)
  
