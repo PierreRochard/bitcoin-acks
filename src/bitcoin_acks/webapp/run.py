@@ -14,7 +14,9 @@ from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.logging import log
 from bitcoin_acks.models import Invoices, PullRequests, Logs
 from bitcoin_acks.models.bounties import Bounties
-from bitcoin_acks.models.users import OAuth, Roles, Users
+from bitcoin_acks.models.users import Users
+from bitcoin_acks.models.roles import Roles
+from bitcoin_acks.models.oauth import OAuth
 from bitcoin_acks.payments.payment_processor import PaymentProcessor
 from bitcoin_acks.webapp.database import db
 from bitcoin_acks.webapp.templates.template_globals import \

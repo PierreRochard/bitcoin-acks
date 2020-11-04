@@ -1,22 +1,12 @@
-from flask_dance.consumer.storage.sqla import OAuthConsumerMixin
 from flask_login import UserMixin
-from flask_security import RoleMixin
 from sqlalchemy import (
     Boolean, Column,
-    ForeignKey, Integer, PickleType, String, Table
+    PickleType, String
 )
-from sqlalchemy.orm import relationship, synonym
+from sqlalchemy.orm import synonym
 
 from bitcoin_acks.database.base import Base
 from bitcoin_acks.webapp.database import db
-
-
-class Roles(Base, RoleMixin):
-    __tablename__ = 'roles'
-
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(80), unique=True)
-    description = Column(String(255))
 
 
 # FIXME Change db.Model to Base for auto-gen migrations
@@ -45,19 +35,3 @@ class Users(Base, db.Model, UserMixin):
     @property
     def best_name(self):
         return self.name or self.login
-
-
-class OAuth(OAuthConsumerMixin, Base):
-    __tablename__ = 'oauth'
-
-    provider_user_id = Column(String(), unique=True, nullable=False)
-    user_id = Column(String, ForeignKey(Users.id), nullable=False)
-    user = relationship(Users)
-
-
-roles_users = Table(
-    'roles_users',
-    Base.metadata,
-    Column('user_id', String, ForeignKey('users.id')),
-    Column('role_id', Integer, ForeignKey('roles.id')),
-)

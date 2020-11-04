@@ -2,7 +2,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from bitcoin_acks.database.base import Base
-from bitcoin_acks.models import PullRequests
+from bitcoin_acks.models.pull_requests import PullRequests
 from bitcoin_acks.models.users import Users
 
 

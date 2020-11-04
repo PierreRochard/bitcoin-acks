@@ -3,7 +3,8 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 
 from bitcoin_acks.database.base import Base
-from bitcoin_acks.models import Bounties, Users
+from bitcoin_acks.models.bounties import Bounties
+from bitcoin_acks.models.users import Users
 
 
 class Invoices(Base):

@@ -11,7 +11,8 @@ from sqlalchemy.orm import relationship, synonym
 
 from bitcoin_acks.constants import ReviewDecision
 from bitcoin_acks.database.base import Base
-from bitcoin_acks.models import Comments, Labels
+from bitcoin_acks.models.comments import Comments
+from bitcoin_acks.models.labels import Labels
 from bitcoin_acks.models.pull_requests_labels import PullRequestsLabels
 from bitcoin_acks.models.users import Users
 
