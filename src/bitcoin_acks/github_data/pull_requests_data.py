@@ -215,11 +215,17 @@ class PullRequestsData(RepositoriesData):
                 for item in data_list:
                     item = flatten_json(item)
                     for key in item.keys():
-                        if isinstance(item[key], str) and key not in ('author_login', 'id', 'pull_request_id', 'name'):
-                            if key == 'id':
-                                print(item[key])
+                        if isinstance(item[key], str) and key not in (
+                                'author_login',
+                                'id',
+                                'pull_request_id',
+                                'name',
+                                'title'
+                        ):
                             input_string = item[key]
-                            item[key] = ' '.join([re.sub(r'\W+', '', s) for s in input_string.split()]).replace('"', '')
+                            item[key] = ' '.join(
+                                [re.sub(r'\W+', '', s) for s in input_string.split()]
+                            ).replace('"', '')
                     string = json.dumps(item, ensure_ascii=True, separators=(',', ':'), default=str) + '\n'
                     json_file.write(string)
 
