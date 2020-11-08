@@ -12,7 +12,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from bitcoin_acks.database.session import session_scope
 from bitcoin_acks.logging import log
-from bitcoin_acks.models import Invoices, PullRequests, Logs
+from bitcoin_acks.models import Invoices, PullRequests, Logs, Repositories
 from bitcoin_acks.models.bounties import Bounties
 from bitcoin_acks.models.users import Users
 from bitcoin_acks.models.roles import Roles
@@ -25,6 +25,7 @@ from bitcoin_acks.webapp.views.bounties_payable_model_view import BountiesPayabl
 from bitcoin_acks.webapp.views.invoices_model_view import InvoicesModelView
 from bitcoin_acks.webapp.views.pull_requests_model_view import \
     PullRequestsModelView
+from bitcoin_acks.webapp.views.repositories_model_view import RepositoriesModelView
 from bitcoin_acks.webapp.views.user_model_view import UsersModelView
 
 
@@ -68,6 +69,7 @@ def create_app(config_object: str):
     admin.add_view(BountiesPayableModelView(Bounties, db.session))
     admin.add_view(InvoicesModelView(Invoices, db.session))
     admin.add_view(UsersModelView(Users, db.session))
+    admin.add_view(RepositoriesModelView(Repositories, db.session))
 
     @app.route('/robots.txt')
     def robots_txt():
@@ -153,10 +155,10 @@ def create_app(config_object: str):
 
     # notify on OAuth provider error
     @oauth_error.connect_via(github_blueprint)
-    def github_error(github_blueprint, message, response, error):
-        msg = "OAuth error from {name}! message={message} response={response}".format(
-            name=github_blueprint.name, message=message, response=response
-        )
+    def github_error(github_blueprint, error, error_description, error_uri):
+        log.debug('github error', error=error, error_description=error_description,
+                  error_uri=error_uri)
+        msg = f'OAuth error from {github_blueprint.name}! message={error_description}'
         flash(msg, category="error")
 
     class LoginMenuLink(MenuLink):

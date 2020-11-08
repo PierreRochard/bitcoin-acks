@@ -1,8 +1,8 @@
 """Add users repositories m2m table
 
-Revision ID: be80d3418d15
+Revision ID: 57d7591b8ce1
 Revises: 330754eb6c0e
-Create Date: 2020-11-04 17:32:07.888270
+Create Date: 2020-11-06 21:25:32.800122
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'be80d3418d15'
+revision = '57d7591b8ce1'
 down_revision = '330754eb6c0e'
 branch_labels = None
 depends_on = None
@@ -22,6 +22,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('repository_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.String(), nullable=True),
+    sa.ForeignKeyConstraint(['repository_id'], ['repositories.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

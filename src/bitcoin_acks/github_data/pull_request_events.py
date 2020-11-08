@@ -25,8 +25,8 @@ class PullRequestEvents(RepositoriesData):
 
     def get(self):
         url = self.api_url + 'repos/{0}/{1}/events?page=1&per_page=300'.format(
-            self.repo.path,
-            self.repo.name
+            self.path,
+            self.name
         )
         headers = {}
         if self.etag is not None:
@@ -48,8 +48,8 @@ class PullRequestEvents(RepositoriesData):
             if pr is not None and ('base' in pr.keys() or 'pull_request' in pr.keys()):
                 pull_request_numbers.add(pr['number'])
 
-        pr_data = PullRequestsData(repository_path=self.repo.path,
-                                   repository_name=self.repo.name)
+        pr_data = PullRequestsData(repository_path=self.path,
+                                   repository_name=self.name)
         for number in pull_request_numbers:
             pr_data.update(number=number)
 

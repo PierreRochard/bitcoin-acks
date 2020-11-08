@@ -30,8 +30,8 @@ class PullRequestsData(RepositoriesData):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
                                                repository_name=repository_name)
 
-        self.comments_data = CommentsData(repository_name=self.repo.name,
-                                          repository_path=self.repo.path)
+        self.comments_data = CommentsData(repository_name=self.name,
+                                          repository_path=self.path)
         self.users_data = UsersData()
         self.json_data_directory = json_data_directory
         self.pull_request_data = []

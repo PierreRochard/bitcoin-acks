@@ -12,5 +12,6 @@ def get_query(query_file: str):
 comments_graphql_query = get_query('comments.graphql')
 pull_request_graphql_query = get_query('pull_request.graphql')
 pull_requests_graphql_query = get_query('pull_requests.graphql')
+repository_graphql_query = get_query('repository.graphql')
 reviews_graphql_query = get_query('reviews.graphql')
 user_graphql_query = get_query('user.graphql')

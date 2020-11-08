@@ -1,0 +1,23 @@
+query ($prFirst: Int = 20, $prCursorAfter: String = null, $searchQuery: String = null) {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+  search(type: REPOSITORY, first: $prFirst, after: $prCursorAfter, query: $searchQuery) {
+    edges {
+      cursor
+      node {
+        ... on Repository {
+          id
+          createdAt
+          databaseId
+          updatedAt
+          description
+          nameWithOwner
+        }
+      }
+    }
+  }
+}
