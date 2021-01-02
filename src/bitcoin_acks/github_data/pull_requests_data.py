@@ -184,7 +184,11 @@ class PullRequestsData(RepositoriesData):
         if last_commit_status is not None:
             pull_request['last_commit_state'] = last_commit_status['state'].capitalize()
             descriptions = [s['description'] for s in last_commit_status['contexts']]
-            pull_request['last_commit_state_description'] = ', '.join(descriptions)
+            if descriptions is not None:
+                pull_request['last_commit_state_description'] = ', '.join(descriptions)
+            else:
+                pull_request['last_commit_state_description'] = None
+
         else:
             pull_request['last_commit_state'] = None
             pull_request['last_commit_state_description'] = None
