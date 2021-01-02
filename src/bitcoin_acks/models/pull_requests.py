@@ -61,7 +61,7 @@ class PullRequests(Base):
     mergedAt = synonym('merged_at')
     closedAt = synonym('closed_at')
 
-    repository_id = Column(Integer, nullable=False)
+    repository_id = Column(String, nullable=False)
     author_id = Column(String)
     tweet_id = Column(Integer, unique=True)
     toot_id = Column(Integer, unique=True)

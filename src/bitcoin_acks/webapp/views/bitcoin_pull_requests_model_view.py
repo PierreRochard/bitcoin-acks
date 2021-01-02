@@ -13,17 +13,17 @@ from bitcoin_acks.webapp.formatters import (
     line_count_formatter,
     mergeable_formatter,
     pr_link_formatter,
-    review_decisions_formatter)
+    review_decisions_formatter, satoshi_formatter)
 from bitcoin_acks.webapp.mixins import NullOrderMixinView
 
 
-class PullRequestsModelView(ModelView, NullOrderMixinView):
+class BitcoinPullRequestsModelView(ModelView, NullOrderMixinView):
     def __init__(self, model, session, *args, **kwargs):
-        super(PullRequestsModelView, self).__init__(model, session, *args,
+        super(BitcoinPullRequestsModelView, self).__init__(model, session, *args,
                                                            **kwargs)
         self.static_folder = 'static'
-        self.endpoint = 'all-pull-requests'
-        self.name = 'All Pull Requests'
+        self.endpoint = 'admin'
+        self.name = 'Bitcoin'
 
     def get_query(self):
         log.debug('get_query', request=request.args)
@@ -32,6 +32,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         query = (
             self.session.query(self.model)
                 .order_by(self.model.is_high_priority.asc().nullslast())
+                .filter(self.model.repository_id)
         )
         if self._get_list_extra_args().sort is None:
             query = query.order_by(self.model.last_commit_pushed_date.desc().nullslast())
