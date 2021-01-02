@@ -23,7 +23,7 @@ class CommentsSchema(Schema):
 
 
 class StatusContextSchema(Schema):
-    description = fields.Str()
+    description = fields.Str(allow_none=True)
 
 
 class StatusSchema(Schema):
