@@ -26,6 +26,8 @@ LEFT OUTER JOIN
               count(id) AS total_pull_request_count,
               sum(CASE WHEN merged_at is not null THEN 1 ELSE 0 END) AS merged_pull_request_count
     FROM pull_requests
+--     WHERE created_at >
+--       date_trunc('month', CURRENT_DATE) - INTERVAL '1 year'
     GROUP BY author_id
   ) pr on dev.id = pr.author_id
 LEFT OUTER JOIN
@@ -40,6 +42,8 @@ LEFT OUTER JOIN
           sum(CASE WHEN comments.auto_detected_review_decision = 'TESTED_ACK'::reviewdecision THEN 1 ELSE 0 END) AS tested_acks,
           sum(CASE WHEN comments.auto_detected_review_decision = 'NONE'::reviewdecision THEN 1 ELSE 0 END) AS nonreview_comments
    FROM comments
+--     WHERE published_at >
+--       date_trunc('month', CURRENT_DATE) - INTERVAL '1 year'
    GROUP BY author_id
   ) c ON c.author_id = dev.id
 ORDER BY merged_pull_request_count DESC NULLS LAST;
