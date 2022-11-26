@@ -55,7 +55,7 @@ class PullRequestsData(RepositoriesData):
         self.update_all(newer_than=from_date)
 
     def update_from_manual_date(self):
-        from_date = datetime(2022, 11, 7)
+        from_date = datetime(2009, 1, 1)
         log.debug('Updating PRs starting from', from_date=from_date)
         self.update_all(newer_than=from_date)
 
