@@ -220,7 +220,8 @@ class PullRequestsData(RepositoriesData):
                 for item in data_list:
                     item = flatten_json(item)
                     for key in item.keys():
-                        if isinstance(item[key], str) and key not in ('author_login', 'id', 'pull_request_id', 'name'):
+                        if isinstance(item[key], str) and key not in ('author_login', 'id', 'pull_request_id', 'name',
+                                                                      'url'):
                             if key == 'id':
                                 print(item[key])
                             input_string = item[key]
