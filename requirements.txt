@@ -7,6 +7,7 @@ email_validator
 flask
 flask-admin>=1.5.1
 flask-dance[sqla]
+flask-login
 flask-security
 flask-sqlalchemy
 graphene
