@@ -3,10 +3,10 @@ import os
 import re
 from datetime import datetime
 
-import dateutil
 import postgres_copy
 import pytz
-from sqlalchemy.orm.exc import NoResultFound
+from dateutil.parser import parse
+from sqlalchemy.exc import NoResultFound
 
 from bitcoin_acks.constants import PullRequestState, ReviewDecision
 from bitcoin_acks.data_schemas import pull_request_schema
@@ -43,10 +43,10 @@ class PullRequestsData(RepositoriesData):
             try:
                 record = (
                     session
-                        .query(PullRequests.updated_at)
-                        .order_by(PullRequests.updated_at.desc())
-                        .limit(1)
-                        .one()
+                    .query(PullRequests.updated_at)
+                    .order_by(PullRequests.updated_at.desc())
+                    .limit(1)
+                    .one()
                 )
                 from_date = record.updated_at
             except NoResultFound:
@@ -75,6 +75,7 @@ class PullRequestsData(RepositoriesData):
                 newer_than: datetime,
                 state: PullRequestState = None,
                 limit: int = None):
+        log.debug('get_all', state=state, limit=limit, newer_than=newer_than)
         variables = {}
         received = 0
         ends_at = newer_than
@@ -112,7 +113,7 @@ class PullRequestsData(RepositoriesData):
 
             starts_at = pull_requests_graphql_data[0]['node']['updatedAt']
             previous_ends_at = ends_at
-            ends_at = dateutil.parser.parse(pull_requests_graphql_data[-1]['node']['updatedAt'])
+            ends_at = parse(pull_requests_graphql_data[-1]['node']['updatedAt'])
             if previous_ends_at == ends_at:
                 break
             log.debug(
@@ -375,7 +376,7 @@ WHERE authors.id IS NULL;
             db_session.execute("""
 WITH etl_data AS (
     SELECT DISTINCT epr.data ->> 'id'                                      AS id,
-                    (epr.data ->> 'repository_id')::int                    AS repository_id,
+                    epr.data ->> 'repository_id'                           AS repository_id,
                     author.id                                              AS author_id,
                     (epr.data ->> 'number')::int                           AS "number",
                     epr.data ->> 'state'                                   AS "state",

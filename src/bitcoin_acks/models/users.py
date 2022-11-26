@@ -20,7 +20,7 @@ class Roles(Base, RoleMixin):
 
 
 # FIXME Change db.Model to Base for auto-gen migrations
-class Users(Base, db.Model, UserMixin):
+class Users(Base, UserMixin):
     __tablename__ = 'users'
 
     id = Column(String, primary_key=True)
