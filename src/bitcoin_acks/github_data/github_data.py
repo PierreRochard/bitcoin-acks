@@ -5,6 +5,8 @@ from typing import Tuple
 
 import backoff
 import requests
+import urllib3
+from urllib3.exceptions import HTTPError
 
 from bitcoin_acks.logging import log
 
@@ -15,7 +17,7 @@ logging.getLogger('backoff').setLevel(logging.INFO)
 def fatal_code(e):
     # We only retry if the error was "Bad Gateway"
     log.error('GitHub error', fatal_code=e)
-    return e.response.status_code != 502
+    return e.response.status_code not in [502, 403]
 
 
 class GitHubData(object):
@@ -42,9 +44,10 @@ class GitHubData(object):
             json.dump(r.json(), output_file, indent=4, sort_keys=True)
 
     @backoff.on_exception(
-        backoff.expo,
-        requests.exceptions.RequestException,
-        giveup=fatal_code
+        wait_gen=backoff.expo,
+        exception=(requests.exceptions.RequestException, HTTPError),
+        max_tries=10,
+        # giveup=fatal_code
     )
     def graphql_post(self, json_object: dict):
         log.debug('graphql post', api_url=self.api_url, json=json_object)

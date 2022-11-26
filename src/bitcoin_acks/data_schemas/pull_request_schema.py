@@ -22,19 +22,14 @@ class CommentsSchema(Schema):
     totalCount = fields.Int()
 
 
-class StatusContextSchema(Schema):
-    description = fields.Str(allow_none=True)
-
-
-class StatusSchema(Schema):
-    contexts = fields.Nested(StatusContextSchema, many=True)
+class StatusCheckRollupSchema(Schema):
     state = fields.Str()
 
 
 class CommitSchema(Schema):
     oid = fields.Str()
     pushedDate = fields.Str(allow_none=True)
-    status = fields.Nested(StatusSchema, allow_none=True)
+    statusCheckRollup = fields.Nested(StatusCheckRollupSchema, allow_none=True)
 
 
 class PullRequestCommitSchema(Schema):

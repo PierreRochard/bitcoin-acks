@@ -270,10 +270,7 @@ def last_commit_state_formatter(view, context, model, name):
         return ''
     else:
         raise Exception('unrecognized last commit status')
-    return Markup('<span title="{0}" class="label {1}">{2}</span>'.format(
-        model.last_commit_state_description,
-        label,
-        text))
+    return Markup(f'<span class="label {label}">{text}</span>')
 
 
 def labels_formatter(view, context, model, name):

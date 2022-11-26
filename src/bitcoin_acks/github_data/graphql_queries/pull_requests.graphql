@@ -108,11 +108,8 @@ $searchQuery: String = null
                             commit {
                                 oid
                                 pushedDate
-                                status {
+                                statusCheckRollup {
                                     state
-                                    contexts {
-                                        description
-                                    }
                                 }
                             }
                         }

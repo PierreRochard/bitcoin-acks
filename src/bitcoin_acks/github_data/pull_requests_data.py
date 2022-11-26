@@ -24,7 +24,7 @@ from bitcoin_acks.models.etl.etl_data import ETLData
 
 
 class PullRequestsData(RepositoriesData):
-    MAX_PRS = 40
+    MAX_PRS = 20
 
     def __init__(self, repository_path: str, repository_name: str, json_data_directory: str):
         super(PullRequestsData, self).__init__(repository_path=repository_path,
@@ -51,6 +51,7 @@ class PullRequestsData(RepositoriesData):
                 from_date = record.updated_at
             except NoResultFound:
                 from_date = datetime(2009, 1, 1)
+        from_date = datetime(2022, 11, 21)
         log.debug('Updating PRs starting from', from_date=from_date)
         self.update_all(newer_than=from_date)
 
@@ -181,19 +182,12 @@ class PullRequestsData(RepositoriesData):
         head_commit_hash = pull_request['headRefOid']
         if commits['nodes']:
             last_commit = [c for c in commits['nodes'] if c['commit']['oid'] == head_commit_hash][0]['commit']
-            last_commit_status = last_commit.get('status')
+            last_commit_status = last_commit.get('statusCheckRollup')
 
         if last_commit_status is not None:
             pull_request['last_commit_state'] = last_commit_status['state'].capitalize()
-            descriptions = [s['description'] for s in last_commit_status['contexts']]
-            if descriptions and None not in descriptions:
-                pull_request['last_commit_state_description'] = ', '.join(descriptions)
-            else:
-                pull_request['last_commit_state_description'] = None
-
         else:
             pull_request['last_commit_state'] = None
-            pull_request['last_commit_state_description'] = None
 
         if len(commits['nodes']):
             pull_request['last_commit_short_hash'] = commits['nodes'][-1]['commit']['oid'][0:7]
@@ -411,7 +405,6 @@ WITH etl_data AS (
                     (epr.data ->> 'deletions')::int                        AS deletions,
                     epr.data ->> 'mergeable'                               AS mergeable,
                     epr.data ->> 'last_commit_state'                       AS last_commit_state,
-                    epr.data ->> 'last_commit_state_description'           AS last_commit_state_description,
                     epr.data ->> 'last_commit_short_hash'                  AS last_commit_short_hash,
                     (epr.data ->> 'last_commit_pushed_date')::timestamp with time zone    AS last_commit_pushed_date,
                     epr.data ->> 'bodyText'                                AS body,
@@ -438,7 +431,6 @@ INTO pull_requests (id,
                     deletions,
                     mergeable,
                     last_commit_state,
-                    last_commit_state_description,
                     last_commit_short_hash,
                     last_commit_pushed_date,
                     body,
@@ -461,7 +453,6 @@ ON CONFLICT ON CONSTRAINT pull_requests_unique_constraint DO UPDATE SET reposito
                                                                         deletions                     = excluded.deletions,
                                                                         mergeable                     = excluded.mergeable,
                                                                         last_commit_state             = excluded.last_commit_state,
-                                                                        last_commit_state_description = excluded.last_commit_state_description,
                                                                         last_commit_short_hash        = excluded.last_commit_short_hash,
                                                                         last_commit_pushed_date       = excluded.last_commit_pushed_date,
                                                                         body                          = excluded.body,

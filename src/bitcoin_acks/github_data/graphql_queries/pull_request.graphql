@@ -96,11 +96,8 @@ query($prNumber: Int = 15024){
                     commit {
                         oid
                         pushedDate
-                        status {
+                        statusCheckRollup {
                             state
-                            contexts {
-                                description
-                            }
                         }
                     }
                 }
