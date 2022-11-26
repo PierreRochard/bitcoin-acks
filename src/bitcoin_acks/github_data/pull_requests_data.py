@@ -55,7 +55,7 @@ class PullRequestsData(RepositoriesData):
         self.update_all(newer_than=from_date)
 
     def update_from_manual_date(self):
-        from_date = datetime(2019, 1, 1)
+        from_date = datetime(2021, 9, 8)
         log.debug('Updating PRs starting from', from_date=from_date)
         self.update_all(newer_than=from_date)
 
@@ -353,6 +353,9 @@ INTO labels (id,
 SELECT id, name, color FROM etl_data
 ON CONFLICT (id) DO UPDATE SET name  = excluded.name,
                                color = excluded.color;
+
+DELETE FROM pull_requests_labels WHERE pull_request_id IN (
+SELECT etl_data.data ->> 'pull_request_id' AS pull_request_id FROM etl_data);
 
 WITH etl_data AS (
     SELECT DISTINCT etl_data.data ->> 'id'              AS label_id,
