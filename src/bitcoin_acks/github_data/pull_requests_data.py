@@ -51,7 +51,11 @@ class PullRequestsData(RepositoriesData):
                 from_date = record.updated_at
             except NoResultFound:
                 from_date = datetime(2009, 1, 1)
-        from_date = datetime(2022, 11, 21)
+        log.debug('Updating PRs starting from', from_date=from_date)
+        self.update_all(newer_than=from_date)
+
+    def update_from_manual_date(self):
+        from_date = datetime(2019, 1, 1)
         log.debug('Updating PRs starting from', from_date=from_date)
         self.update_all(newer_than=from_date)
 
