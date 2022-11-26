@@ -31,35 +31,18 @@ $searchQuery: String = null
                             color
                         }
                     }
-                    projectCards(last: 100) {
+                    projectItems(last: 100) {
                         totalCount
                         nodes {
                             id
-                            column {
-                                id
-                                name
-                            }
                             project {
                                 id
                                 number
-                                state
+                                title
                             }
                             createdAt
                             updatedAt
-                        }
-                    }
-                    timelineItems(itemTypes:[ADDED_TO_PROJECT_EVENT, REMOVED_FROM_PROJECT_EVENT], last:100) {
-                        nodes {
-                            ... on AddedToProjectEvent {
-                                __typename
-                                createdAt
-                                projectColumnName
-                            }
-                            ... on RemovedFromProjectEvent {
-                                __typename
-                                createdAt
-                                projectColumnName
-                            }
+                            isArchived
                         }
                     }
                     author {

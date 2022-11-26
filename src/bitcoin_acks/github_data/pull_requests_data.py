@@ -100,9 +100,11 @@ class PullRequestsData(RepositoriesData):
 
             response = self.graphql_post(json_object=json_object)
             data = response.json()
-
-            search_data = data['data']['search']
-
+            try:
+                search_data = data['data']['search']
+            except KeyError:
+                log.error('Error in response', response=response.text)
+                raise
             pull_requests_graphql_data = search_data['edges']
             results_count = len(search_data['edges'])
 
@@ -155,25 +157,23 @@ class PullRequestsData(RepositoriesData):
                     comment_or_review['id'] = comment_or_review['url']
                 self.review_decisions_data.append(comment_or_review)
 
-        project_cards = pull_request.pop('projectCards')
-        blocker_card = [c for c in project_cards['nodes'] if
-                        c['column'] and c['column']['name'] == 'Blockers']
-        if blocker_card and not pull_request['closedAt']:
-            pull_request['is_high_priority'] = blocker_card[0]['createdAt']
+        project_items = pull_request.pop('projectItems')
+        high_priority_for_review = [project_item for project_item in project_items['nodes']
+                                    if project_item['project']
+                                    and project_item['project']['title'] == 'High-priority for review']
+
+        if high_priority_for_review and (pull_request['closedAt'] or high_priority_for_review[0]['isArchived']):
+            pull_request['is_high_priority'] = high_priority_for_review[0]['createdAt']
+            pull_request['added_to_high_priority'] = high_priority_for_review[0]['createdAt']
+            pull_request['removed_from_high_priority'] = high_priority_for_review[0]['updatedAt']
+        elif high_priority_for_review:
+            pull_request['is_high_priority'] = high_priority_for_review[0]['createdAt']
+            pull_request['added_to_high_priority'] = high_priority_for_review[0]['createdAt']
+            pull_request['removed_from_high_priority'] = None
         else:
             pull_request['is_high_priority'] = None
-
-        timeline_items = pull_request.pop('timelineItems')
-        blocker_events = [e for e in timeline_items['nodes'] if
-                          e['projectColumnName'] == 'Blockers']
-        for blocker_event in blocker_events:
-            if blocker_event['typename'] == 'AddedToProjectEvent':
-                pull_request['added_to_high_priority'] = blocker_event['createdAt']
-            elif blocker_event['typename'] == 'RemovedFromProjectEvent':
-                pull_request['removed_from_high_priority'] = blocker_event['createdAt']
-            else:
-                pull_request['added_to_high_priority'] = None
-                pull_request['removed_from_high_priority'] = None
+            pull_request['added_to_high_priority'] = None
+            pull_request['removed_from_high_priority'] = None
 
         # Last commit is used to determine CI status
         last_commit_status = None

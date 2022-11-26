@@ -22,7 +22,7 @@
 - [Install docker-compose](https://docs.docker.com/compose/install/)
 
 - [Create GitHub API token](https://github.com/settings/tokens/new) 
-  The token must have the `public_repo` permission scope.
+  The token must have the `public_repo` and `read:project` permission scopes.
 
 - [Create a GitHub OAuth Application](https://github.com/settings/applications/new)
 

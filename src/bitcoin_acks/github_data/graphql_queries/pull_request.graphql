@@ -19,21 +19,18 @@ query($prNumber: Int = 15024){
                     color
                 }
             }
-            projectCards(last: 100) {
+            projectItems(last: 100) {
                 totalCount
                 nodes {
                     id
-                    column {
-                        id
-                        name
-                    }
                     project {
                         id
                         number
-                        state
+                        title
                     }
                     createdAt
                     updatedAt
+                    isArchived
                 }
             }
             timelineItems(itemTypes:[ADDED_TO_PROJECT_EVENT, REMOVED_FROM_PROJECT_EVENT], last:100) {

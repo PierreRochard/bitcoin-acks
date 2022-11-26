@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
 
-from bitcoin_acks.data_schemas.project_schema import ProjectCardsSchema
+from bitcoin_acks.data_schemas.project_schema import ProjectItemsSchema
 
 
 class AuthorSchema(Schema):
@@ -52,16 +52,6 @@ class LabelsSchema(Schema):
     totalCount = fields.Int()
 
 
-class TimelineItemSchema(Schema):
-    typename = fields.Str(data_key='__typename')
-    createdAt = fields.Str()
-    projectColumnName = fields.Str()
-
-
-class TimelineItemsSchema(Schema):
-    nodes = fields.Nested(TimelineItemSchema, many=True)
-
-
 class PullRequestSchema(Schema):
     additions = fields.Int()
     author = fields.Nested(AuthorSchema, allow_none=True)
@@ -78,8 +68,7 @@ class PullRequestSchema(Schema):
     mergeable = fields.Str()
     mergedAt = fields.DateTime(allow_none=True)
     number = fields.Int()
-    projectCards = fields.Nested(ProjectCardsSchema)
+    projectItems = fields.Nested(ProjectItemsSchema)
     state = fields.Str()
     title = fields.Str()
     updatedAt = fields.DateTime()
-    timelineItems = fields.Nested(TimelineItemsSchema)
