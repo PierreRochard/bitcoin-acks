@@ -55,7 +55,7 @@ class PullRequestsData(RepositoriesData):
         self.update_all(newer_than=from_date)
 
     def update_from_manual_date(self):
-        from_date = datetime(2021, 9, 8)
+        from_date = datetime(2022, 11, 7)
         log.debug('Updating PRs starting from', from_date=from_date)
         self.update_all(newer_than=from_date)
 
@@ -301,7 +301,7 @@ ON CONFLICT (id) DO UPDATE SET id = excluded.id,
             db_session.execute(
                 """
 WITH etl_data AS (
-    SELECT DISTINCT etl_data.data ->> 'pull_request_id' AS pull_request_id, etl_data.data ->> 'last_commit_short_hash' as last_commit_short_hash FROM etl_data
+    SELECT DISTINCT etl_data.data ->> 'pull_request_id' AS pull_request_id FROM etl_data
 )
 UPDATE pull_requests
 SET review_decisions_count = s.review_decisions_count,
@@ -312,12 +312,12 @@ SET review_decisions_count = s.review_decisions_count,
     nack_count = s.nack_count
 from (SELECT count(comments.id) as review_decisions_count,
              sum(CASE WHEN comments.auto_detected_review_decision = 'TESTED_ACK'::reviewdecision 
-                        AND last_commit_short_hash IS NOT NULL
-                         AND comments.body LIKE '%' || last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
+                        AND pull_requests.last_commit_short_hash IS NOT NULL
+                         AND comments.body LIKE '%' || pull_requests.last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
                             as fresh_tested_ack_count,
              sum(CASE WHEN comments.auto_detected_review_decision = 'TESTED_ACK'::reviewdecision 
-                        AND last_commit_short_hash IS NULL
-                         OR comments.body NOT LIKE '%' || last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
+                        AND pull_requests.last_commit_short_hash IS NULL
+                         OR comments.body NOT LIKE '%' || pull_requests.last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
                             as stale_tested_ack_count,
              sum(CASE WHEN comments.auto_detected_review_decision = 'UNTESTED_ACK'::reviewdecision THEN 1 ELSE 0 END) 
                             as untested_ack_count,
@@ -330,6 +330,7 @@ from (SELECT count(comments.id) as review_decisions_count,
                LEFT JOIN comments on etl_data.pull_request_id = comments.pull_request_id AND
                                      comments.auto_detected_review_decision is not null and
                                      comments.auto_detected_review_decision != 'NONE'::reviewdecision
+               LEFT JOIN pull_requests on etl_data.pull_request_id = pull_requests.id
       GROUP BY etl_data.pull_request_id) s
 WHERE s.pull_request_id = pull_requests.id;
                 """
