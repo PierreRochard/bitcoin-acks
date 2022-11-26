@@ -32,22 +32,29 @@ class GitHubData(object):
         return self.user_name, self.password
 
     def get_graphql_schema(self):
-        r = requests.get(self.api_url + 'graphql',
-                         auth=self.auth,
-                         headers=self.dev_preview_headers)
+        r = requests.get(
+            self.api_url + 'graphql',
+            auth=self.auth,
+            headers=self.dev_preview_headers
+        )
         r.raise_for_status()
         with open('graphql.schema.json', 'w') as output_file:
             json.dump(r.json(), output_file, indent=4, sort_keys=True)
 
-    @backoff.on_exception(backoff.expo,
-                          requests.exceptions.RequestException,
-                          giveup=fatal_code)
+    @backoff.on_exception(
+        backoff.expo,
+        requests.exceptions.RequestException,
+        giveup=fatal_code
+    )
     def graphql_post(self, json_object: dict):
         log.debug('graphql post', api_url=self.api_url, json=json_object)
-        r = requests.post(self.api_url + 'graphql',
-                          auth=self.auth,
-                          headers=self.dev_preview_headers,
-                          json=json_object)
+        r = requests.post(
+            self.api_url + 'graphql',
+            auth=self.auth,
+            headers=self.dev_preview_headers,
+            json=json_object
+        )
+        log.debug('graphql post response', response=r.headers)
         r.raise_for_status()
         return r
 

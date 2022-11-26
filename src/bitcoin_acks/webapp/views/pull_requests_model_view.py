@@ -94,7 +94,12 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
         'created_at',
         'last_commit_pushed_date',
         'merged_at',
-        'closed_at'
+        'closed_at',
+        'fresh_tested_ack_count',
+        'stale_tested_ack_count',
+        'untested_ack_count',
+        'concept_ack_count',
+        'nack_count',
     ]
     column_sortable_list = [
         'number',

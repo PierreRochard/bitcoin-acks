@@ -51,6 +51,11 @@ class PullRequests(Base):
 
     commit_count = Column(Integer)
     review_decisions_count = Column(Integer, default=0)
+    stale_tested_ack_count = Column(Integer, default=0)
+    fresh_tested_ack_count = Column(Integer, default=0)
+    untested_ack_count = Column(Integer, default=0)
+    concept_ack_count = Column(Integer, default=0)
+    nack_count = Column(Integer, default=0)
 
     total_bounty_amount = Column(Integer)
 

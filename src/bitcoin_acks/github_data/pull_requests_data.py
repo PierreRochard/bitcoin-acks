@@ -97,7 +97,8 @@ class PullRequestsData(RepositoriesData):
                 'variables': variables
             }
 
-            data = self.graphql_post(json_object=json_object).json()
+            response = self.graphql_post(json_object=json_object)
+            data = response.json()
 
             search_data = data['data']['search']
 
@@ -302,11 +303,30 @@ ON CONFLICT (id) DO UPDATE SET id = excluded.id,
             db_session.execute(
                 """
 WITH etl_data AS (
-    SELECT DISTINCT etl_data.data ->> 'pull_request_id' AS pull_request_id FROM etl_data
+    SELECT DISTINCT etl_data.data ->> 'pull_request_id' AS pull_request_id, etl_data.data ->> 'last_commit_short_hash' as last_commit_short_hash FROM etl_data
 )
 UPDATE pull_requests
-SET review_decisions_count = s.review_decisions_count
+SET review_decisions_count = s.review_decisions_count,
+    stale_tested_ack_count = s.stale_tested_ack_count,
+    fresh_tested_ack_count = s.fresh_tested_ack_count,
+    untested_ack_count = s.untested_ack_count,
+    concept_ack_count = s.concept_ack_count,
+    nack_count = s.nack_count
 from (SELECT count(comments.id) as review_decisions_count,
+             sum(CASE WHEN comments.auto_detected_review_decision = 'TESTED_ACK'::reviewdecision 
+                        AND last_commit_short_hash IS NOT NULL
+                         AND comments.body LIKE '%' || last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
+                            as fresh_tested_ack_count,
+             sum(CASE WHEN comments.auto_detected_review_decision = 'TESTED_ACK'::reviewdecision 
+                        AND last_commit_short_hash IS NULL
+                         OR comments.body NOT LIKE '%' || last_commit_short_hash || '%' THEN 1 ELSE 0 END) 
+                            as stale_tested_ack_count,
+             sum(CASE WHEN comments.auto_detected_review_decision = 'UNTESTED_ACK'::reviewdecision THEN 1 ELSE 0 END) 
+                            as untested_ack_count,
+             sum(CASE WHEN comments.auto_detected_review_decision = 'CONCEPT_ACK'::reviewdecision THEN 1 ELSE 0 END) 
+                            as concept_ack_count,
+             sum(CASE WHEN comments.auto_detected_review_decision = 'NACK'::reviewdecision THEN 1 ELSE 0 END) 
+                            as nack_count,
              etl_data.pull_request_id
       FROM etl_data
                LEFT JOIN comments on etl_data.pull_request_id = comments.pull_request_id AND
