@@ -19,7 +19,6 @@ depends_on = None
 def upgrade():
     # Change primary key type
     op.alter_column('pull_requests', 'repository_id', existing_type=sa.Integer, type_=sa.VARCHAR)
-    op.alter_column('users_repositories', 'repository_id', existing_type=sa.Integer, type_=sa.VARCHAR)
     # Re-create the primary key constraint
     # op.create_primary_key('repositories_pkey', 'repositories', ['id'])
     # Re-create the foreign key constraint
