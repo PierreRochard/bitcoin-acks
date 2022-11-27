@@ -33,9 +33,9 @@ def create_app(config_object: str):
 
     db.init_app(app)
 
-    user_datastore = SQLAlchemyUserDatastore(db, Users, Roles)
-    security = Security(datastore=user_datastore)
-    security.init_app(app, user_datastore)
+    # user_datastore = SQLAlchemyUserDatastore(db, Users, Roles)
+    # security = Security(datastore=user_datastore)
+    # security.init_app(app, user_datastore)
 
     apply_template_globals(app)
 
