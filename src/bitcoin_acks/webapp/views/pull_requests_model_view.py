@@ -63,7 +63,7 @@ class PullRequestsModelView(ModelView, NullOrderMixinView):
     column_list = [
         'number',
         'author.login',
-        'total_bounty_amount',
+        # 'total_bounty_amount',
         'labels',
         'title',
         # 'body',
