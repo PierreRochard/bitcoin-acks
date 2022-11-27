@@ -167,8 +167,8 @@ def create_app(config_object: str):
         def is_accessible(self):
             return current_user.is_authenticated
 
-    admin.add_link(LoginMenuLink(name='Login', endpoint='github.login'))
-    admin.add_link(LogoutMenuLink(name='Logout', endpoint='logout'))
+    # admin.add_link(LoginMenuLink(name='Login', endpoint='github.login'))
+    # admin.add_link(LogoutMenuLink(name='Logout', endpoint='logout'))
 
     return app
 
