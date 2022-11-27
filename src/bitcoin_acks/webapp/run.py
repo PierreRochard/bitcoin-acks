@@ -63,9 +63,9 @@ def create_app(config_object: str):
                   template_mode='bootstrap3',
                   url='/',
                   index_view=PullRequestsModelView(PullRequests, db.session))
-    admin.add_view(BountiesPayableModelView(Bounties, db.session))
-    admin.add_view(InvoicesModelView(Invoices, db.session))
-    admin.add_view(UsersModelView(Users, db.session))
+    # admin.add_view(BountiesPayableModelView(Bounties, db.session))
+    # admin.add_view(InvoicesModelView(Invoices, db.session))
+    # admin.add_view(UsersModelView(Users, db.session))
 
     @app.route('/robots.txt')
     def robots_txt():
