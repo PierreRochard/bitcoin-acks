@@ -94,7 +94,7 @@ def create_app(config_object: str):
         client_secret=os.environ['GITHUB_OAUTH_CLIENT_SECRET'],
         scope='user:email'
     )
-    app.register_blueprint(github_blueprint, url_prefix='/login-github')
+    # app.register_blueprint(github_blueprint, url_prefix='/login-github')
 
     # twitter_blueprint = make_twitter_blueprint(
     #     api_key=os.environ['TWITTER_OAUTH_CLIENT_KEY'],
