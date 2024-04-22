@@ -44,17 +44,16 @@ def send_tweet(pull_request_number=None):
         response = requests.get(commits_url, params=params)
         log.debug('github response', response=response)
         response_json = response.json()
-        author_name = next_pull_request.author.name or next_pull_request.author.login
         if len(response_json) > 1 and next_pull_request.number != 14802:
             status = 'Merged PR from {0}: {1} {2}' \
-                .format(author_name,
+                .format(next_pull_request.author.login,
                         next_pull_request.title,
                         next_pull_request.html_url)
         else:
             status = '''
             {0}'s first merged PR: {1}
             Congratulations!  🎉🍾🎆
-            '''.format(author_name,
+            '''.format(next_pull_request.author.login,
                        next_pull_request.html_url)
         log.debug('tweet status', status=status)
         tweet = twitter.update_status(status=status)
